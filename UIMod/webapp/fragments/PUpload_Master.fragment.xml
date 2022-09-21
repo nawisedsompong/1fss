@@ -62,12 +62,22 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="Claim Details"/>
-							<Text text="{PUpload_Master>/LINE_ITEM/0/CLAIM_CODE} - {PUpload_Master>/LINE_ITEM/0/CLAIM_CATEGORY}"/>
+							<Text
+								text="{parts:[{path:'PUpload_Master>/LINE_ITEM/0/CLAIM_CODE'},{path:'PUpload_Master>/LINE_ITEM/0/CLAIM_CATEGORY'}],formatter:'.formatter.oPayupLine'}"/>
 						</VBox>
 						<VBox class="sapUiMediumMarginEnd"
 							visible="{=${PUpload_Master>/CLAIM_STATUS}==='Pending for Submission' ? true : ${PUpload_Master>/CLAIM_STATUS}===undefined ? true : false}">
 							<Label text="Line Item Template" visible="{ViewData>/DMode}"/>
 							<Link visible="{ViewData>/DMode}" text="Download here" press="onTemplateDownload('Pay_Up')"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0" visible="{=${ViewData>/oTile}==='History'? false : true }">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_TOT_AMNT}" wrapping="true"/>
+							<ObjectNumber unit="{PUpload_Master>/LINE_ITEM/0/CURRENCY}"
+								number="{ path:'PUpload_Master>/CLAIM_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
 						</VBox>
 					</l:content>
 				</l:Grid>
@@ -78,7 +88,7 @@
 							<Label text="Select Approver" required="{= ${PUpload_Master>/LINE_ITEM}.length > 0 ? true : false}"/>
 							<ComboBox id="cb_payapprover" items="{oApprovers>/}" selectedKey="{PUpload_Master>/FIRST_LEVEL_APPROVER}" width="100%"
 								required="{= ${PUpload_Master>/LINE_ITEM}.length > 0 ? true : false}" fieldGroupIds="fgInput" editable="{ViewData>/DMode}"
-								change="onValidData">
+								change="onChangeApprover">
 								<core:Item key="{oApprovers>EMPLOYEE_ID}" text="{oApprovers>EMPLOYEE_ID} - {oApprovers>FULLNAME}"/>
 							</ComboBox>
 							<!--<Text visible="{= !${ViewData>/DMode}}" text="{PUpload_Master>/FIRST_LEVEL_APPROVER}"/>-->
@@ -94,18 +104,19 @@
 						</VBox>
 					</l:content>
 				</l:Grid>-->
-				<Table id="tbPUpload_Master" inset="false" items="{PUpload_Master>/LINE_ITEM}" mode="MultiSelect"
-					updateFinished="onUpdateWRC($event,'PUpload_Master')" growing="true" growingThreshold="100" enableBusyIndicator="true">
+				<Table id="tbPUpload_Master" inset="false" items="{PUpload_Master>/LINE_ITEM}" mode="MultiSelect" growing="true" growingThreshold="10000"
+					updateFinished="onUpdateWRC($event,'PUpload_Master')" sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true">
 					<headerToolbar>
 						<OverflowToolbar>
 							<content>
-								<Title text="Line Items ({=${PUpload_Master>/LINE_ITEM}.length})" class="sapUiNoMargin"/>
+								<Title text="Line Items ({ViewData>/PayUpLength})" class="sapUiNoMargin"/>
 								<ToolbarSpacer/>
 								<Button visible="{ViewData>/DMode}" icon="sap-icon://add" text="ADD" press="onAddWRC('PUpload')" type="Emphasized"/>
 								<Button visible="{ViewData>/DMode}" icon="sap-icon://delete" text="DELETE" press="onDeleteLineItem('tbPUpload_Master','PUpload_Master')"
 									type="Reject"/>
 								<Button visible="{ViewData>/DMode}" icon="sap-icon://upload" text="UPLOAD" press="onClickUpload" type="Accept"/>
-								<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownloadPayUp('PUpload_Master','Payment_Upload')"/>
+								<Button visible="{=${ViewData>/oTile}==='History'? false : true }" icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept"
+									press="onDownloadPayUp('PUpload_Master','Payment_Upload')"/>
 							</content>
 						</OverflowToolbar>
 					</headerToolbar>
@@ -135,7 +146,7 @@
 							<Text text="Claim Amount"/>
 						</Column>
 						<Column minScreenWidth="Desktop" demandPopin="true">
-							<Text text="GL Code"/>
+							<Text text="Claim description"/>
 						</Column>
 						<Column minScreenWidth="Desktop" demandPopin="true">
 							<Text text="Vendor"/>
@@ -159,7 +170,7 @@
 									number="{ path:'PUpload_Master>CLAIM_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
 								<!--<ExpandableText maxCharacters="50" class="sapUiTinyMarginBottom sapUiTinyMarginTop" text="{PUpload_Master>REMARKS_EMPLOYEE}"
 									overflowMode="Popover"/>-->
-								<Text text="{PUpload_Master>GL_ACCOUNT}"/>
+								<Text text="{PUpload_Master>CLAIM_CATEGORY}"/>
 								<Text text="{PUpload_Master>VENDOR_CODE}"/>
 								<HBox justifyContent="End">
 									<Button icon="sap-icon://edit" type="Transparent" press="onLineItem($event, 'PUpload', 'Edit')"/>
@@ -189,12 +200,11 @@
 					</VBox>
 				</l:content>
 			</l:Grid>-->
-			<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0"
-				visible="{=(${ViewData>/oTile}==='History' ||${ViewData>/oTile}=== 'SMSApprovals')? false: true}">
+			<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0" visible="{=${ViewData>/oTile}==='History'? false: true}">
 				<l:content>
 					<VBox class="sapUiMediumMarginEnd">
 						<UploadCollection id="PAY_UPUploadCollection" maximumFilenameLength="50" filenameLengthExceed="onFileNameExceed" maximumFileSize="10"
-							multiple="false" uploadButtonInvisible="{parts:[{path:'ViewData>/DMode'},{path:'ViewData>/oTile'}],formatter:'.formatter.oPlusVisible'}"
+							multiple="false" uploadButtonInvisible="{parts:[{path:'ViewData>/DMode'},{path:'ViewData>/oTabValue'}],formatter:'.formatter.oPlusVisible'}"
 							fileType="jpg,jpeg,png,pdf,xls,xlsx" change="onChange($event, ${PUpload_Master>/CLAIM_REFERENCE})" fileSizeExceed="onFileSizeExceed"
 							selectionChange="onSelectionChange" typeMissmatch="onTypeMissmatch" uploadComplete="onUploadComplete(${PUpload_Master>/CLAIM_REFERENCE})"
 							fileDeleted="onFileDeleted" beforeUploadStarts="onBeforeUploadStarts" items="{ path: 'oAttachItems>/', templateShareable: false }">
@@ -208,7 +218,7 @@
 							</toolbar>
 							<items>
 								<UploadCollectionItem documentId="{oAttachItems>ID}" fileName="{oAttachItems>fileName}" visibleEdit="false"
-									visibleDelete="{=${oAttachItems>delete} || ${ViewData>/oTile}==='SMSApprovals'}" press="onDownloadFile">
+									visibleDelete="{=${oAttachItems>delete} || ${ViewData>/oTabValue}!=='History'}" press="onDownloadFile">
 									<attributes>
 										<ObjectAttribute title="{i18n>TIT_UPLOADEDON}" text="{ path: 'oAttachItems>date', formatter: '.formatter.oClaimDate'}" active="false"/>
 										<ObjectAttribute title="{i18n>TIT_UPLOADEDBY}" text="{oAttachItems>name}" active="false"/>

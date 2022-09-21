@@ -99,7 +99,7 @@
 						<Column minScreenWidth="Desktop" demandPopin="true">
 							<Text text="Claim Amount"/>
 						</Column>
-						<Column hAlign="End" visible="{ViewData>/DMode}"></Column>
+						<Column hAlign="End" visible="{=(${ViewData>/DMode} || ${ViewData>/oTile}==='Approvals')}"></Column>
 					</columns>
 					<items>
 						<ColumnListItem type="Active" press="onLineItem($event, 'WorkRelated')">
@@ -110,7 +110,7 @@
 								<Text
 									text="{ path:'WorkRelated_Master>CLAIM_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
 								<HBox justifyContent="End">
-									<Button icon="sap-icon://edit" type="Transparent" press="onLineItem($event, 'WorkRelated', 'Edit')"/>
+									<Button enabled="{parts:[{path:'WorkRelated_Master>CLAIM_CODE'},{path:'ViewData>/oValCont'}], formatter: '.formatter.onEditline'}" icon="sap-icon://edit" type="Transparent" press="onLineItem($event, 'WorkRelated', 'Edit')"/>
 								</HBox>
 							</cells>
 						</ColumnListItem>

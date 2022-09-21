@@ -4,10 +4,10 @@
 		<headerToolbar>
 			<OverflowToolbar>
 				<content>
-					<Title text="{i18n>TIT_APPROVAL_DATA} ({= ${oApprovalData>/}.length})" class="sapUiSmallMargin"/>
+					<Title text="{i18n>TIT_APPROVAL_DATA} ({ViewData>/apprLength})" class="sapUiSmallMargin"/>
 					<ToolbarSpacer/>
-					<SearchField width="25%" placeholder="Search Description" liveChange="onSearchAdmin($event, 'oTableApprover')"/>
-					<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownloadE('oApprovalData')"/>
+					<SearchField id="search_approval" width="25%" placeholder="Search" liveChange="onSearchAppr($event, 'oTableApprover', 'apprLength')"/>
+					<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oApprovalData', 'oTableApprover')"/>
 					<Button text="{i18n>BTN_NEW_APPROVAL}" icon="sap-icon://add" iconFirst="true" type="Emphasized" press="onAddApproval"/>
 					<Button text="{i18n>BTN_DELETE}" icon="sap-icon://delete" iconFirst="true" type="Reject" press="onDeleteApprover"/>
 				</content>
@@ -15,7 +15,7 @@
 		</headerToolbar>
 		<columns>
 			<Column width="{=${device>/isPhone}=== true ? 'auto' : '23%'}">
-				<Text text="{i18n>LBL_CLAIM}"/>
+				<Text text="{i18n>LBL_BEN_DESC}"/>
 			</Column>
 			<Column minScreenWidth="Desktop" demandPopin="true">
 				<Text text="PA/PSA"/>
@@ -31,6 +31,9 @@
 			</Column>
 			<Column minScreenWidth="Desktop" demandPopin="true" visible="{=${ViewData>/oTile}==='Approval'}">
 				<Text text="{i18n>LBL_APPROVER3}"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true" visible="{=${ViewData>/oTile}==='Approval'}">
+				<Text text="Approver 4"/>
 			</Column>
 			<Column minScreenWidth="Desktop" demandPopin="true" visible="{=${ViewData>/oTile}==='HRMC'}">
 				<Text text="Division"/>
@@ -54,12 +57,13 @@
 					<Text text="{oApprovalData>First_Level_Approver}" visible="{=${ViewData>/oTile}==='Approval'}"/>
 					<Text text="{oApprovalData>Second_Level_Approver}" visible="{=${ViewData>/oTile}==='Approval'}"/>
 					<Text text="{oApprovalData>Third_Level_Approver}" visible="{=${ViewData>/oTile}==='Approval'}"/>
+					<Text text="{oApprovalData>Fourth_Level_Approver}" visible="{=${ViewData>/oTile}==='Approval'}"/>
 					<Text text="{oApprovalData>Employee_Division}" visible="{=${ViewData>/oTile}==='HRMC'}"/>
 					<Text text="{oApprovalData>HR_maker/0/UserID}" visible="{=${ViewData>/oTile}==='HRMC'}"/>
 					<Text text="{oApprovalData>HR_checker/UserID}" visible="{=${ViewData>/oTile}==='HRMC'}"/>
 					<HBox justifyContent="End">
-						<Button icon="sap-icon://copy"   type="Transparent" press="onCopyApprover"/>
-						<Button icon="sap-icon://edit"   type="Transparent" press="onEditApprover"/>
+						<Button icon="sap-icon://copy" type="Transparent" press="onCopyApprover"/>
+						<Button icon="sap-icon://edit" type="Transparent" press="onEditApprover"/>
 					</HBox>
 				</cells>
 			</ColumnListItem>

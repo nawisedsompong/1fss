@@ -50,9 +50,9 @@
 						</VBox>
 						<VBox class="sapUiMediumMarginEnd" visible="{=${ViewData>/oTile}==='Approval'}">
 							<Label text="{i18n>LBL_PAY_GRADE}" required="true"/>
-							<Input id="inpPayGrade" visible="{ViewData>/DMode}" required="true" fieldGroupIds="fgInput" value="{oApprovalData>/Pay_Grade}"
-								valueHelpRequest="onPGOpen($event,'oApprovalData')" showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true"
-								startSuggestion="1" showTableSuggestionValueHelp="false"/>
+							<Input id="inpPayGrade" visible="{ViewData>/DMode}" required="{=${ViewData>/oTile}==='Approval'}" fieldGroupIds="fgInput"
+								value="{oApprovalData>/Pay_Grade}" valueHelpRequest="onPGOpen($event,'oApprovalData')" showValueHelp="true" showSuggestion="true"
+								valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
 							<Text visible="{= !${ViewData>/DMode}}" text="{oApprovalData>/Pay_Grade}"/>
 						</VBox>
 					</l:content>
@@ -100,17 +100,17 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="Approver 1" required="true"></Label>
-							<Input id="inpEmpIDApp1" width="100%" visible="{ViewData>/DMode}" required="true" fieldGroupIds="fgInput"
-								value="{oApprovalData>/First_Level_Approver}" valueHelpRequest="onEmpSearchOpen('oApprovalData', 'A')" showValueHelp="true"
+							<Input id="inpEmpIDApp1" width="100%" visible="{ViewData>/DMode}" required="{=${ViewData>/oTile}==='Approval'}" fieldGroupIds="fgInput"
+								value="{oApprovalData>/First_Level_Approver}" valueHelpRequest="onEmpSearchOpen('oApprovalData', 'Active', 'A')" showValueHelp="true"
 								showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
 							<Text visible="{= !${ViewData>/DMode}}" text="{oApprovalData>/First_Level_Approver}"/>
 						</VBox>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="Approver 2"/>
 							<Text visible="{= !${ViewData>/DMode}}" text="{oApprovalData>/Second_Level_Approver}"/>
-							<Input id="inpEmpIDApp2" width="100%" visible="{ViewData>/DMode}" required="true" value="{oApprovalData>/Second_Level_Approver}"
-								valueHelpRequest="onEmpSearchOpen('oApprovalData', 'B')" showValueHelp="true" showSuggestion="true" valueHelpOnly="true"
-								filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
+							<Input id="inpEmpIDApp2" width="100%" visible="{ViewData>/DMode}" required="{=${ViewData>/oTile}==='Approval'}"
+								value="{oApprovalData>/Second_Level_Approver}" valueHelpRequest="onEmpSearchOpen('oApprovalData', 'Active','B')" showValueHelp="true"
+								showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
 						</VBox>
 					</l:content>
 				</l:Grid>
@@ -118,10 +118,17 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="Approver 3"></Label>
-							<Input id="inpEmpIDApp3" width="100%" visible="{ViewData>/DMode}" required="true" value="{oApprovalData>/Third_Level_Approver}"
-								valueHelpRequest="onEmpSearchOpen('oApprovalData', 'C')" showValueHelp="true" showSuggestion="true" valueHelpOnly="true"
-								filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
+							<Input id="inpEmpIDApp3" width="100%" visible="{ViewData>/DMode}" required="{=${ViewData>/oTile}==='Approval'}"
+								value="{oApprovalData>/Third_Level_Approver}" valueHelpRequest="onEmpSearchOpen('oApprovalData', 'Active','C')" showValueHelp="true"
+								showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
 							<Text visible="{= !${ViewData>/DMode}}" text="{oApprovalData>/Third_Level_Approver}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="Approver 4"></Label>
+							<Input id="inpEmpIDApp4" width="100%" visible="{ViewData>/DMode}" required="{=${ViewData>/oTile}==='Approval'}"
+								value="{oApprovalData>/Fourth_Level_Approver}" valueHelpRequest="onEmpSearchOpen('oApprovalData', 'Active','D4')" showValueHelp="true"
+								showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
+							<Text visible="{= !${ViewData>/DMode}}" text="{oApprovalData>/Fourth_Level_Approver}"/>
 						</VBox>
 					</l:content>
 				</l:Grid>
@@ -129,15 +136,15 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="HR Maker" required="true"></Label>
-							<Input id="inpHRmaker" width="100%" visible="{ViewData>/DMode}" required="true" fieldGroupIds="fgInput"
-								value="{oApprovalData>/HR_maker/0/UserID}" valueHelpRequest="onEmpSearchOpen('oApprovalData', 'HRM')" showValueHelp="true"
+							<Input id="inpHRmaker" width="100%" visible="{ViewData>/DMode}" required="{=${ViewData>/oTile}==='HRMC'}" fieldGroupIds="fgInput"
+								value="{oApprovalData>/HR_maker/0/UserID}" valueHelpRequest="onEmpSearchOpen('oApprovalData', 'Active','HRM')" showValueHelp="true"
 								showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
 							<Text visible="{= !${ViewData>/DMode}}" text="{oApprovalData>/HR_maker/0/UserID}"/>
 						</VBox>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="HR Checker" required="true"/>
-							<Input id="inpHRchecker" width="100%" visible="{ViewData>/DMode}" required="true" fieldGroupIds="fgInput"
-								value="{oApprovalData>/HR_checker/UserID}" valueHelpRequest="onEmpSearchOpen('oApprovalData', 'HRC')" showValueHelp="true"
+							<Input id="inpHRchecker" width="100%" visible="{ViewData>/DMode}" required="{=${ViewData>/oTile}==='HRMC'}" fieldGroupIds="fgInput"
+								value="{oApprovalData>/HR_checker/UserID}" valueHelpRequest="onEmpSearchOpen('oApprovalData','Active', 'HRC')" showValueHelp="true"
 								showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
 							<Text visible="{= !${ViewData>/DMode}}" text="{oApprovalData>/HR_checker/UserID}"/>
 						</VBox>

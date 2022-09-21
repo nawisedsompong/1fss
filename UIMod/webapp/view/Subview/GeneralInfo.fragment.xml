@@ -1,13 +1,13 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core">
-	<Table id="oTableBenefit" inset="false" mode="MultiSelect" items="{ClaimDetails>/}" updateFinished="onUpdateEMis"
-		noDataText="{i18n>MSG_BEN_PLAN}" sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true">
+	<Table id="oTableBenefit" mode="MultiSelect" items="{path:'ClaimDetails>/' , sorter: { path: 'Claim_Category', descending: false}}"
+		inset="false" noDataText="{i18n>MSG_BEN_PLAN}" sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true">
 		<headerToolbar>
 			<OverflowToolbar>
 				<content>
-					<Title text="{i18n>TIT_BEN_PLANS} ({= ${ClaimDetails>/}.length})" class="sapUiSmallMargin"/>
+					<Title text="{i18n>TIT_BEN_PLANS} ({ViewData>/infoLength})" class="sapUiSmallMargin"/>
 					<ToolbarSpacer/>
-					<SearchField width="25%" placeholder="Search" liveChange="onSearchAdmin($event, 'oTableBenefit')"/>
-					<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('ClaimDetails')"/>
+					<SearchField id="search_benefit" width="25%" placeholder="Search" liveChange="onSearchAdmin($event, 'oTableBenefit', 'infoLength')"/>
+					<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('ClaimDetails','oTableBenefit')"/>
 					<Button text="{i18n>BTN_NEW_BEN_PLAN}" icon="sap-icon://add" iconFirst="true" type="Emphasized" press="onCreateBenefit"/>
 					<Button text="{i18n>BTN_DELETE}" icon="sap-icon://delete" iconFirst="true" type="Reject" press="onDeleteBenefit"/>
 				</content>
@@ -51,8 +51,8 @@
 					<Text text="{ClaimDetails>Entitlement_Type}"/>
 					<Text text="{ClaimDetails>Period_Number} - {ClaimDetails>Period_Units}"/>
 					<HBox justifyContent="End" visible="{viewData>/oMisf}">
-						<Button icon="sap-icon://copy" tooltip="Copy Data" type="Transparent" press="onCopyBenefit"/>
-						<Button icon="sap-icon://edit" tooltip="{i18n>TLP_EDIT_CLAIMS}" type="Transparent" press="onEditBenefit"/>
+						<Button icon="sap-icon://copy" type="Transparent" press="onCopyBenefit"/>
+						<Button icon="sap-icon://edit" type="Transparent" press="onEditBenefit"/>
 					</HBox>
 				</cells>
 			</ColumnListItem>

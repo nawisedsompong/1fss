@@ -1,7 +1,7 @@
 <mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:fb="sap.ui.comp.filterbar"
 	controllerName="BenefitClaim.ZBenefitClaim.controller.Report" xmlns:html="http://www.w3.org/1999/xhtml">
 	<Page title="Year to Date Balance Report" class="sapUiSizeCompact Dashboard_bg" navButtonPress="onNavBack" showNavButton="true"
-		showFooter="{=${ViewData>/oTile}==='Ring'}">
+		showFooter="false">
 		<customHeader>
 			<Bar>
 				<contentLeft>
@@ -79,6 +79,14 @@
 								</ComboBox>
 							</fb:control>
 						</fb:FilterGroupItem>-->
+						<fb:FilterGroupItem id="fgiEmployeeRepring" groupName="Basic" name="R" label="Employee ID" partOfCurrentVariant="true"
+							visibleInFilterBar="{=${ViewData>/oTile}==='Ring'}">
+							<fb:control>
+								<Input id="inpEmpIDring" width="100%" value="{ViewData>/EmpIDring}" valueHelpRequest="onEmpSearchOpen('ViewData','Inactive', 'RG')"
+									showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1"
+									showTableSuggestionValueHelp="false"/>
+							</fb:control>
+						</fb:FilterGroupItem>
 						<fb:FilterGroupItem id="fgiEmployeeRep" groupName="Basic" name="B" label="Claim Code" partOfCurrentVariant="true" visibleInFilterBar="true">
 							<fb:control>
 								<Input width="100%" required="{=${ViewData>/oTile}==='ADReport'}" value="{ViewData>/ClaimCate}" valueHelpRequest="onClaimTypeOpen('YTD')"
@@ -119,19 +127,22 @@
 						</fb:FilterGroupItem>
 					</fb:filterGroupItems>
 				</fb:FilterBar>
-				<Table id="tb_Ringfence" items="{oRingAmntDetails>/}" inset="false" mode="MultiSelect" visible="{=${ViewData>/oTile}==='Ring'}"
-					sticky="ColumnHeaders,HeaderToolbar" growing="true" growingThreshold="500" enableBusyIndicator="true">
+				<Table id="tb_Ringfence" items="{oRingAmntDetails>/}" inset="false" visible="{=${ViewData>/oTile}==='Ring'}"
+					sticky="ColumnHeaders,HeaderToolbar" growing="true" growingThreshold="2000" enableBusyIndicator="true"
+					updateFinished="onCountTable($event, 'tb_Ringfence')">
 					<headerToolbar>
 						<OverflowToolbar>
 							<content>
-								<Title text="Medisave Data ({= ${oRingAmntDetails>/}.length})" level="H2"/>
+								<Title text="Medisave Data ({ViewData>/tb_Ringfence})" level="H2"/>
 								<ToolbarSpacer/>
+								<Button icon="sap-icon://download" enabled="{= ${oRingAmntDetails>/}.length>0}" tooltip="EXPORT DATA" type="Accept"
+									press="onDownloadMed('tb_Ringfence', 'Finance')"/>
 							</content>
 						</OverflowToolbar>
 					</headerToolbar>
 					<columns>
 						<Column>
-							<Label text="Employee ID" design="Bold" wrapping="true"/>
+							<Label text="Employee" design="Bold" wrapping="true"/>
 						</Column>
 						<Column>
 							<Label text="Claim Code" design="Bold" wrapping="true"/>
@@ -143,25 +154,30 @@
 							<Label text="Taken" design="Bold" wrapping="true"/>
 						</Column>
 						<Column minScreenWidth="Tablet" demandPopin="true">
-							<Label text="Ring Fence Amount" design="Bold" wrapping="true"/>
+							<Label text="Pending" design="Bold" wrapping="true"/>
 						</Column>
 						<Column minScreenWidth="Tablet" demandPopin="true">
 							<Label design="Bold" text="Balance" wrapping="true"/>
+						</Column>
+						<Column minScreenWidth="Tablet" demandPopin="true">
+							<Label text="Credit Amount" design="Bold" wrapping="true"/>
 						</Column>
 					</columns>
 					<items>
 						<ColumnListItem >
 							<cells>
-								<Text text="{oRingAmntDetails>employeeId}"/>
-								<Text text="{oRingAmntDetails>Claim_Code}"/>
+								<ObjectIdentifier title="{oRingAmntDetails>EMPLOYEE}" text="{oRingAmntDetails>EMPLOYEE_NAME}"/>
+								<Text text="{oRingAmntDetails>CLAIM_CODE_VALUE}"/>
 								<Text
-									text="{ path:'oRingAmntDetails>entitlement', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+									text="{ path:'oRingAmntDetails>ENTITLEMENT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
 								<Text
-									text="{ path:'oRingAmntDetails>taken', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+									text="{ path:'oRingAmntDetails>TAKEN_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
 								<Text
-									text="{path:'oRingAmntDetails>Ring_Fenced_Claim_Amount', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+									text="{ path:'oRingAmntDetails>PENDING_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
 								<Text
-									text="{ path:'oRingAmntDetails>balance', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+									text="{ path:'oRingAmntDetails>BALANCE', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } , formatter: '.formatter.oPending' }"/>
+								<Text
+									text="{path:'oRingAmntDetails>MEDISAVE_CREDIT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
 							</cells>
 						</ColumnListItem>
 					</items>
@@ -172,7 +188,7 @@
 					<headerToolbar>
 						<OverflowToolbar>
 							<content>
-								<Title text="Balance Report" level="H2"/>
+								<Title text="Balance Report ({= ${oReportDetails>/}.length})" level="H2"/>
 								<ToolbarSpacer/>
 								<Button text="EXPORT" type="Emphasized" enabled="{= ${oReportDetails>/}.length>0}" tooltip="EXPORT DATA"
 									press="onDownload('oReportDetails')"/>
@@ -180,7 +196,7 @@
 						</OverflowToolbar>
 					</headerToolbar>
 					<columns>
-						<Column>
+						<Column width="25%">
 							<Label text="Claim Code" design="Bold" wrapping="true"/>
 						</Column>
 						<Column minScreenWidth="Tablet" demandPopin="true">
@@ -211,7 +227,7 @@
 					<items>
 						<ColumnListItem >
 							<cells>
-								<ObjectIdentifier title="{oReportDetails>DESCRIPTION}"/>
+								<ObjectIdentifier title="{oReportDetails>CLAIM_CODE_VALUE}" text="{oReportDetails>DESCRIPTION}"/>
 								<Text
 									text="{ path:'oReportDetails>ENTITLEMENT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 }, formatter:'.formatter.emptyDecimal' }"/>
 								<Text
@@ -238,7 +254,7 @@
 					<headerToolbar>
 						<OverflowToolbar>
 							<content>
-								<Title text="Balance Report" level="H2"/>
+								<Title text="Balance Report ({= ${oReportAdminDetails>/}.length})" level="H2"/>
 								<ToolbarSpacer/>
 								<Button text="EXPORT" type="Emphasized" enabled="{= ${oReportAdminDetails>/}.length>0}" tooltip="EXPORT DATA"
 									press="onDownload('oReportAdminDetails')"/>
@@ -246,10 +262,10 @@
 						</OverflowToolbar>
 					</headerToolbar>
 					<columns>
-						<Column>
+						<Column width="16%">
 							<Label text="Claim Code" design="Bold" wrapping="true"/>
 						</Column>
-						<Column>
+						<Column width="16%">
 							<Label text="Employee" design="Bold" wrapping="true"/>
 						</Column>
 						<Column minScreenWidth="Tablet" demandPopin="true">
@@ -280,7 +296,7 @@
 					<items>
 						<ColumnListItem >
 							<cells >
-								<ObjectIdentifier title="{oReportAdminDetails>DESCRIPTION}"/>
+								<ObjectIdentifier title="{oReportAdminDetails>CLAIM_CODE_VALUE}" text="{oReportAdminDetails>DESCRIPTION}"/>
 								<ObjectIdentifier title="{oReportAdminDetails>EMPLOYEE}" text="{oReportAdminDetails>NAME}"/>
 								<Text text="{oReportAdminDetails>ENTITLEMENT}"/>
 								<Text
@@ -335,10 +351,10 @@
 							<Label text="First Approved On" design="Bold" wrapping="true"/>
 						</Column>
 						<Column minScreenWidth="Tablet" demandPopin="true">
-							<Label text="Second Approver On" design="Bold" wrapping="true"/>
+							<Label text="Second Approved On" design="Bold" wrapping="true"/>
 						</Column>
 						<Column minScreenWidth="Tablet" demandPopin="true">
-							<Label text="Third Approver On" design="Bold" wrapping="true"/>
+							<Label text="Third Approved On" design="Bold" wrapping="true"/>
 						</Column>
 					</columns>
 					<items>

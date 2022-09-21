@@ -38,10 +38,13 @@
 		<footer>
 			<OverflowToolbar>
 				<ToolbarSpacer/>
-				<Button text="RE-ROUTE" type="Emphasized" icon="sap-icon://action" iconFirst="true" press="onEmpSearchOpen('ViewData', 'TR')"/>
-				<!--<Button text="APPROVE" type="Accept" icon="sap-icon://accept" iconFirst="true" press="onSubmit($event,'A')"/>
-				<Button text="REJECT" type="Reject" icon="sap-icon://decline" iconFirst="true" press="onSubmit($event,'R')"/>
-				<Button text="SUBMIT" type="Accept" icon="sap-icon://complete" press="onSubmitApproval" {=${ViewData>/oTile}==='Approvals' ? true :false }
+				<Button text="RE-ROUTE" type="Emphasized" icon="sap-icon://action" iconFirst="true" press="onEmpSearchOpen('ViewData', 'Active','TR')"
+					visible="{=${ViewData>/oTile} === 'MassR'}"/>
+				<Button text="APPROVE" type="Accept" icon="sap-icon://accept" iconFirst="true" press="onSubmit($event,'A')"
+					visible="{=(${ViewData>/oTile} === 'Approvals' &amp;&amp; ${ViewData>/oTabValue}==='Pending')}"/>
+				<Button text="REJECT" type="Reject" icon="sap-icon://decline" iconFirst="true" press="onSubmit($event,'R')"
+					visible="{=(${ViewData>/oTile} === 'Approvals' &amp;&amp; ${ViewData>/oTabValue}==='Pending')}"/>
+				<!--<Button text="SUBMIT" type="Accept" icon="sap-icon://complete" press="onSubmitApproval" {=${ViewData>/oTile}==='Approvals' ? true :false }
 					visible="{=${ViewData>/oTile}==='Form' ? true : ${ViewData>/oTile}==='Admin' ? true :false}"/>-->
 			</OverflowToolbar>
 		</footer>
