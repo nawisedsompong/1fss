@@ -1,0 +1,68 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core">
+	<Table id="oTableApprover" inset="false" mode="MultiSelect" items="{oApprovalData>/}" noDataText="{i18n>MSG_APP_DATA}"
+		sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true">
+		<headerToolbar>
+			<OverflowToolbar>
+				<content>
+					<Title text="{i18n>TIT_APPROVAL_DATA} ({= ${oApprovalData>/}.length})" class="sapUiSmallMargin"/>
+					<ToolbarSpacer/>
+					<SearchField width="25%" placeholder="Search Description" liveChange="onSearchAdmin($event, 'oTableApprover')"/>
+					<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownloadE('oApprovalData')"/>
+					<Button text="{i18n>BTN_NEW_APPROVAL}" icon="sap-icon://add" iconFirst="true" type="Emphasized" press="onAddApproval"/>
+					<Button text="{i18n>BTN_DELETE}" icon="sap-icon://delete" iconFirst="true" type="Reject" press="onDeleteApprover"/>
+				</content>
+			</OverflowToolbar>
+		</headerToolbar>
+		<columns>
+			<Column width="{=${device>/isPhone}=== true ? 'auto' : '23%'}">
+				<Text text="{i18n>LBL_CLAIM}"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="PA/PSA"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true" visible="{=${ViewData>/oTile}==='Approval'}">
+				<Text text="{i18n>LBL_PAY_GRADE}"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true" visible="{=${ViewData>/oTile}==='Approval'}">
+				<Text text="{i18n>LBL_APPROVER1}"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true" visible="{=${ViewData>/oTile}==='Approval'}">
+				<Text text="{i18n>LBL_APPROVER2}"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true" visible="{=${ViewData>/oTile}==='Approval'}">
+				<Text text="{i18n>LBL_APPROVER3}"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true" visible="{=${ViewData>/oTile}==='HRMC'}">
+				<Text text="Division"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true" visible="{=${ViewData>/oTile}==='HRMC'}">
+				<Text text="HR Maker"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true" visible="{=${ViewData>/oTile}==='HRMC'}">
+				<Text text="HR Checker"/>
+			</Column>
+			<Column hAlign="End" visible="{viewData>/Mode}">
+				<Text text=""/>
+			</Column>
+		</columns>
+		<items>
+			<ColumnListItem type="Active" press="onSubDetailApprover">
+				<cells>
+					<ObjectIdentifier title="{oApprovalData>Description}"/>
+					<Text text="{oApprovalData>Personnel_Area} / {oApprovalData>Personal_Subarea}"/>
+					<Text text="{oApprovalData>Pay_Grade}"/>
+					<Text text="{oApprovalData>First_Level_Approver}" visible="{=${ViewData>/oTile}==='Approval'}"/>
+					<Text text="{oApprovalData>Second_Level_Approver}" visible="{=${ViewData>/oTile}==='Approval'}"/>
+					<Text text="{oApprovalData>Third_Level_Approver}" visible="{=${ViewData>/oTile}==='Approval'}"/>
+					<Text text="{oApprovalData>Employee_Division}" visible="{=${ViewData>/oTile}==='HRMC'}"/>
+					<Text text="{oApprovalData>HR_maker/0/UserID}" visible="{=${ViewData>/oTile}==='HRMC'}"/>
+					<Text text="{oApprovalData>HR_checker/UserID}" visible="{=${ViewData>/oTile}==='HRMC'}"/>
+					<HBox justifyContent="End">
+						<Button icon="sap-icon://copy"   type="Transparent" press="onCopyApprover"/>
+						<Button icon="sap-icon://edit"   type="Transparent" press="onEditApprover"/>
+					</HBox>
+				</cells>
+			</ColumnListItem>
+		</items>
+	</Table>
+</core:FragmentDefinition>

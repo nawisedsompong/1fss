@@ -1,0 +1,55 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core">
+	<VBox>
+		<Table id="oTableAcls" inset="false" mode="MultiSelect" sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true"
+			items="{ path: 'ABcls>/', filters: [{ path: 'CATEGORY_CODE', operator: 'EQ', value1: 'CLS' }]}" noDataText="{i18n>MSG_ABCLS_DATA}">
+			<headerToolbar>
+				<OverflowToolbar>
+					<content>
+						<Title text="{i18n>TIT_PENDING_SUB} ({= ${ABcls>/}.length})"/>
+						<ToolbarSpacer/>
+						<Button text="{i18n>BTN_NEW_EXP}" icon="sap-icon://add" iconFirst="true" type="Emphasized" press="onDialogOpen('ABcls')"/>
+						<Button text="{i18n>BTN_DELETE}" icon="sap-icon://delete" iconFirst="true" type="Reject" press="onDelete('oTableAcls','ABcls')"/>
+					</content>
+				</OverflowToolbar>
+			</headerToolbar>
+			<columns>
+				<Column >
+					<Text text="{i18n>LBL_CLAIM}"/>
+				</Column>
+				<Column >
+					<Text text="{i18n>LBL_CLAIM_NUM}"/>
+				</Column>
+				<Column minScreenWidth="Desktop" demandPopin="true">
+					<Text text="{i18n>LBL_REC_NUM}"/>
+				</Column>
+				<Column minScreenWidth="Desktop" demandPopin="true">
+					<Text text="{i18n>LBL_RECP_DATE}"/>
+				</Column>
+				<Column minScreenWidth="Desktop" demandPopin="true">
+					<Text text="{i18n>LBL_CLAIM_AMNT}"/>
+				</Column>
+				<Column minScreenWidth="Desktop" demandPopin="true">
+					<Text text="{i18n>LBL_STATUS}"/>
+				</Column>
+				<Column hAlign="End" visible="{viewData>/Mode}">
+					<Text text=""/>
+				</Column>
+			</columns>
+			<items>
+				<ColumnListItem type="Active" press="onSubDetail($event,'ABcls')">
+					<cells>
+						<ObjectIdentifier title="{ABcls>CLAIM_CATEGORY}"/>
+						<Text text="{ABcls>CLAIM_REFERENCE}"/>
+						<Text text="{ABcls>RECEIPT_NUMBER}"/>
+						<Text text="{ path: 'ABcls>RECEIPT_DATE', formatter: '.formatter.oClaimDate'}"/>
+						<Text text="{ path:'ABcls>CLAIM_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+						<ObjectStatus state="{=${ABcls>CLAIM_STATUS} === 'Pending for Submission' ? 'Warning' : 'Success'}" text="{ABcls>CLAIM_STATUS}"/>
+						<HBox justifyContent="End">
+							<Button icon="sap-icon://edit" type="Transparent" press="onEdit($event,'ABcls')"/>
+						</HBox>
+					</cells>
+				</ColumnListItem>
+			</items>
+		</Table>
+	</VBox>
+</core:FragmentDefinition>

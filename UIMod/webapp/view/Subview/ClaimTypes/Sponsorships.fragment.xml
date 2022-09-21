@@ -1,0 +1,51 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core">
+	<VBox>
+		<Table id="oTableTSpons" inset="false" mode="MultiSelect" sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true"
+			items="{Sponsorship>/}" noDataText="{i18n>MSG_SPONS_DATA}" updateFinished="onUpdateSpons">
+			<headerToolbar>
+				<OverflowToolbar>
+					<content>
+						<Title text="{i18n>TIT_PENDING_SUB} ({ViewData>/SP_Length})"/>
+						<ToolbarSpacer/>
+						<!--<Button text="{i18n>BTN_ELIG}" icon="sap-icon://notes" iconFirst="true" type="Emphasized" press="onEligibleOpen"/>-->
+						<Button text="{i18n>BTN_NEW_EXP}" icon="sap-icon://add" iconFirst="true" type="Emphasized" press="onDialogOpenWRC('Sponsorship_Master')"/>
+						<Button text="{i18n>BTN_DELETE}" icon="sap-icon://delete" iconFirst="true" type="Reject" press="onDelete('oTableTSpons','Sponsorship')"/>
+					</content>
+				</OverflowToolbar>
+			</headerToolbar>
+			<columns>
+				<Column >
+					<Text text="{i18n>LBL_CLAIM_REF}"/>
+				</Column>
+				<Column minScreenWidth="Desktop" demandPopin="true">
+					<Text text="{i18n>LBL_CLAIM_DATE}"/>
+				</Column>
+				<Column minScreenWidth="Desktop" demandPopin="true">
+					<Text text="{i18n>LBL_CLAIM_AMNT}"/>
+				</Column>
+				<Column minScreenWidth="Desktop" demandPopin="true">
+					<Text text="{i18n>LBL_STATUS}"/>
+				</Column>
+				<Column hAlign="End" visible="{viewData>/Mode}">
+					<Text text=""/>
+				</Column>
+			</columns>
+			<items>
+				<ColumnListItem type="Active" press="onSubDetailWRC($event,'Sponsorship', 'Sponsorship_Master')">
+					<cells>
+						<Text text="{Sponsorship>CLAIM_REFERENCE}"/>
+						<Text
+							text="{ path: 'Sponsorship>CLAIM_DATE', formatter: '.formatter.oClaimDate'}"/>
+						<Text
+							text="{ path:'Sponsorship>CLAIM_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+						<ObjectStatus state="{=${Sponsorship>CLAIM_STATUS} === 'Pending for Submission' ? 'Warning' : 'Success'}" text="{Sponsorship>CLAIM_STATUS}"/>
+						<HBox justifyContent="End">
+							<Button icon="sap-icon://edit"  type="Transparent"
+								press="onEditWRC($event,'Sponsorship','Sponsorship_Master')"/>
+						</HBox>
+					</cells>
+				</ColumnListItem>
+			</items>
+		</Table>
+	</VBox>
+</core:FragmentDefinition>

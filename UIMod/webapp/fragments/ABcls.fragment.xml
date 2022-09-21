@@ -1,0 +1,232 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<Dialog contentWidth="{=${device>/isPhone}=== true ? 'auto' : '45%'}" class="sapUiSizeCompact" resizable="true"
+		title="{ABcls>/CLAIM_CATEGORY}" horizontalScrolling="false" draggable="true" busy="{appView>/busy}">
+		<content>
+			<VBox class="sapUiSmallMargin">
+				<Title class="sapUiSmallMargin" text="{i18n>TIT_ELIG_SEC}" titleStyle="H3"/>
+				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<FlexBox alignItems="Start" justifyContent="SpaceBetween">
+								<Label text="{i18n>LBL_TAKEN}"/>
+								<Text
+									text="{ path:'oEligCalData>/TAKEN_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+							</FlexBox>
+							<FlexBox alignItems="Start" justifyContent="SpaceBetween">
+								<Label text="{i18n>LBL_PENDING}"/>
+								<Text
+									text="{ path:'oEligCalData>/PENDING_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+							</FlexBox>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<Title class="sapUiSmallMargin" text="{i18n>TIT_CLAIM_SEC}" titleStyle="H3"/>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_CLAIM_NUM}"/>
+							<Text text="{ABcls>/CLAIM_REFERENCE}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_CLAIM_NAME}"/>
+							<Text text="{ABcls>/CLAIM_CATEGORY}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<!--<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_EXPENSE}" required="true"></Label>
+							<ComboBox width="100%" value="{ABcls>/PTF_DESCRIPTION}" selectedKey="{ABcls>/PTF_TYPE}" visible="{ViewData>/DMode}">
+								<core:Item key="Book" text="Book"/>
+								<core:Item key="Course" text="Course"/>
+								<core:Item key="Examination" text="Examination"/>
+								<core:Item key="Membership Fee" text="Membership Fee"/>
+								<core:Item key="Poster" text="Poster"/>
+								<core:Item key="Subscription Fee" text="Subscription Fee"/>
+								<core:Item key="Training Material" text="Training Material"/>
+							</ComboBox>
+							<Text visible="{= !${ViewData>/DMode}}" text="{ABcls>/PTF_DESCRIPTION}"/>
+						</VBox>-->
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_CLAIM_DATE}"></Label>
+							<Text text="{ path: 'ABcls>/CLAIM_DATE', formatter: '.formatter.oClaimDate' }"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_REC_NUM}" required="true"></Label>
+							<Input id="inp_ABreceiptNumb" value="{ABcls>/RECEIPT_NUMBER}" required="true" fieldGroupIds="fgNumber" visible="{ViewData>/DMode}"
+								maxLength="50" liveChange="onReceiptNumb"/>
+							<Text visible="{= !${ViewData>/DMode}}" text="{ABcls>/RECEIPT_NUMBER}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_REC_DATE}" required="true"/>
+							<HBox visible="{ViewData>/DMode}">
+								<core:HTML content='&lt;input class="datePicker"/&gt;'></core:HTML>
+							</HBox>
+							<Text visible="{= !${ViewData>/DMode}}" text="{ path: 'ABcls>/RECEIPT_DATE', formatter: '.formatter.oClaimDate' }"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_REC_AMNT}" required="true"/>
+							<Input id="inp_ABrecpamnt" required="true" fieldGroupIds="fgInput" liveChange="onValidateDecimalValue"
+								value="{ path:'ABcls>/RECEIPT_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"
+								visible="{ViewData>/DMode}"/>
+							<Text visible="{= !${ViewData>/DMode}}"
+								text="{ path:'ABcls>/RECEIPT_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_CLAIM_AMNT}"></Label>
+							<HBox alignContent="SpaceAround">
+								<Input id="inp_ABclaimamnt" editable="false" required="true" fieldGroupIds="fgInput"
+									value="{ path:'ABcls>/CLAIM_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"
+									visible="{ViewData>/DMode}" liveChange="onValidateNumericValue">
+									<layoutData>
+										<l:GridData span="XL1 L2 M2 S4"/>
+									</layoutData>
+								</Input>
+								<Button visible="{ViewData>/DMode}" text="COMPUTE" type="Emphasized" press="onCopayCal($event,'ABcls')"></Button>
+							</HBox>
+							<Text visible="{= !${ViewData>/DMode}}"
+								text="{ path:'ABcls>/CLAIM_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<!--	<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label
+								text="{=${ABcls>/PTF_TYPE} === 'Course' ? ${i18n>LBL_EVENT_SDATE} : ${ABcls>/PTF_TYPE} === 'Examination' ? ${i18n>LBL_EVENT_SDATE} : ${i18n>LBL_COURSE_SDATE} }"/>
+							<DatePicker width="100%"
+								value="{ path: 'ABcls>/START_DATE', formatter: '.formatter.oClaimDate' }"
+								visible="{ViewData>/DMode}" displayFormat="dd.MM.yyyy" valueFormat="yyyy-MM-dd"/>
+							<Text visible="{= !${ViewData>/DMode}}"
+								text="{ path: 'ABcls>/START_DATE', formatter: '.formatter.oClaimDate' }"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label
+								text="{=${ABcls>/PTF_TYPE} === 'Course' ? ${i18n>LBL_EVENT_EDATE} : ${ABcls>/PTF_TYPE} === 'Examination' ? ${i18n>LBL_EVENT_EDATE} : ${i18n>LBL_COURSE_EDATE} }"/>
+							<DatePicker width="100%"
+								value="{ path: 'ABcls>/END_DATE', formatter: '.formatter.oClaimDate' }"
+								visible="{ViewData>/DMode}" displayFormat="dd.MM.yyyy" valueFormat="yyyy-MM-dd"/>
+							<Text visible="{= !${ViewData>/DMode}}"
+								text="{ path: 'ABcls>/END_DATE', formatter: '.formatter.oClaimDate' }"/>
+						</VBox>
+					</l:content>
+				</l:Grid>-->
+				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_REMARK}"/>
+							<TextArea id="ta_remarkabcls" fieldGroupIds="fgInput" maxLength="500" width="100%" rows="3" value="{ABcls>/REMARKS_EMPLOYEE}"
+								visible="{ViewData>/DMode}" liveChange="onChangeData"/>
+							<Text visible="{= !${ViewData>/DMode}}" text="{ABcls>/REMARKS_EMPLOYEE}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<Title class="sapUiSmallMargin" text="Approver Section" titleStyle="H3"
+					visible="{=${ABcls>/CLAIM_STATUS}==='Pending for Submission' ? true : ${ABcls>/CLAIM_STATUS}===undefined ? true : false}"/>
+				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent=" L0 M0 S0"
+					visible="{=${ABcls>/CLAIM_STATUS}==='Pending for Submission' ? true : ${ABcls>/CLAIM_STATUS}===undefined ? true : false}">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="Select Approver" required="true"/>
+							<ComboBox id="cbACLS_Approver" width="100%" selectedKey="{ABcls>/FIRST_LEVEL_APPROVER}" editable="{ViewData>/DMode}"
+								enabled="{=${ABcls>/RECEIPT_DATE}===undefined ? false : true }" required="{=${ViewData>/oTile}==='Approvals' ? true : ${ViewData>/DMode}}"
+								fieldGroupIds="fgInput" items="{oApprovers>/}" change="onChangeApprover">
+								<core:Item key="{oApprovers>EMPLOYEE_ID}" text="{oApprovers>EMPLOYEE_ID} - {oApprovers>FULLNAME}"/>
+							</ComboBox>
+							<!--<Text visible="{= !${ViewData>/DMode}}" text="{ABcls>/FIRST_LEVEL_APPROVER}"/>-->
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<!--<l:Grid defaultSpan="XL9 L9 M9 S12" hSpacing="1" defaultIndent="L0 M0 S0"
+					visible="{=${ABcls>/CLAIM_STATUS}==='Pending for Submission' ? true : ${ABcls>/CLAIM_STATUS}===undefined ? true : false}">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd" visible="{=${ViewData>/oTile}==='Admin' ? true : false}">
+							<Label text="HR Checker"/>
+							<Text text="{ViewData>/oHRCheckerID} - {ViewData>/HRcheckfname}, {ViewData>/HRchecklname}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>-->
+				<!--<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0"
+					visible="{=${ABcls>/CLAIM_STATUS}==='Pending for Submission' ? false : ${ABcls>/CLAIM_STATUS}===undefined ? false : true}">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<List headerText="Approver's Comment">
+								<FeedListItem text="{ABcls>/REMARKS_APPROVER1}"
+									timestamp=" Approved On: { path: 'ABcls>/FIRST_LEVEL_APPROVED_ON', formatter: '.formatter.oClaimDate' }"
+									visible="{=${ABcls>/REMARKS_APPROVER1} ==='' ? false : ${ABcls>/REMARKS_APPROVER1} ===null ? false : true}"></FeedListItem>
+								<FeedListItem text="{ABcls>/REMARKS_APPROVER2}"
+									timestamp=" Approved On: { path: 'ABcls>/SECOND_LEVEL_APPROVED_ON', formatter: '.formatter.oClaimDate' }"
+									visible="{=${ABcls>/REMARKS_APPROVER2} ==='' ? false : ${ABcls>/REMARKS_APPROVER2} ===null ? false : true}"></FeedListItem>
+								<FeedListItem text="{ABcls>/REMARKS_APPROVER3}"
+									timestamp=" Approved On: { path: 'ABcls>/THIRD_LEVEL_APPROVED_ON', formatter: '.formatter.oClaimDate' }"
+									visible="{=${ABcls>/REMARKS_APPROVER3} ==='' ? false : ${ABcls>/REMARKS_APPROVER3} ===null ? false : true}"></FeedListItem>
+								<FeedListItem text="{ABcls>/REMARKS_REJECTION}"
+									visible="{=${ABcls>/REMARKS_REJECTION} ==='' ? false : ${ABcls>/REMARKS_REJECTION} ===null ? false : true}"></FeedListItem>
+							</List>
+						</VBox>
+					</l:content>
+				</l:Grid>-->
+				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<UploadCollection id="CLSUploadCollection" maximumFilenameLength="50" filenameLengthExceed="onFileNameExceed" maximumFileSize="10"
+								multiple="false" uploadButtonInvisible="{= !${ViewData>/DMode}}" fileType="jpg,jpeg,png,pdf"
+								change="onChange($event, ${ABcls>/CLAIM_REFERENCE})" fileSizeExceed="onFileSizeExceed" selectionChange="onSelectionChange"
+								typeMissmatch="onTypeMissmatch" uploadComplete="onUploadComplete(${ABcls>/CLAIM_REFERENCE})" fileDeleted="onFileDeleted"
+								beforeUploadStarts="onBeforeUploadStarts" items="{ path: 'oAttachItems>/', templateShareable: false }">
+								<toolbar>
+									<OverflowToolbar>
+										<Title id="attachmentTitleCLS" text="Attachments ({ViewData>/ALength})"/>
+										<Link text="{i18n>LBL_INFO_TXT}" wrapping="false" press="handleUploadPopover"></Link>
+										<ToolbarSpacer/>
+										<UploadCollectionToolbarPlaceholder/>
+									</OverflowToolbar>
+								</toolbar>
+								<items>
+									<UploadCollectionItem documentId="{oAttachItems>ID}" fileName="{oAttachItems>fileName}" visibleEdit="false"
+										visibleDelete="{oAttachItems>delete}" press="onDownloadFile">
+										<attributes>
+											<ObjectAttribute title="{i18n>TIT_UPLOADEDON}" text="{ path: 'oAttachItems>date', formatter: '.formatter.oClaimDate'}" active="false"/>
+											<ObjectAttribute title="{i18n>TIT_UPLOADEDBY}" text="{oAttachItems>name}" active="false"/>
+										</attributes>
+									</UploadCollectionItem>
+								</items>
+							</UploadCollection>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<VBox visible="{= ${oCancelClaims>/}.length > 0 ? true : false}">
+					<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.fragments.CancelClaim" type="XML"/>
+				</VBox>
+				<VBox visible="{=${ABcls>/CLAIM_STATUS}==='Pending for Submission' ? false : ${ABcls>/CLAIM_STATUS}===undefined ? false : true}">
+					<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.fragments.ApproverRemarks" type="XML"/>
+				</VBox>
+			</VBox>
+		</content>
+		<buttons>
+			<!--<Button text="SAVE AS DRAFT" type="Emphasized" icon="sap-icon://save" press="onAddData($event, 'ABcls')"
+				visible="false"/>
+			<Button text="{i18n>BTN_TXT_CANCELLATION}" press="onCancellation($event,'CLS', 'ABcls')" type="Emphasized" visible="{ViewData>/oCan}"/>-->
+			<Button text="{i18n>BTN_TXT_CANCELLATION}" press="onSelectItemCancel($event, 'ABcls')" type="Emphasized" visible="{ViewData>/oCan}"/>
+			<Button text="SUBMIT" press="onAddData($event, 'ABcls', 'H')" type="Emphasized"
+				visible="{parts:[{path:'ViewData>/App'},{path:'ViewData>/DMode'},{path:'ViewData>/oTile'},{path:'ViewData>/oAdminHis'}],formatter:'.formatter.oSubmitVisible'}"/>
+			<Button text="{ViewData>/BtnTxt}" press="onAddData($event, 'ABcls')" type="Emphasized"
+				visible="{parts:[{path:'ViewData>/App'},{path:'ViewData>/DMode'},{path:'ViewData>/oTile'},{path:'ViewData>/oAdminHis'}],formatter:'.formatter.oSubmitVisible'}"/>
+			<Button text="APPROVE" type="Accept" icon="sap-icon://accept" iconFirst="true" press="onSubmitD($event, 'CLS','ABcls','A')"
+				visible="{=${ViewData>/oHis} === true ? false : ${ViewData>/App}}"/>
+			<Button text="REJECT" type="Reject" icon="sap-icon://decline" iconFirst="true" press="onSubmitD($event, 'CLS','ABcls','R')"
+				visible="{=${ViewData>/oHis} === true ? false : ${ViewData>/App}}"/>
+			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseDialog('ABcls')" type="Reject"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

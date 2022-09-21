@@ -1,0 +1,16 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<Popover id="myPopover" showHeader="true" contentWidth="250px" contentHeight="230px" placement="Bottom" title="{i18n>TIT_ELIGIBILITY_DET}">
+		<VBox class="sapUiSmallMargin">
+			<ObjectAttribute class="sapUiSmallMargin" title="{i18n>LBL_ELIGIBILITY}" text="1000"/>
+			<ObjectAttribute class="sapUiSmallMargin" title="{i18n>LBL_TAKEN}" text="0.00"/>
+			<ObjectAttribute class="sapUiSmallMargin" title="{i18n>LBL_PENDING}" text="0.00"/>
+			<ObjectAttribute class="sapUiSmallMargin" title="{i18n>LBL_BALANCE}" text="300"/>
+		</VBox>
+		<footer>
+			<OverflowToolbar>
+				<ToolbarSpacer/>
+				<Button text="Close" press="onhandleClose"/>
+			</OverflowToolbar>
+		</footer>
+	</Popover>
+</core:FragmentDefinition>

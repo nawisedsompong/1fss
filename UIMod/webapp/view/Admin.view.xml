@@ -1,0 +1,44 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="BenefitClaim.ZBenefitClaim.controller.Admin"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	<Page title="Benefit Administration" class="sapUiSizeCompact Dashboard_bg" showFooter="true" navButtonPress="onNavBack" showNavButton="true">
+		<customHeader>
+			<Bar>
+				<contentLeft>
+					<Button icon="sap-icon://nav-back" press="onNavBack"/>
+				</contentLeft>
+				<contentMiddle>
+					<Title text="Benefit Administration"/>
+				</contentMiddle>
+				<contentRight>
+					<Image src="images/mohh.jpg" width="{ViewData>/width}" height="{ViewData>/height}"></Image>
+					<!--<Button icon="sap-icon://log" press="onLogout"/>-->
+				</contentRight>
+			</Bar>
+		</customHeader>
+		<content>
+			<VBox class="VboxBackground" visible="{=${ViewData>/oTile}==='Info'}">
+				<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.GeneralInfo" type="XML"/>
+			</VBox>
+			<VBox class="VboxBackground" visible="{=${ViewData>/oTile}==='Elig'}">
+				<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.Eligibility" type="XML"/>
+			</VBox>
+			<VBox class="VboxBackground" visible="{=${ViewData>/oTile}==='Copay'}">
+				<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.CoPayment" type="XML"/>
+			</VBox>
+			<VBox class="VboxBackground" visible="{=${ViewData>/oTile}==='Approval' || ${ViewData>/oTile}==='HRMC'}">
+				<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.Approval" type="XML"/>
+			</VBox>
+			<VBox class="VboxBackground" visible="{=${ViewData>/oTile}==='Coord'}">
+				<core:Fragment id="idCoord" fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.Coordinator" type="XML"/>
+			</VBox>
+			<VBox class="VboxBackground" visible="{=${ViewData>/oTile}==='Role'}">
+				<core:Fragment id="idRole" fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.Role" type="XML"/>
+			</VBox>
+		</content>
+		<!--	<footer>
+			<OverflowToolbar>
+				<Button text="Submit" press="onPostCall"/>
+			</OverflowToolbar>
+		</footer>-->
+	</Page>
+</mvc:View>

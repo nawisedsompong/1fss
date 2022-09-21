@@ -1,0 +1,6 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<SelectDialog class="sapUiSizeCompact" title="Specialisation" id="dlgSPService" search="onSearch($event,'Special_Code','Special_Desc')"
+		liveChange="onSearch($event,'Special_Code','Special_Desc')" confirm="onSPClose" items="{ComboDetails>/SPECIALISATION}" cancel="onSDialogCancel" >
+		<StandardListItem title="{ComboDetails>Special_Code}" description="{ComboDetails>Special_Desc}"/>
+	</SelectDialog>
+</core:FragmentDefinition>

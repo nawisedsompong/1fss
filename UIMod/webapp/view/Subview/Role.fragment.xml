@@ -1,0 +1,100 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core">
+	<Table id="oTableRole" inset="false" mode="MultiSelect" items="{oRoleData>/}" sticky="ColumnHeaders,HeaderToolbar"
+		enableBusyIndicator="true">
+		<headerToolbar>
+			<OverflowToolbar>
+				<content>
+					<Title text="Role Data ({= ${oRoleData>/}.length})" class="sapUiSmallMargin"/>
+					<ToolbarSpacer/>
+					<SearchField width="25%" placeholder="Search Description" liveChange="onSearchRole($event, 'oTableRole')" visible="false"/>
+					<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownloadE('oRoleData')"/>
+					<Button text="NEW DATA" icon="sap-icon://add" iconFirst="true" type="Emphasized" press="onAddRole"/>
+					<Button text="{i18n>BTN_DELETE}" icon="sap-icon://delete" iconFirst="true" type="Reject" press="onDeleteRole"/>
+				</content>
+			</OverflowToolbar>
+		</headerToolbar>
+		<columns>
+			<Column mergeDuplicates="true">
+				<Text text="Employee"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="Start Date"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="End Date"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="Tile Info"/>
+			</Column>
+			<!--<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="CoPay"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="Eligibility"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="Approval"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="On-Behalf"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="Table Maintenance"/>
+			</Column>-->
+			<!--<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="Medisave Crediting"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="YTD Report"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="Claim Record"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="Interim Report"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="Mass Reroute"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="Claim Upload"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="Delegate Action"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="Claim Coordinator"/>
+			</Column>
+			<Column hAlign="End" visible="{viewData>/Mode}">
+				<Text text="Admin Role"/>
+			</Column>-->
+		</columns>
+		<items>
+			<ColumnListItem type="Active" press="onSubDetailRole">
+				<cells>
+					<ObjectIdentifier title="{oRoleData>EMPLOYEE_ID}" text="{oRoleData>FIRSTNAME}"/>
+					<Text text="{ path: 'oRoleData>START_DATE', formatter: '.formatter.oClaimDate' }"/>
+					<Text text="{path: 'oRoleData>END_DATE', formatter: '.formatter.oClaimDate' }"/>
+					<Text text="{path: 'oRoleData>ADMIN', formatter: '.formatter.oTileInfo' }"/>
+					<!--<Text text="{oRoleData>COPAY}"/>
+					<Text text="{oRoleData>ELIGIBILITY}"/>
+					<Text text="{oRoleData>APPROVAL}"/>
+					<Text text="{oRoleData>ON_BEHALF}"/>
+					<Text text="{oRoleData>TABLE_MAINT}"/>
+					<Text text="{oRoleData>MEDISAVE}"/>
+					<Text text="{oRoleData>YTD_REPORT}"/>
+					<Text text="{oRoleData>CLAIM_REPORT}"/>
+					<Text text="{oRoleData>INTERIM_REPORT}"/>
+					<Text text="{oRoleData>RE_ROUTE}"/>
+					<Text text="{oRoleData>CLAIM_UPLOAD}"/>
+					<Text text="{oRoleData>ADMIN_DELEGATE}"/>
+					<Text text="{oRoleData>CLAIM_COORD}"/>
+					<Text text="{oRoleData>ADMIN_ROLE}"/>-->
+					<HBox justifyContent="End">
+						<Button icon="sap-icon://edit" type="Transparent" press="onEditRole"/>
+					</HBox>
+				</cells>
+			</ColumnListItem>
+		</items>
+	</Table>
+</core:FragmentDefinition>

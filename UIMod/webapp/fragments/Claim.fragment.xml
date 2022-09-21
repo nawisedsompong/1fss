@@ -1,0 +1,6 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<SelectDialog class="sapUiSizeCompact" title="{i18n>TIT_CLAIM}" id="dlgClaimCode" search="onSearch($event,'ClaimCode','ClaimDesc')" liveChange="onSearch($event,'ClaimCode','ClaimDesc')" confirm="onBenfitClose"
+		items="{Claims>/}" cancel="onSDialogCancel">
+		<StandardListItem title="{Claims>ClaimCode}" description="{Claims>ClaimDesc}"/>
+	</SelectDialog>
+</core:FragmentDefinition>

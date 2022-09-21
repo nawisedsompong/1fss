@@ -1,0 +1,136 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<Dialog class="sapUiSizeCompact" resizable="true" title="{OClaim>/CLAIM_CATEGORY}" horizontalScrolling="false" draggable="true"
+		busy="{appView>/busy}">
+		<content>
+			<VBox class="sapUiSmallMargin">
+				<Title class="sapUiSmallMargin" text="{i18n>TIT_CLAIM_SEC}" titleStyle="H3"/>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_CLAIM_NUM}" wrapping="true"/>
+							<Text text="{OClaim>/CLAIM_REFERENCE}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_CLAIM_DATE}"/>
+							<Text text="{ path: 'OClaim>/CLAIM_DATE', formatter: '.formatter.oClaimDate' }"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_ITEM_DESC}"/>
+							<TextArea maxLength="50" width="100%" rows="2" value="{OClaim>/ITEM_DESC}" visible="{ViewData>/DMode}" liveChange="onChangeDataSpl"/>
+							<Text visible="{= !${ViewData>/DMode}}" text="{OClaim>/ITEM_DESC}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_INV_DATE}" required="true"/>
+							<HBox visible="{ViewData>/DMode}">
+								<core:HTML content='&lt;input class="datePicker"/&gt;'></core:HTML>
+							</HBox>
+							<Text visible="{= !${ViewData>/DMode}}" text="{ path: 'OClaim>/INVOICE_DATE', formatter: '.formatter.oClaimDate' }"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_INV_NUMB}" required="true"/>
+							<Input id="inp_SDFCInv_numb" required="true" fieldGroupIds="fgInput" value="{OClaim>/INVOICE_NUMBER}" visible="{ViewData>/DMode}"
+								liveChange="onValidateSpecialChar"/>
+							<Text visible="{= !${ViewData>/DMode}}" text="{OClaim>/INVOICE_NUMBER}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_AMOUNT}" required="true"/>
+							<Input id="inp_SDFCamnt" required="true" fieldGroupIds="fgInput"
+								value="{OClaim>/CLAIM_AMOUNT}"
+								visible="{ViewData>/DMode}" liveChange="onValidateDecimalValue"/>
+							<Text visible="{= !${ViewData>/DMode}}"
+								text="{ path:'OClaim>/CLAIM_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_CURR}"/>
+							<!--<Input id="inp_OCAmnt" visible="{ViewData>/DMode}" width="100%" value="{OClaim>/CURRENCY}" valueHelpRequest="onCurrencyOpen('OClaim')"
+								showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1"
+								showTableSuggestionValueHelp="false"/>-->
+							<Text text="{OClaim>/CURRENCY}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_POST_CURR}"/>
+							<!--<Input id="inp_CPCcurr" fieldGroupIds="fgInput" value="{OClaim>/POST_CURRENCY}" visible="{ViewData>/DMode}"/>-->
+							<Text text="{OClaim>/POST_CURRENCY}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_POST_CLAIM_AMNT}"/>
+							<!--<Input id="inp_CPC_amnt" fieldGroupIds="fgInput" value="{OClaim>/POST_CLAIM_AMOUNT}" visible="{ViewData>/DMode}"/>-->
+							<Text text="{OClaim>/POST_CLAIM_AMOUNT}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_POST_DATE}"/>
+							<!--<DatePicker id="dp_CPCdate" fieldGroupIds="fgInput" value="{OClaim>/POST_DATE}" visible="{ViewData>/DMode}" displayFormat="dd.MM.yyyy"
+								valueFormat="yyyy-MM-dd"/>-->
+							<Text text="{ path: 'OClaim>/POST_DATE', formatter: '.formatter.oClaimDate' }"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_REMARK}"/>
+							<TextArea maxLength="500" width="100%" rows="3" value="{OClaim>/ITEM_LINE_REMARKS_EMPLOYEE}" visible="{ViewData>/DMode}"
+								liveChange="onChangeDataSpl"/>
+							<Text visible="{= !${ViewData>/DMode}}" text="{OClaim>/ITEM_LINE_REMARKS_EMPLOYEE}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<UploadCollection id="OCUploadCollection" maximumFilenameLength="50" filenameLengthExceed="onFileNameExceed" maximumFileSize="10"
+								multiple="false" uploadButtonInvisible="{parts:[{path:'ViewData>/DMode'},{path:'ViewData>/oTile'}],formatter:'.formatter.oPlusVisible'}"
+								fileType="jpg,jpeg,png,pdf" change="onChange($event, ${OClaim>/CLAIM_REFERENCE})" fileSizeExceed="onFileSizeExceed"
+								selectionChange="onSelectionChange" typeMissmatch="onTypeMissmatch" uploadComplete="onUploadComplete(${OClaim>/CLAIM_REFERENCE})"
+								fileDeleted="onFileDeleted" beforeUploadStarts="onBeforeUploadStarts" items="{ path: 'oAttachItems>/', templateShareable: false }">
+								<toolbar>
+									<OverflowToolbar>
+										<Title id="attachmentTitle" text="Attachments ({ViewData>/ALength})"/>
+										<Link text="{i18n>LBL_INFO_TXT}" wrapping="false" press="handleUploadPopover"></Link>
+										<ToolbarSpacer/>
+										<UploadCollectionToolbarPlaceholder/>
+									</OverflowToolbar>
+								</toolbar>
+								<items>
+									<UploadCollectionItem documentId="{oAttachItems>ID}" fileName="{oAttachItems>fileName}" visibleEdit="false"
+										visibleDelete="{=${oAttachItems>delete} || ${ViewData>/oTile}==='SMSApprovals'}" press="onDownloadFile">
+										<attributes>
+											<ObjectAttribute title="{i18n>TIT_UPLOADEDON}" text="{ path: 'oAttachItems>date', formatter: '.formatter.oClaimDate'}" active="false"/>
+											<ObjectAttribute title="{i18n>TIT_UPLOADEDBY}" text="{oAttachItems>name}" active="false"/>
+										</attributes>
+									</UploadCollectionItem>
+								</items>
+							</UploadCollection>
+						</VBox>
+					</l:content>
+				</l:Grid>
+			</VBox>
+		</content>
+		<buttons>
+			<!--<Button text="SAVE AS DRAFT" type="Emphasized" icon="sap-icon://save" press="onAddData($event, 'OClaim')" visible="{ViewData>/DMode}"/>-->
+			<Button text="{ViewData>/BtnTxt}" press="onAddLineData($event, 'OClaim','OClaim_Master')" type="Emphasized" visible="{ViewData>/DMode}"/>
+			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseLineDialog('OClaim_Master')" type="Reject"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

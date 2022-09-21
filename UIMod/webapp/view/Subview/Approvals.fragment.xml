@@ -1,0 +1,433 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<IconTabBar id="idIconTabBarNoIcons" expanded="{device>/isNoPhone}" class="sapUiNoResponsiveMargin" select="onTabSelect">
+		<items>
+			<IconTabFilter text="Pending" key="Pending">
+				<content>
+					<fb:FilterBar id="fbFilterA" reset="onReset" search="onSearchs('A')" showRestoreButton="false" clear="onClear('A')"
+						showFilterConfiguration="false" showClearOnFB="true" useToolbar="false">
+						<fb:filterGroupItems>
+							<fb:FilterGroupItem id="fgiOrgA" groupName="Basic" name="A" label="Claim Category" partOfCurrentVariant="true" visibleInFilterBar="true">
+								<fb:control>
+									<ComboBox width="100%" selectedKey="{ViewData>/ClaimCateg}" loadItems="_fnClaimTypes"
+										items="{path:'oClaimCatg>/' , sorter: { path: 'Category_Code', descending: false}}">
+										<core:Item key="{oClaimCatg>Category_Code}" text="{oClaimCatg>Category_Desc}"/>
+									</ComboBox>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem id="fgiEmployeeA" groupName="Basic" name="B" label="Claim Type" partOfCurrentVariant="true" visibleInFilterBar="true">
+								<fb:control>
+									<Input width="100%" value="{ViewData>/ClaimCate}" valueHelpRequest="onClaimTypeOpen" showValueHelp="true" showSuggestion="true"
+										valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"
+										enabled="{=(${ViewData>/ClaimCateg}==='WRC'||${ViewData>/ClaimCateg}==='WRC_HR'||${ViewData>/ClaimCateg}==='COV'||${ViewData>/ClaimCateg}==='TC'||${ViewData>/ClaimCateg}==='SP'||${ViewData>/ClaimCateg}==='SP1'||${ViewData>/ClaimCateg}==='SP2'||${ViewData>/ClaimCateg}==='SP3')? false : true}"/>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem id="fgiStatusA" groupName="Basic" name="C" label="Status" partOfCurrentVariant="true" visibleInFilterBar="true">
+								<fb:control>
+									<ComboBox id="cbCsidA" selectedKey="{ViewData>/Status}" change="onValidData">
+										<core:Item key="Pending for approval, Level 1" text="Pending for approval, Level 1"/>
+										<core:Item key="Pending for approval, Level 2" text="Pending for approval, Level 2"/>
+										<core:Item key="Cancellation Pending for approval, Level 1" text="Cancellation Pending for approval, Level 1"/>
+										<core:Item key="Cancellation Pending for approval, Level 2" text="Cancellation Pending for approval, Level 2"/>
+									</ComboBox>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem id="fgiStatusApp" groupName="Basic" name="D" label="Employee ID" partOfCurrentVariant="true" visibleInFilterBar="true">
+								<fb:control>
+									<Input id="inpEmpIDApp" width="100%" value="{ViewData>/EmpID_App}" valueHelpRequest="onEmpSearchOpen('ViewData', 'App')"
+										showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1"
+										showTableSuggestionValueHelp="false"/>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem id="fgiRefNoApp" groupName="Basic" name="E" label="Claim Number" partOfCurrentVariant="true" visibleInFilterBar="true">
+								<fb:control>
+									<Input id="inpClmnoApp" width="100%" value="{ViewData>/ClaimNo}"/>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem id="fgiCreatedDateApp" groupName="Basic" name="F" label="Start Date" partOfCurrentVariant="true"
+								visibleInFilterBar="true">
+								<fb:control>
+									<core:HTML content='&lt;input class="HisdatePicker1"/&gt;'></core:HTML>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem id="fgiCreatedDateApp1" groupName="Basic" name="FI" label="End Date" partOfCurrentVariant="true"
+								visibleInFilterBar="true">
+								<fb:control>
+									<core:HTML content='&lt;input class="HisdatePicker2"/&gt;'></core:HTML>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem id="fgiReceiptDateApp" groupName="Basic" name="G" label="Receipt Date" partOfCurrentVariant="true"
+								visibleInFilterBar="true">
+								<fb:control>
+									<core:HTML content='&lt;input class="ReceiptDate"/&gt;'></core:HTML>
+								</fb:control>
+							</fb:FilterGroupItem>
+						</fb:filterGroupItems>
+					</fb:FilterBar>
+					<Table id="tbApprovalDetails" items="{path:'ApprovalModel>/' , sorter: { path: 'CATEGORY_CODE', descending: false}}" inset="false"
+						updateFinished="onTotalAmount($event,'ApprovalModel')" sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true" growing="true"
+						growingThreshold="100">
+						<headerToolbar>
+							<OverflowToolbar>
+								<content>
+									<Title text="Pending Claim ({= ${ApprovalModel>/}.length})" level="H2"/>
+									<ToolbarSpacer/>
+									<Button text="SELF" visible="false" enabled="{ViewData>/oSelf}" press="onSelfPress" width="8%" type="Accept"/>
+									<!--<Button text="DELEGATE" enabled="{ViewData>/oDeleg}" press="onDelPress" width="8%" type="Emphasized"/>-->
+									<Button text="DELEGATE" press="onDelSearchOpen('ViewData', 'DL')" width="8%" type="Emphasized" visible="false"/>
+								</content>
+							</OverflowToolbar>
+						</headerToolbar>
+						<columns>
+							<Column minScreenWidth="Tablet" demandPopin="true" mergeDuplicates="true" width="{=${device>/isPhone}=== true ? 'auto' : '9%'}">
+								<Label text="Claim Category" design="Bold" wrapping="true"/>
+							</Column>
+							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '21%'}">
+								<Label text="Claim Type" design="Bold" wrapping="true"/>
+							</Column>
+							<Column width="{=${device>/isPhone}=== true ? 'auto' : '19%'}">
+								<Label wrapping="true" text="Employee" design="Bold"/>
+							</Column>
+							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '18%'}">
+								<Label text="Claim Reference No" design="Bold" wrapping="true"/>
+							</Column>
+							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '8%'}">
+								<Label design="Bold" text="Claim / Receipt Date" wrapping="true"/>
+							</Column>
+							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '13%'}">
+								<Label text="Claim Status" design="Bold" wrapping="true"/>
+							</Column>
+							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '6%'}" hAlign="End">
+								<Label design="Bold" text="Amount" wrapping="true"/>
+								<!--<footer>
+									<ObjectAttribute title="Total"
+										text="{ path:'ViewData>/TotalClaim', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"></ObjectAttribute>
+								</footer>-->
+							</Column>
+						</columns>
+						<items>
+							<ColumnListItem type="Navigation" press="onSelectItemApproval($event,'ApprovalModel', true)">
+								<cells>
+									<Text text="{path: 'ApprovalModel>CATEGORY_CODE', formatter: '.formatter.oClaimDesc'}"/>
+									<Text text="{path: 'ApprovalModel>CLAIM_CATEGORY', formatter: '.formatter.oClaimCategDesc'}"/>
+									<!--Sahas FirstName Last Name Change-->
+									<Text text="{ApprovalModel>CLAIM_OWNER_ID} / {ApprovalModel>Claim_Owner_FullName}"/>
+									<!--<Text text="{ApprovalModel>CLAIM_OWNER_ID} / {ApprovalModel>CLAIM_OWNER_FIRSTNAME}, {ApprovalModel>CLAIM_OWNER_LASTNAME}"/>-->
+									<!--End Sahas FirstName Last Name Change-->
+									<Text text="{ApprovalModel>CLAIM_REFERENCE}"/>
+									<Text
+										text="{ path: 'ApprovalModel>CLAIM_DATE', formatter: '.formatter.oClaimDate'} / { path: 'ApprovalModel>RECEIPT_DATE', formatter: '.formatter.oClaimDate'}"/>
+									<ObjectStatus
+										state="{=${ApprovalModel>CLAIM_STATUS}==='Pending for Approval' ? 'Warning' : ${ApprovalModel>CLAIM_STATUS}==='Approved' ? 'Success' : 'Error' }"
+										text="{ApprovalModel>CLAIM_STATUS}"/>
+									<Text text="{ path:'ApprovalModel>AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+								</cells>
+							</ColumnListItem>
+						</items>
+					</Table>
+				</content>
+			</IconTabFilter>
+			<IconTabFilter text="Record(s)" key="History" visible="true">
+				<content>
+					<fb:FilterBar id="fbFilterAB" reset="onReset" search="onSearchs('AB')" showRestoreButton="false" clear="onClear('AB')"
+						showFilterConfiguration="false" showClearOnFB="true" useToolbar="false">
+						<fb:filterGroupItems>
+							<fb:FilterGroupItem id="fgiOrgAB" groupName="Basic" name="A" label="Claim Category" partOfCurrentVariant="true" visibleInFilterBar="true">
+								<fb:control>
+									<ComboBox width="100%" selectedKey="{ViewData>/ClaimCateg}" loadItems="_fnClaimTypes"
+										items="{path:'oClaimCatg>/' , sorter: { path: 'Category_Code', descending: false}}">
+										<core:Item key="{oClaimCatg>Category_Code}" text="{oClaimCatg>Category_Desc}"/>
+									</ComboBox>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem id="fgiEmployeeAB" groupName="Basic" name="B" label="Claim Type" partOfCurrentVariant="true" visibleInFilterBar="true">
+								<fb:control>
+									<Input width="100%" value="{ViewData>/ClaimCate}" valueHelpRequest="onClaimTypeOpen" showValueHelp="true" showSuggestion="true"
+										valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"
+										enabled="{=(${ViewData>/ClaimCateg}==='WRC'||${ViewData>/ClaimCateg}==='WRC_HR'||${ViewData>/ClaimCateg}==='COV'||${ViewData>/ClaimCateg}==='TC'||${ViewData>/ClaimCateg}==='SP'||${ViewData>/ClaimCateg}==='SP1'||${ViewData>/ClaimCateg}==='SP2'||${ViewData>/ClaimCateg}==='SP3')? false : true}"/>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem id="fgiStatusAB" groupName="Basic" name="C" label="Status" partOfCurrentVariant="true" visibleInFilterBar="true">
+								<fb:control>
+									<ComboBox id="cbCsidAB" selectedKey="{ViewData>/Status}" change="onValidData">
+										<core:Item key="Pending for approval, Level 1" text="Pending for approval, Level 1"/>
+										<core:Item key="Pending for approval, Level 2" text="Pending for approval, Level 2"/>
+										<core:Item key="Cancellation Pending for approval, Level 1" text="Cancellation Pending for approval, Level 1"/>
+										<core:Item key="Cancellation Pending for approval, Level 2" text="Cancellation Pending for approval, Level 2"/>
+									</ComboBox>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem id="fgiStatusAppB" groupName="Basic" name="D" label="Employee ID" partOfCurrentVariant="true" visibleInFilterBar="true">
+								<fb:control>
+									<Input id="inpEmpIDAppB" width="100%" value="{ViewData>/EmpID_App}" valueHelpRequest="onEmpSearchOpen('ViewData', 'App')"
+										showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1"
+										showTableSuggestionValueHelp="false"/>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem id="fgiRefNoAppB" groupName="Basic" name="E" label="Claim Number" partOfCurrentVariant="true" visibleInFilterBar="true">
+								<fb:control>
+									<Input id="inpClmnoAppB" width="100%" value="{ViewData>/ClaimNo}"/>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem id="fgiCreatedDateAppB" groupName="Basic" name="F" label="Start Date" partOfCurrentVariant="true"
+								visibleInFilterBar="true">
+								<fb:control>
+									<core:HTML content='&lt;input class="HisdatePicker3"/&gt;'></core:HTML>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem id="fgiCreatedDateApp1B" groupName="Basic" name="FI" label="End Date" partOfCurrentVariant="true"
+								visibleInFilterBar="true">
+								<fb:control>
+									<core:HTML content='&lt;input class="HisdatePicker4"/&gt;'></core:HTML>
+								</fb:control>
+							</fb:FilterGroupItem>
+						</fb:filterGroupItems>
+					</fb:FilterBar>
+					<Table id="tbApprovalDetailsHistory" items="{path:'ApprovalHistoryModel>/' , sorter: { path: 'CATEGORY_CODE', descending: false}}"
+						inset="false" updateFinished="onTotalAmount($event,'ApprovalHistoryModel')" sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true">
+						<headerToolbar>
+							<OverflowToolbar>
+								<content>
+									<Title text="Claim Record ({= ${ApprovalHistoryModel>/}.length})" level="H2"/>
+									<ToolbarSpacer/>
+									<ComboBox visible="false" selectedKey="{ViewData>/oHisClaimType}" loadItems="_fnClaimTypes"
+										width="{=${device>/isPhone}=== true ? 'auto' : '23%'}" items="{path:'oClaimCatg>/' , sorter: { path: 'Category_Code', descending: false}}"
+										change="onChangeCateg">
+										<core:Item key="{oClaimCatg>Category_Code}" text="{oClaimCatg>Category_Desc}"/>
+									</ComboBox>
+									<DateRangeSelection visible="false" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" dateValue="{ViewData>/oHisSdate}"
+										width="{=${device>/isPhone}=== true ? 'auto' : '16%'}" secondDateValue="{ViewData>/oHisEdate}"></DateRangeSelection>
+									<Button visible="false" text="SEARCH" type="Emphasized" press="onSearchHistoryClaim"/>
+									<Button icon="sap-icon://download" tooltip="EXPORT DATA" press="onDownload('ApprovalHistoryModel')"/>
+								</content>
+							</OverflowToolbar>
+						</headerToolbar>
+						<columns>
+							<Column minScreenWidth="Tablet" demandPopin="true" mergeDuplicates="true" width="{=${device>/isPhone}=== true ? 'auto' : '9%'}">
+								<Label text="Claim Category" design="Bold" wrapping="true"/>
+							</Column>
+							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '21%'}">
+								<Label text="Claim Type" design="Bold" wrapping="true"/>
+							</Column>
+							<Column width="{=${device>/isPhone}=== true ? 'auto' : '19%'}">
+								<Label wrapping="true" text="Employee" design="Bold"/>
+							</Column>
+							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '18%'}">
+								<Label text="Claim Reference No" design="Bold" wrapping="true"/>
+							</Column>
+							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '8%'}">
+								<Label design="Bold" text="Claim / Receipt Date" wrapping="true"/>
+							</Column>
+							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '13%'}">
+								<Label text="Claim Status" design="Bold" wrapping="true"/>
+							</Column>
+							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '6%'}" hAlign="End">
+								<Label design="Bold" text="Amount" wrapping="true"/>
+								<!--<footer>
+									<ObjectAttribute title="Total"
+										text="{ path:'ViewData>/TotalClaimHistory', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"></ObjectAttribute>
+								</footer>-->
+							</Column>
+						</columns>
+						<items>
+							<ColumnListItem type="Navigation" press="onSelectItemApproval($event,'ApprovalHistoryModel', false)">
+								<cells>
+									<Text text="{path: 'ApprovalHistoryModel>CATEGORY_CODE', formatter: '.formatter.oClaimDesc'}"/>
+									<Text text="{path: 'ApprovalHistoryModel>CLAIM_CATEGORY', formatter: '.formatter.oClaimCategDesc'}"/>
+									<Text text="{ApprovalHistoryModel>CLAIM_OWNER_ID} / {ApprovalHistoryModel>Claim_Owner_FullName}"/>
+									<Text text="{ApprovalHistoryModel>CLAIM_REFERENCE}"/>
+									<Text
+										text="{ path: 'ApprovalHistoryModel>CLAIM_DATE', formatter: '.formatter.oClaimDate' } / { path: 'ApprovalHistoryModel>RECEIPT_DATE', formatter: '.formatter.oClaimDate'}"/>
+									<!--<ObjectStatus
+										state="{=${ApprovalHistoryModel>CLAIM_STATUS}==='Pending for Approval' ? 'Warning' : ${ApprovalHistoryModel>CLAIM_STATUS}==='Approved' ? 'Success' : 'Error' }"
+										text="{=(${ApprovalHistoryModel>APPROVER1_STATUS}===${ViewData>/EmpID} || ${ApprovalHistoryModel>APPROVER2_STATUS}===${ViewData>/EmpID} || ${ApprovalHistoryModel>APPROVER3_STATUS}===${ViewData>/EmpID}) ? 'Approved' : ${ApprovalHistoryModel>CLAIM_STATUS}}"/>-->
+									<ObjectStatus
+										state="{=${ApprovalHistoryModel>CLAIM_STATUS}==='Pending for Approval' ? 'Warning' : ${ApprovalHistoryModel>CLAIM_STATUS}==='Approved' ? 'Success' : 'Error' }"
+										text="{ApprovalHistoryModel>CLAIM_STATUS}"/>
+									<Text
+										text="{ path:'ApprovalHistoryModel>AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+								</cells>
+							</ColumnListItem>
+						</items>
+					</Table>
+				</content>
+			</IconTabFilter>
+			<IconTabFilter text="Delegate" key="Delegate" visible="true">
+				<content>
+					<fb:FilterBar id="fbFilterAC" reset="onReset" search="onSearchs('AC')" showRestoreButton="false" clear="onClear('AC')"
+						showFilterConfiguration="false" showClearOnFB="true" useToolbar="false">
+						<fb:filterGroupItems>
+							<fb:FilterGroupItem id="fgiOrgAC" groupName="Basic" name="A" label="Claim Category" partOfCurrentVariant="true" visibleInFilterBar="true">
+								<fb:control>
+									<ComboBox width="100%" selectedKey="{ViewData>/ClaimCateg}" loadItems="_fnClaimTypes"
+										items="{path:'oClaimCatg>/' , sorter: { path: 'Category_Code', descending: false}}">
+										<core:Item key="{oClaimCatg>Category_Code}" text="{oClaimCatg>Category_Desc}"/>
+									</ComboBox>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem id="fgiEmployeeAC" groupName="Basic" name="B" label="Claim Type" partOfCurrentVariant="true" visibleInFilterBar="true">
+								<fb:control>
+									<Input width="100%" value="{ViewData>/ClaimCate}" valueHelpRequest="onClaimTypeOpen" showValueHelp="true" showSuggestion="true"
+										valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"
+										enabled="{=(${ViewData>/ClaimCateg}==='WRC'||${ViewData>/ClaimCateg}==='WRC_HR'||${ViewData>/ClaimCateg}==='COV'||${ViewData>/ClaimCateg}==='TC'||${ViewData>/ClaimCateg}==='SP'||${ViewData>/ClaimCateg}==='SP1'||${ViewData>/ClaimCateg}==='SP2'||${ViewData>/ClaimCateg}==='SP3')? false : true}"/>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem id="fgiStatusAC" groupName="Basic" name="C" label="Status" partOfCurrentVariant="true" visibleInFilterBar="true">
+								<fb:control>
+									<ComboBox id="cbCsidAC" selectedKey="{ViewData>/Status}" change="onValidData">
+										<core:Item key="Pending for approval, Level 1" text="Pending for approval, Level 1"/>
+										<core:Item key="Pending for approval, Level 2" text="Pending for approval, Level 2"/>
+										<core:Item key="Cancellation Pending for approval, Level 1" text="Cancellation Pending for approval, Level 1"/>
+										<core:Item key="Cancellation Pending for approval, Level 2" text="Cancellation Pending for approval, Level 2"/>
+									</ComboBox>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem id="fgiStatusAppC" groupName="Basic" name="D" label="Employee ID" partOfCurrentVariant="true" visibleInFilterBar="true">
+								<fb:control>
+									<Input id="inpEmpIDAppC" width="100%" value="{ViewData>/EmpID_App}" valueHelpRequest="onEmpSearchOpen('ViewData', 'App')"
+										showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1"
+										showTableSuggestionValueHelp="false"/>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem id="fgiRefNoAppC" groupName="Basic" name="E" label="Claim Number" partOfCurrentVariant="true" visibleInFilterBar="true">
+								<fb:control>
+									<Input id="inpClmnoAppC" width="100%" value="{ViewData>/ClaimNo}"/>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem id="fgiCreatedDateAppC" groupName="Basic" name="F" label="Start Date" partOfCurrentVariant="true"
+								visibleInFilterBar="true">
+								<fb:control>
+									<core:HTML content='&lt;input class="HisdatePicker5"/&gt;'></core:HTML>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem id="fgiCreatedDateApp1C" groupName="Basic" name="FI" label="End Date" partOfCurrentVariant="true"
+								visibleInFilterBar="true">
+								<fb:control>
+									<core:HTML content='&lt;input class="HisdatePicker6"/&gt;'></core:HTML>
+								</fb:control>
+							</fb:FilterGroupItem>
+						</fb:filterGroupItems>
+					</fb:FilterBar>
+					<Table id="tbApprovalDelegateDetails" items="{path:'ApprovalDelegModel>/' , sorter: { path: 'CATEGORY_CODE', descending: false}}"
+						inset="false" sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true">
+						<headerToolbar>
+							<OverflowToolbar>
+								<content>
+									<Title text="Pending Claim ({= ${ApprovalDelegModel>/}.length})" level="H2"/>
+									<ToolbarSpacer/>
+									<Input visible="false" id="inpEmpIDDel" width="18%" value="{ViewData>/Del_EmpID}" valueHelpRequest="onDelSearchOpen('ViewData', 'DL')"
+										showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1"
+										showTableSuggestionValueHelp="false"/>
+									<Button text="SEARCH" press="onSearchDelegate" width="8%" type="Emphasized" visible="false"/>
+								</content>
+							</OverflowToolbar>
+						</headerToolbar>
+						<columns>
+							<Column minScreenWidth="Tablet" demandPopin="true" mergeDuplicates="true" width="{=${device>/isPhone}=== true ? 'auto' : '9%'}">
+								<Label text="Claim Category" design="Bold" wrapping="true"/>
+							</Column>
+							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '21%'}">
+								<Label text="Claim Type" design="Bold" wrapping="true"/>
+							</Column>
+							<Column width="{=${device>/isPhone}=== true ? 'auto' : '19%'}">
+								<Label wrapping="true" text="Employee" design="Bold"/>
+							</Column>
+							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '18%'}">
+								<Label text="Claim Reference No" design="Bold" wrapping="true"/>
+							</Column>
+							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '8%'}">
+								<Label design="Bold" text="Claim / Receipt Date" wrapping="true"/>
+							</Column>
+							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '13%'}">
+								<Label text="Claim Status" design="Bold" wrapping="true"/>
+							</Column>
+							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '6%'}" hAlign="End">
+								<Label design="Bold" text="Amount" wrapping="true"/>
+								<!--<footer>
+									<ObjectAttribute title="Total"
+										text="{ path:'ViewData>/TotalClaim', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"></ObjectAttribute>
+								</footer>-->
+							</Column>
+						</columns>
+						<items>
+							<ColumnListItem type="Navigation" press="onSelectItemApproval($event,'ApprovalDelegModel', true)">
+								<cells>
+									<Text text="{path: 'ApprovalDelegModel>CATEGORY_CODE', formatter: '.formatter.oClaimDesc'}"/>
+									<Text text="{path: 'ApprovalDelegModel>CLAIM_CATEGORY', formatter: '.formatter.oClaimCategDesc'}"/>
+									<Text text="{ApprovalDelegModel>CLAIM_OWNER_ID} / {ApprovalDelegModel>Claim_Owner_FullName}"/>
+									<Text text="{ApprovalDelegModel>CLAIM_REFERENCE}"/>
+									<Text
+										text="{ path: 'ApprovalDelegModel>CLAIM_DATE', formatter: '.formatter.oClaimDate'} / { path: 'ApprovalDelegModel>RECEIPT_DATE', formatter: '.formatter.oClaimDate'}"/>
+									<ObjectStatus
+										state="{=${ApprovalDelegModel>CLAIM_STATUS}==='Pending for Approval' ? 'Warning' : ${ApprovalDelegModel>CLAIM_STATUS}==='Approved' ? 'Success' : 'Error' }"
+										text="{ApprovalDelegModel>CLAIM_STATUS}"/>
+									<Text
+										text="{ path:'ApprovalDelegModel>AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+								</cells>
+							</ColumnListItem>
+						</items>
+					</Table>
+				</content>
+			</IconTabFilter>
+			<IconTabFilter text="Re-Route" key="Route" visible="false">
+				<content>
+					<Table id="tbApprovalRouteDetails" items="{path:'RouteApprovalModel>/' , sorter: { path: 'CATEGORY_CODE', descending: false}}" inset="false"
+						updateFinished="onTotalAmount($event,'RouteApprovalModel')" sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true">
+						<headerToolbar>
+							<OverflowToolbar>
+								<content>
+									<Title text="Pending Claim ({= ${RouteApprovalModel>/}.length})" level="H2"/>
+									<ToolbarSpacer/>
+								</content>
+							</OverflowToolbar>
+						</headerToolbar>
+						<columns>
+							<Column minScreenWidth="Tablet" demandPopin="true" mergeDuplicates="true" width="{=${device>/isPhone}=== true ? 'auto' : '9%'}">
+								<Label text="Claim Category" design="Bold" wrapping="true"/>
+							</Column>
+							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '21%'}">
+								<Label text="Claim Type" design="Bold" wrapping="true"/>
+							</Column>
+							<Column width="{=${device>/isPhone}=== true ? 'auto' : '19%'}">
+								<Label wrapping="true" text="Employee" design="Bold"/>
+							</Column>
+							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '18%'}">
+								<Label text="Claim Reference No" design="Bold" wrapping="true"/>
+							</Column>
+							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '8%'}">
+								<Label design="Bold" text="Claim / Receipt Date" wrapping="true"/>
+							</Column>
+							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '13%'}">
+								<Label text="Claim Status" design="Bold" wrapping="true"/>
+							</Column>
+							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '6%'}" hAlign="End">
+								<Label design="Bold" text="Amount" wrapping="true"/>
+								<!--<footer>
+									<ObjectAttribute title="Total"
+										text="{ path:'ViewData>/TotalClaim', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"></ObjectAttribute>
+								</footer>-->
+							</Column>
+						</columns>
+						<items>
+							<ColumnListItem type="Navigation" press="onSelectItemApproval($event,'RouteApprovalModel')">
+								<cells>
+									<Text text="{path: 'RouteApprovalModel>CATEGORY_CODE', formatter: '.formatter.oClaimDesc'}"/>
+									<Text text="{path: 'RouteApprovalModel>CLAIM_CATEGORY', formatter: '.formatter.oClaimCategDesc'}"/>
+									<Text text="{RouteApprovalModel>CLAIM_OWNER_ID} / {RouteApprovalModel>Claim_Owner_FullName}"/>
+									<Text text="{RouteApprovalModel>CLAIM_REFERENCE}"/>
+									<Text
+										text="{ path: 'RouteApprovalModel>CLAIM_DATE', formatter: '.formatter.oClaimDate'} / { path: 'RouteApprovalModel>RECEIPT_DATE', formatter: '.formatter.oClaimDate'}"/>
+									<ObjectStatus
+										state="{=${RouteApprovalModel>CLAIM_STATUS}==='Pending for Approval' ? 'Warning' : ${RouteApprovalModel>CLAIM_STATUS}==='Approved' ? 'Success' : 'Error' }"
+										text="{RouteApprovalModel>CLAIM_STATUS}"/>
+									<Text
+										text="{ path:'RouteApprovalModel>AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+								</cells>
+							</ColumnListItem>
+						</items>
+					</Table>
+				</content>
+			</IconTabFilter>
+		</items>
+	</IconTabBar>
+</core:FragmentDefinition>

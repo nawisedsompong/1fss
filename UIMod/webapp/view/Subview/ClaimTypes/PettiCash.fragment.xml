@@ -1,0 +1,56 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core">
+	<VBox>
+		<Table id="oTablePettyCash" inset="false" mode="MultiSelect" sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true"
+			items="{PettyCash>/}" noDataText="{i18n>MSG_PETTY_DATA}">
+			<headerToolbar>
+				<OverflowToolbar>
+					<content>
+						<Title text="{i18n>TIT_PENDING_SUB} ({= ${PettyCash>/}.length})"/>
+						<ToolbarSpacer/>
+						<Button text="{i18n>BTN_NEW_EXP}" icon="sap-icon://add" iconFirst="true" type="Emphasized" press="onDialogOpen('PettyCash')"/>
+						<Button text="{i18n>BTN_DELETE}" icon="sap-icon://delete" iconFirst="true" type="Reject" press="onDelete('oTablePettyCash','PettyCash')"/>
+					</content>
+				</OverflowToolbar>
+			</headerToolbar>
+			<columns>
+				<Column >
+					<Text text="{i18n>LBL_CLAIM}"/>
+				</Column>
+				<Column >
+					<Text text="{i18n>LBL_CLAIM_NUM}"/>
+				</Column>
+				<Column minScreenWidth="Desktop" demandPopin="true">
+					<Text text="{i18n>LBL_REC_NUM}"/>
+				</Column>
+				<Column minScreenWidth="Desktop" demandPopin="true">
+					<Text text="{i18n>LBL_RECP_DATE}"/>
+				</Column>
+				<Column minScreenWidth="Desktop" demandPopin="true">
+					<Text text="{i18n>LBL_CLAIM_AMNT}"/>
+				</Column>
+				<Column minScreenWidth="Desktop" demandPopin="true">
+					<Text text="{i18n>LBL_STATUS}"/>
+				</Column>
+				<Column hAlign="End" visible="{viewData>/Mode}">
+					<Text text=""/>
+				</Column>
+			</columns>
+			<items>
+				<ColumnListItem type="Active" press="onSubDetail($event,'PettyCash')">
+					<cells>
+						<ObjectIdentifier title="{PettyCash>CLAIM_CATEGORY}"/>
+						<Text text="{PettyCash>CLAIM_REFERENCE}"/>
+						<Text text="{PettyCash>RECEIPT_NUMBER}"/>
+						<Text text="{ path: 'PettyCash>RECEIPT_DATE', formatter: '.formatter.oClaimDate'}"/>
+						<Text
+							text="{ path:'PettyCash>CLAIM_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+						<ObjectStatus state="{=${PettyCash>CLAIM_STATUS} === 'Pending for Submission' ? 'Warning' : 'Success'}" text="{PettyCash>CLAIM_STATUS}"/>
+						<HBox justifyContent="End">
+							<Button icon="sap-icon://edit" type="Transparent" press="onEdit($event,'PettyCash')"/>
+						</HBox>
+					</cells>
+				</ColumnListItem>
+			</items>
+		</Table>
+	</VBox>
+</core:FragmentDefinition>
