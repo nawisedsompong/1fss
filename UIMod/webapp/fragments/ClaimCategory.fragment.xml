@@ -1,8 +1,0 @@
-<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
-	<SelectDialog class="sapUiSizeCompact" title="{i18n>TIT_CLAIM_CAT}" id="dlgClaimCategory"
-		search="onSearch($event, 'Claim_code','Description')" liveChange="onSearch($event, 'Claim_code','Description')" confirm="onClaimCatSel"
-		items="{path:'oClaimCat>/' , sorter: { path: 'Claim_code', descending: false}}" cancel="onSDialogCancel">
-		<!--<StandardListItem title="{oClaimCat>Claim_Code}" description="{oClaimCat>Description}"/>-->
-		<StandardListItem title="{oClaimCat>Claim_code}" description="{oClaimCat>Description}"/>
-	</SelectDialog>
-</core:FragmentDefinition>

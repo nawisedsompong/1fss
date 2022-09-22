@@ -1,7 +1,0 @@
-<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
-	<SelectDialog class="sapUiSizeCompact" title="Pay Grade" id="dlgPGService" search="onSearch($event,'PayGrade_ID','PayGrade_Desc')"
-		liveChange="onSearch($event,'PayGrade_ID','PayGrade_Desc')" confirm="onPGClose"
-		items="{path:'oPayGrade>/' , sorter: { path: 'payGrade', descending: false}}" cancel="onSDialogCancel">
-		<StandardListItem title="{oPayGrade>PayGrade_ID}" description="{oPayGrade>PayGrade_Desc}"/>
-	</SelectDialog>
-</core:FragmentDefinition>

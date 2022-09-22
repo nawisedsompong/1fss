@@ -1,9 +1,0 @@
-<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
-	<SelectDialog class="sapUiSizeCompact" title="Delegatee Search" id="dlgEmployeeData"
-		search="onSearch($event,'APPROVER_ID','APP_FIRST_NAME')" liveChange="onSearch($event,'APPROVER_ID','APP_FIRST_NAME')"
-		confirm="onEmpClose($event,'oDelegData')" cancel="onSDialogCancel" growing="true"
-		items="{path:'oDelegData>/' , sorter: { path: 'APPROVER_ID', descending: false}}">
-		<StandardListItem title="{oDelegData>APPROVER_ID}" description="{oDelegData>APP_FIRST_NAME}"
-			info="{ path: 'oDelegData>START_DATE', formatter: '.formatter.oClaimDate' } - { path: 'oDelegData>END_DATE', formatter: '.formatter.oClaimDate' }"/>
-	</SelectDialog>
-</core:FragmentDefinition>

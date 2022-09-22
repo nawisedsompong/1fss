@@ -1,7 +1,0 @@
-<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
-	<SelectDialog class="sapUiSizeCompact" title="Vendor Search" id="dlgVendor" search="onSearch($event,'VENDOR_CODE')"
-		liveChange="onSearch($event,'VENDOR_CODE')" confirm="onVendorClose" cancel="onSDialogCancel" growing="true"
-		items="{path:'oVendor>/' , sorter: { path: 'VENDOR_CODE', descending: false}}">
-		<StandardListItem title="{oVendor>VENDOR_CODE}" description="{oVendor>VENDOR_DESC}"/>
-	</SelectDialog>
-</core:FragmentDefinition>

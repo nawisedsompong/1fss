@@ -1,3 +1,0 @@
-<mvc:View controllerName="BenefitClaim.ZBenefitClaim.controller.NotFound" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc">
-	<MessagePage title="ERROR" text="{ViewData>/PageNotFoundMsgText}" description="" navButtonPress=".onNavBack"/>
-</mvc:View>

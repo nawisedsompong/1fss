@@ -1,7 +1,0 @@
-<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
-	<SelectDialog class="sapUiSizeCompact" title="Employee Search" search="onSearch($event,'EmployeeID', 'firstName')"
-		liveChange="onSearch($event,'EmployeeID', 'firstName')" confirm="onCoordEmpClose" cancel="onSDialogCancel" growing="true"
-		items="{path:'oCoordEmployeeData>/' , sorter: { path: 'EmployeeID', descending: false}}">
-		<StandardListItem title="{oCoordEmployeeData>EmployeeID}" description="{oCoordEmployeeData>firstName}"/>
-	</SelectDialog>
-</core:FragmentDefinition>

@@ -1,6 +1,0 @@
-<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
-	<SelectDialog class="sapUiSizeCompact" title="Pay Component" id="dlgPGService" search="onSearch($event, 'PayComponent_ID', 'PayComponent_Desc')" liveChange="onSearch($event,'PayComponent_ID', 'PayComponent_Desc')"
-		confirm="onPayCompClose" cancel="onSDialogCancel" items="{ComboDetails>/PAY_COMPONENT}" >
-		<StandardListItem title="{ComboDetails>PayComponent_ID}" description="{ComboDetails>PayComponent_Desc}"/>
-	</SelectDialog>
-</core:FragmentDefinition>
