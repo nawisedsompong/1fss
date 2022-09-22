@@ -8,7 +8,7 @@
 				<content>
 					<Title text="Pending Claim ({= ${AdminApprovalModel>/}.length})" level="H2"/>
 					<ToolbarSpacer/>
-					<Input id="inpEmpIDAdm" width="18%" value="{ViewData>/oReRouteEmp}" valueHelpRequest="onEmpSearchOpen('ViewData','RE','RE')"
+					<Input id="inpEmpIDAdm" width="18%" value="{ViewData>/oReRouteEmp}" valueHelpRequest="onEmpSearchOpen('ViewData','Inactive','RE','RE')"
 						showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1"
 						showTableSuggestionValueHelp="false"/>
 					<Button text="SEARCH" press="onSearchReroute" width="8%" type="Emphasized"/>
@@ -29,9 +29,12 @@
 				<Label text="Claim Reference No" design="Bold" wrapping="true"/>
 			</Column>
 			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '8%'}">
-				<Label design="Bold" text="Claim / Receipt Date" wrapping="true"/>
+				<Label design="Bold" text="Claim Date" wrapping="true"/>
 			</Column>
-			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '13%'}">
+			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '8%'}">
+				<Label design="Bold" text="Receipt Date" wrapping="true"/>
+			</Column>
+			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '12%'}">
 				<Label text="Claim Status" design="Bold" wrapping="true"/>
 			</Column>
 			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '6%'}" hAlign="End">
@@ -47,13 +50,10 @@
 				<cells>
 					<Text text="{path: 'AdminApprovalModel>CATEGORY_CODE', formatter: '.formatter.oClaimDesc'}"/>
 					<Text text="{path: 'AdminApprovalModel>CLAIM_CATEGORY', formatter: '.formatter.oClaimCategDesc'}"/>
-					<!--Sahas FirstName Last Name Change-->
-					<Text text="{AdminApprovalModel>CLAIM_OWNER_ID} / {AdminApprovalModel>Claim_Owner_FullName}"/>
-					<!--<Text text="{AdminApprovalModel>CLAIM_OWNER_ID} / {AdminApprovalModel>CLAIM_OWNER_FIRSTNAME}, {AdminApprovalModel>CLAIM_OWNER_LASTNAME}"/>-->
-					<!--End Sahas FirstName Last Name Change-->
+					<ObjectIdentifier title="{AdminApprovalModel>CLAIM_OWNER_ID}" text="{AdminApprovalModel>Claim_Owner_FullName}"/>
 					<Text text="{AdminApprovalModel>CLAIM_REFERENCE}"/>
-					<Text
-						text="{ path: 'AdminApprovalModel>CLAIM_DATE', formatter: '.formatter.oClaimDate' } / { path: 'AdminApprovalModel>RECEIPT_DATE', formatter: '.formatter.oClaimDate' }"/>
+					<Text text="{ path: 'AdminApprovalModel>CLAIM_DATE', formatter: '.formatter.oClaimDate' }"/>
+					<Text text="{ path: 'AdminApprovalModel>RECEIPT_DATE', formatter: '.formatter.oClaimDate' }"/>
 					<ObjectStatus
 						state="{=${AdminApprovalModel>CLAIM_STATUS}==='Pending for Approval' ? 'Warning' : ${AdminApprovalModel>CLAIM_STATUS}==='Approved' ? 'Success' : 'Error' }"
 						text="{AdminApprovalModel>CLAIM_STATUS}"/>

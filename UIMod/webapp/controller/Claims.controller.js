@@ -37,6 +37,7 @@ sap.ui.define([
 				oTileKey = this.oViewData.getProperty("/oTile"),
 				oURL;
 			if (oTileKey === "Delegate" || oTileKey === "ADDelegate") {
+				this.getView().byId("search_delegate").setValue();
 				if (oTileKey === "Delegate") {
 					oURL = "/BenefietCAP/claim/DELEGATOR?$filter=CREATED_BY eq '" + oEmp + "'&$top=100000";
 				} else {
@@ -49,6 +50,7 @@ sap.ui.define([
 					url: oURL,
 					dataType: "json",
 					success: function (data) {
+						this.oViewData.setProperty("/delegLength", data.value.length);
 						this.getView().setModel(new JSONModel(data.value), "oDelegate");
 					}.bind(this),
 					error: function (response) {
@@ -62,8 +64,10 @@ sap.ui.define([
 				oFilter._oSearchButton.setProperty("text", "SEARCH");
 				oFilter._oClearButtonOnFB.setProperty("text", "CLEAR");
 				this.loadDatePicker(this.oViewData, "create", "oPostingDate", "ViewData", "Posting");
+				this.loadDatePicker(this.oViewData, "create", "oPostingDateT", "ViewData", "PostingT");
 				this.loadDatePicker(this.oViewData, "create", "oFinanceDate", "ViewData", "Replicate");
-				this._fnFinanceData();
+				this.loadDatePicker(this.oViewData, "create", "oFinanceDateT", "ViewData", "ReplicateT");
+				this.onClearFin();
 			} else if (oTileKey === "Coordinat" || oTileKey === "CoordinatSch") {
 				this._fnClaimLoad();
 			} else {
@@ -149,17 +153,17 @@ sap.ui.define([
 		},
 
 		onNextForm: function (key) {
-			// var oNameTile = this.oViewData.getProperty("/oTile"),
-			// 	oAdmin = this.oViewData.getProperty("/LoginID"),
-			// 	oEmp = this.oViewData.getProperty("/EmpID");
-			// if (oAdmin === oEmp && oNameTile === "Admin") {
-			// 	this._fnShowErrorMessage("Selected Employee will not be same as Login Admin");
-			// } else {
-			this.oViewData.setProperty("/oAdminHis", key);
-			this._oRouter.navTo("ClaimFormRouteName", {
-				Claim: this.oViewData.getProperty("/ClaimType")
-			});
-			// }
+			var oNameTile = this.oViewData.getProperty("/oTile"),
+				oAdmin = this.oViewData.getProperty("/LoginID"),
+				oEmp = this.oViewData.getProperty("/EmpID");
+			if (oAdmin === oEmp && key === "F" && (oNameTile === "Admin" || oNameTile === "Coordinat" || oNameTile === "CoordinatSch")) {
+				this._fnShowErrorMessage("Selected employee will not be same as login");
+			} else {
+				this.oViewData.setProperty("/oAdminHis", key);
+				this._oRouter.navTo("ClaimFormRouteName", {
+					Claim: this.oViewData.getProperty("/ClaimType")
+				});
+			}
 		},
 
 		onSearchDeleg: function (oEvent, id) {
@@ -179,6 +183,7 @@ sap.ui.define([
 				oFilter = [];
 			}
 			oBinding.filter(oFilter);
+			this.oViewData.setProperty("/delegLength", oBinding.iLength);
 		},
 
 		onDelegateOpen: function () {
@@ -406,10 +411,69 @@ sap.ui.define([
 		onClearFin: function () {
 			this.oViewData.setProperty("/oFinanceDate", null);
 			this.oViewData.setProperty("/oPostingDate", null);
+			this.oViewData.setProperty("/oFinanceDateT", null);
+			this.oViewData.setProperty("/oPostingDateT", null);
 			this.oViewData.setProperty("/Emp_SMS_finance", "");
+			this.oViewData.setProperty("/SMS_EXP_REF", "");
+			this.oViewData.setProperty("/SMS_LINE_REF", "");
+			this.oViewData.setProperty("/SMS_Stats", "");
 			$(".Posting").val(null);
 			$(".Replicate").val(null);
+			$(".PostingT").val(null);
+			$(".ReplicateT").val(null);
 			this._fnFinanceData();
+		},
+
+		onFinanceSelect: function (oEvent) {
+			var oLine = oEvent.getSource().getBindingContext("oFinanceData").getObject(),
+				oMain = "&$filter=CLAIM_REFERENCE eq '" + oLine.Master_Claim_Reference + "'",
+				oValue = [];
+			this.oViewData.setProperty("/ClaimType", oLine.Category_Code);
+			this.oViewData.setProperty("/oFinanc", false);
+			if (oLine.Status === "Success") {
+				$.ajax({
+					url: this.fnPostEntity() + oMain,
+					method: "GET",
+					crossDomain: true,
+					success: function (data, oResponse) {
+						var oData = data.value;
+						if (oData[0].LINE_ITEM.length > 0) {
+							$.each(oData[0].LINE_ITEM, function (idx, obj) {
+								if (obj.CLAIM_REFERENCE === oLine.Internal_Claim_Reference) {
+									oValue.push(obj);
+								}
+							});
+							this._fnfragmentopen(oValue);
+						}
+					}.bind(this),
+					error: function (xhr, ajaxOptions, throwError) {
+						this.handleErrorDialog(xhr);
+					}.bind(this)
+				});
+			}
+		},
+
+		_fnfragmentopen: function (oValue) {
+			var name = this.oViewData.getProperty("/oModelName");
+			this.oViewData.setProperty("/oTabValue", "History");
+			this.oViewData.setProperty("/DMode", false);
+			this.oFinance = Fragment.load({
+				id: this.createId(name),
+				name: "BenefitClaim.ZBenefitClaim.fragments." + name,
+				controller: this
+			}).then(function (oDialog) {
+				this.oFinance = oDialog;
+				this.getView().addDependent(this.oFinance);
+				this.oFinance.setModel(new JSONModel(oValue[0]), name);
+				this.oFinance.open();
+				if (name === "CPClaim" || name === "OClaim" || name === "SDFClaim") {
+					this.onDisplayFiles(oValue[0].CLAIM_REFERENCE);
+				}
+			}.bind(this));
+		},
+		onCloseFinance: function () {
+			this.oFinance.close();
+			this.oFinance.destroyContent();
 		}
 
 	});

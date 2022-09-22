@@ -25,7 +25,7 @@ sap.ui.define([], function () {
 			case "CLS":
 				return "ACLS/BCLS";
 			case "COV":
-				return "COVID-19";
+				return "On-Boarding Reimbursement";
 			case "PC":
 				return "Petty Cash";
 			case "PTF":
@@ -58,7 +58,7 @@ sap.ui.define([], function () {
 		oClaimCategDesc: function (key, code, desc) {
 			switch (key) {
 			case "COV":
-				return "COVID-19";
+				return "On-Boarding Reimbursement";
 			case "SP":
 				return "Sponsorship Exit Exam";
 			case "SP1":
@@ -123,7 +123,7 @@ sap.ui.define([], function () {
 		},
 
 		oPlusVisible: function (mode, tile) {
-			if (mode || tile === "SMSApprovals") {
+			if (mode || tile !== "History") {
 				return false;
 			} else {
 				return true;
@@ -139,6 +139,15 @@ sap.ui.define([], function () {
 				return deleg;
 			} else {
 				return "N/A";
+			}
+		},
+
+		oReceiptDatevisible: function (key) {
+			if (key === "WRC" || key === "WRC_HR" || key === "COV" || key === "TC" || key === "SP" || key === "SP1" || key === "SP2" || key ===
+				"SP3") {
+				return false;
+			} else {
+				return true;
 			}
 		},
 
@@ -198,9 +207,33 @@ sap.ui.define([], function () {
 			return parseFloat(oTot).toFixed(2);
 		},
 
-		oClaimRef: function (key) {
-			if (key) {
-				return "Claim Cancel Reference: " + key;
+		Optsent: function (a, b) {
+			var rt = parseFloat(a, 2) + parseFloat(b, 2);
+			return rt.toFixed(2);
+		},
+
+		oPayupLine: function (code, desc) {
+			if (code) {
+				return code + " - " + desc;
+			} else {
+				return "";
+			}
+		},
+
+		oSlashLine: function (a, b) {
+			if (a) {
+				return a + " / " + b;
+			} else {
+				return "";
+			}
+		},
+
+		oClaimRef: function (key, okey) {
+			if (okey) {
+				return "Original Claim Ref: " + okey;
+				// return "";
+			} else if (key) {
+				return "Claim Cancel Ref: " + key;
 			} else {
 				return "";
 			}
@@ -214,12 +247,24 @@ sap.ui.define([], function () {
 			}
 		},
 
+		oApprovalTile: function (sch, mohh) {
+			if (mohh === "Yes" && sch === "Yes") {
+				return true;
+			} else if (sch === "Yes" && !mohh) {
+				return false;
+			} else {
+				return true;
+			}
+		},
+
 		oClaimStatus: function (key, cancel, payRoll, ccode, tilename) {
 			if (key === "Cancelled" || key === "Rejected" || key === "Cancellation Approved") {
 				return false;
-			} else if ((ccode === "SDFR" || ccode === "SDFC" || ccode === "CPR" || ccode === "CPC" || ccode === "OC" || ccode === "PAY_UP") && (
-					key.includes("Level 3") || key.includes("Level 4") || key === "Approved")) {
-				return false;
+			} else if (ccode === "SDFR" || ccode === "SDFC" || ccode === "CPR" || ccode === "CPC" || ccode === "OC" || ccode === "PAY_UP") {
+				if (key === "Cancellation Pending for approval, Level 3" || key === "Cancellation Pending for approval, Level 4" || key ===
+					"Pending for approval, Level 3" || key === "Pending for approval, Level 4" || key === "Approved") {
+					return false;
+				}
 			} else if (ccode === "PAY_UP" && (tilename === "History")) {
 				return false;
 			} else {
@@ -289,7 +334,7 @@ sap.ui.define([], function () {
 			case "ROLE":
 				return "Admin Role";
 			case "TAB_ADMIN":
-				return "Administration Section Tab";	
+				return "Administration Section Tab";
 			default:
 				return key;
 			}
@@ -393,7 +438,7 @@ sap.ui.define([], function () {
 		oSubmitVisible: function (a, b, c, d) {
 			if (a === true && b === true && (c === "History" || c === "HistoryCoord" || c === "PaymentUpload")) {
 				return true;
-			} else if (a === true && b === true && c === "Admin" && d === "H") {
+			} else if (a === true && b === true && (c === "Admin" || c === "Coordinat" || c === "CoordinatSch") && d === "H") {
 				return true;
 			} else if (a === false && b === true) {
 				return true;
@@ -418,6 +463,27 @@ sap.ui.define([], function () {
 				return true;
 			} else {
 				return false;
+			}
+		},
+
+		onEditline: function (code) {
+			var array = this.oViewData.getData().Approvers[0],
+				isValidate = true;
+
+			var aDupRec = $.grep(array, function (obj, index) {
+				return obj.Claim_Code === code && obj.Allow_Approver === "No";
+			});
+			if (aDupRec.length > 0) {
+				isValidate = false;
+			}
+			return isValidate;
+		},
+
+		oPending: function (val) {
+			if (val > 0) {
+				return val;
+			} else {
+				return 0.00;
 			}
 		},
 

@@ -26,14 +26,20 @@ sap.ui.define([
 		},
 
 		objectMatched: function () {
+			this.oViewData.setProperty("/oTbnameSCH", "");
+			this.oViewData.setProperty("/oTbname", "");
+			this.oViewData.setProperty("/searchempty", "");
 			if (this.getModel("oEmpData").getProperty("/COMPANY") !== "MOHHSCH") {
 				this._fnValueTable();
 				this._fnEmpJob();
 			}
+			if (this.oViewData.getProperty("/oTile") === "Entit") {
+				this.oViewData.setProperty("/oTbname", "EA");
+			}
 		},
 
 		_fnValueTable: function () {
-			this.getView().setBusy(true);
+			this._getBusyIndicator().show();
 			$.ajax({
 				method: "GET",
 				url: "/BenefietCAP/claim/DropDowns()",
@@ -42,10 +48,10 @@ sap.ui.define([
 					var oData = JSON.parse(data.value);
 					this.getView().setModel(new JSONModel(oData), "ComboDetails");
 					this._fnFilterDepDiv();
-					this.getView().setBusy(false);
+					this._getBusyIndicator().hide();
 				}.bind(this),
 				error: function (response) {
-					this.getView().setBusy(false);
+					this._getBusyIndicator().hide();
 					this.handleErrorDialog(response);
 				}.bind(this)
 			});
@@ -57,10 +63,10 @@ sap.ui.define([
 				success: function (data) {
 					var oModel = this._getSizeLimit(data.value);
 					this.getView().setModel(oModel, "oEntitAdjus");
-					this.getView().setBusy(false);
+					this._getBusyIndicator().hide();
 				}.bind(this),
 				error: function (response) {
-					this.getView().setBusy(false);
+					this._getBusyIndicator().hide();
 					this.handleErrorDialog(response);
 				}.bind(this)
 			});
@@ -72,10 +78,10 @@ sap.ui.define([
 				success: function (data) {
 					var oModel = this._getSizeLimit(data.value);
 					this.getView().setModel(oModel, "oWRCamnt");
-					this.getView().setBusy(false);
+					this._getBusyIndicator().hide();
 				}.bind(this),
 				error: function (response) {
-					this.getView().setBusy(false);
+					this._getBusyIndicator().hide();
 					this.handleErrorDialog(response);
 				}.bind(this)
 			});
@@ -87,10 +93,10 @@ sap.ui.define([
 				success: function (data) {
 					var oModel = this._getSizeLimit(data.value);
 					this.getView().setModel(oModel, "oTransAmnt");
-					this.getView().setBusy(false);
+					this._getBusyIndicator().hide();
 				}.bind(this),
 				error: function (response) {
-					this.getView().setBusy(false);
+					this._getBusyIndicator().hide();
 					this.handleErrorDialog(response);
 				}.bind(this)
 			});
@@ -102,16 +108,17 @@ sap.ui.define([
 				success: function (data) {
 					var oModel = this._getSizeLimit(data.value);
 					this.getView().setModel(oModel, "oPostCutoff");
-					this.getView().setBusy(false);
+					this._getBusyIndicator().hide();
 				}.bind(this),
 				error: function (response) {
-					this.getView().setBusy(false);
+					this._getBusyIndicator().hide();
 					this.handleErrorDialog(response);
 				}.bind(this)
 			});
 		},
 
 		onChangeComb: function (oEvent) {
+			this.oViewData.setProperty("/searchempty", "");
 			var key, url;
 			if (oEvent === "A") {
 				key = "RO";
@@ -125,6 +132,7 @@ sap.ui.define([
 		},
 
 		onChangeSCH: function (oEvent) {
+			this.oViewData.setProperty("/searchempty", "");
 			var url,
 				key = this.oViewData.getProperty("/oTbnameSCH");
 
@@ -233,11 +241,11 @@ sap.ui.define([
 					this._fnShowErrorMessage("Please select date");
 					return;
 				}
-				if ((oStrtdate < new Date().toISOString().substring(0, 10)) && oTableVal !== "LOC") {
+				if ((oStrtdate < new Date().toISOString().substring(0, 10)) && (oTableVal !== "LOC" && oTableVal !== "RO")) {
 					this._fnShowErrorMessage("Start date should be future date");
 					return;
 				}
-				if ((oEnddate < new Date().toISOString().substring(0, 10)) && oTableVal !== "LOC") {
+				if ((oEnddate < new Date().toISOString().substring(0, 10)) && (oTableVal !== "LOC" && oTableVal !== "RO")) {
 					this._fnShowErrorMessage("End date should be future date");
 					return;
 				}
@@ -298,6 +306,7 @@ sap.ui.define([
 			}).then(function (oDialog) {
 				this._oCreateValue = oDialog;
 				this.getView().addDependent(this._oCreateValue);
+				this.oValueTable = $.extend(true, {}, oContext.getObject());
 				this._oCreateValue.setModel(new JSONModel(oContext.getObject()), "oValueTable");
 				if (oTableVal === "CUT") {
 					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "claimFinalApprovalDateFrom", "oValueTable",
@@ -307,6 +316,10 @@ sap.ui.define([
 					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "estimatePaymentDate", "oValueTable", "datePickerp4");
 					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "postingCutoffDate", "oValueTable", "datePickerp5");
 					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "replicationRestart", "oValueTable", "datePickerp6");
+				}
+
+				if (oTableVal === "LOC" || oTableVal === "RO") {
+					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "END_DATE", "oValueTable", "datePicker2");
 				}
 				this._oCreateValue.open();
 			}.bind(this));
@@ -320,7 +333,7 @@ sap.ui.define([
 			Validator.resetValidStates(this, "dlgNewValue", this._oCreateValue);
 
 			var oPayLoad = this._oCreateValue.getModel("oValueTable").getData();
-			this._fnTableName(oPayLoad);
+			this._fnTableName(this.oValueTable);
 			$.ajax({
 				url: this.oViewData.getProperty("/oTableURL"),
 				data: JSON.stringify(oPayLoad),
@@ -342,35 +355,53 @@ sap.ui.define([
 		},
 
 		onCopyValueTable: function (oEvent) {
-			var oContext;
-			if (this.oViewData.getProperty("/oTbname") === "RO") {
+			var oContext, oTableVal = this.oViewData.getProperty("/oTbname");
+			if (oTableVal === "RO") {
 				oContext = oEvent.getSource().getBindingContext("oLocationRO");
-			} else if (this.oViewData.getProperty("/oTbname") === "EA") {
+			} else if (oTableVal === "EA") {
 				oContext = oEvent.getSource().getBindingContext("oEntitAdjus");
+			} else if (oTableVal === "CUT") {
+				oContext = oEvent.getSource().getBindingContext("oPostCutoff");
+			} else if (oTableVal === "TRAN") {
+				oContext = oEvent.getSource().getBindingContext("oTransAmnt");
+			} else if (oTableVal === "WRC") {
+				oContext = oEvent.getSource().getBindingContext("oWRCamnt");
 			} else {
 				oContext = oEvent.getSource().getBindingContext("ComboDetails");
 			}
 			var sPath = oContext.getPath().replace(/^\D+/g, ""),
 				sIndex = parseInt(sPath, 0);
-			this.oViewData.setProperty("/DMode", false);
+			this.oViewData.setProperty("/DMode", true);
 			this.oViewData.setProperty("/eIndex", sIndex);
 			this.oViewData.setProperty("/TMode", "Copy");
 
-			if (!this._oCreateValue) {
-				Fragment.load({
-					id: this.createId("dlgNewValue"),
-					name: "BenefitClaim.ZBenefitClaim.fragments.AddValueTable",
-					controller: this
-				}).then(function (oDialog) {
-					this._oCreateValue = oDialog;
-					this.getView().addDependent(this._oCreateValue);
-					this._oCreateValue.setModel(new JSONModel(oContext.getObject()), "oValueTable");
-					this._oCreateValue.open();
-				}.bind(this));
-			} else {
+			this._oCreateValue = Fragment.load({
+				id: this.createId("dlgNewValue"),
+				name: "BenefitClaim.ZBenefitClaim.fragments.AddValueTable",
+				controller: this
+			}).then(function (oDialog) {
+				this._oCreateValue = oDialog;
+				this.getView().addDependent(this._oCreateValue);
 				this._oCreateValue.setModel(new JSONModel(oContext.getObject()), "oValueTable");
 				this._oCreateValue.open();
-			}
+				if (oTableVal === "WRC" || oTableVal === "RO" || oTableVal === "LOC" || oTableVal === "TRAN") {
+					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "START_DATE", "oValueTable", "datePicker1");
+					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "END_DATE", "oValueTable", "datePicker2");
+				}
+				if (oTableVal === "ADMIN") {
+					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "Start_Date", "oValueTable", "datePicker1");
+					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "End_Date", "oValueTable", "datePicker2");
+				}
+				if (oTableVal === "CUT") {
+					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "claimFinalApprovalDateFrom", "oValueTable",
+						"datePickerp2");
+					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "claimFinalApprovalDateTo", "oValueTable",
+						"datePickerp3");
+					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "estimatePaymentDate", "oValueTable", "datePickerp4");
+					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "postingCutoffDate", "oValueTable", "datePickerp5");
+					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "replicationRestart", "oValueTable", "datePickerp6");
+				}
+			}.bind(this));
 
 		},
 
@@ -412,7 +443,7 @@ sap.ui.define([
 				} else if (oTableKey === "RO") {
 					oTableName = "Location_RO";
 				} else if (oTableKey === "TRAN") {
-					oTableName = "Benefit_Transport_Amount"; //
+					oTableName = "VEHICLE_RATE"; //
 				} else if (oTableKey === "LOC") {
 					oTableName = "BEN_LOCATION";
 				} else if (oTableKey === "CUT") {
@@ -663,6 +694,13 @@ sap.ui.define([
 				posturl = "/BenefietCAP/claim/Claim_Code";
 				this.oViewData.setProperty("/oTableURL", url);
 				this.oViewData.setProperty("/oTablePostURL", posturl);
+			} else if (oTable === "COM") {
+				posturl = "/BenefietCAP/claim/Company_Master";
+				this.oViewData.setProperty("/oTablePostURL", posturl);
+			} else if (oTable === "CLCCC") {
+				url = "/BenefietCAP/claim/Company_Claim_Category(Company='" + oPayLoad.Company + "',Claim_code='" + oPayLoad.Claim_code +
+					"',Category_Code='" + oPayLoad.Category_Code + "')";
+				this.oViewData.setProperty("/oTableURL", url);
 			} else if (oTable === "CLMCG") {
 				url = "/BenefietCAP/claim/Claim_Category(Company='" + oPayLoad.Company + "',Category_Code='" + oPayLoad.Category_Code + "')";
 				posturl = "/BenefietCAP/claim/Claim_Category";
@@ -729,8 +767,7 @@ sap.ui.define([
 				this.oViewData.setProperty("/oTableURL", url);
 				this.oViewData.setProperty("/oTablePostURL", posturl);
 			} else if (oTable === "LOC") {
-				url = "/BenefietCAP/claim/BEN_LOCATION(START_DATE=" + oPayLoad.START_DATE + ",END_DATE=" + oPayLoad.END_DATE +
-					",LOCATION='" + oPayLoad.LOCATION + "')";
+				url = "/BenefietCAP/claim/BEN_LOCATION(START_DATE=" + oPayLoad.START_DATE + ",LOCATION='" + oPayLoad.LOCATION + "')";
 				posturl = "/BenefietCAP/claim/BEN_LOCATION";
 				this.oViewData.setProperty("/oTableURL", url);
 				this.oViewData.setProperty("/oTablePostURL", posturl);
@@ -750,7 +787,7 @@ sap.ui.define([
 			this.oViewData.setProperty("/oTableAdminClaim", key);
 			if (key === "WRC") {
 				$.each(oData.COMPANY_CLAIM_CATEGORY, function (idx, obj) {
-					if (obj.Category_Code === "WRC" && obj.Company === oCompany) {
+					if ((obj.Category_Code === "WRC" || obj.Category_Code === "WRC_HR") && obj.Company === oCompany) {
 						oClaimType.push(obj);
 					}
 				});
@@ -791,28 +828,135 @@ sap.ui.define([
 			oItems.sort(oSorter);
 		},
 
-		onSearchTM: function (oEvent, id, key) {
-			var oFilter = "",
+		onSearchCUT: function (oEvent, id, key, key1) {
+			var oFilter = [],
 				table = this.getView().byId(id),
 				oBinding = table.getBinding("items"),
 				sValue = oEvent.getSource().getValue();
 			if (sValue !== "") {
-				oFilter = new Filter(key, FilterOperator.Contains, sValue);
+				var oFilter1 = new Filter(key, FilterOperator.EQ, sValue),
+					oFilter3 = new Filter("company", FilterOperator.EQ, sValue);
+				oFilter = new Filter([oFilter1, oFilter3], false);
 			} else {
 				oFilter = "";
 			}
 			oBinding.filter([oFilter]);
 		},
 
-		onDownload: function (model, key) {
-			var data;
-			if (key) {
+		onSearchTM: function (oEvent, id, key, key1) {
+			var oFilter = [],
+				table = this.getView().byId(id),
+				oBinding = table.getBinding("items"),
+				sValue = oEvent.getSource().getValue();
+			if (sValue !== "") {
+				var oFilter1 = new Filter(key, FilterOperator.Contains, sValue),
+					oFilter2 = new Filter(key1, FilterOperator.Contains, sValue),
+					oFilter3 = new Filter("Company", FilterOperator.Contains, sValue);
+				oFilter = new Filter([oFilter1, oFilter2, oFilter3], false);
+			} else {
+				oFilter = "";
+			}
+			oBinding.filter([oFilter]);
+		},
+
+		onSearchL: function (oEvent, id, key) {
+			var oFilter = [],
+				table = this.getView().byId(id),
+				oBinding = table.getBinding("items"),
+				sValue = oEvent.getSource().getValue();
+			if (sValue !== "") {
+				oFilter = new Filter(key, FilterOperator.Contains, sValue);
+				// oFilter = new Filter([oFilter1], false);
+			} else {
+				oFilter = "";
+			}
+			oBinding.filter([oFilter]);
+		},
+
+		onSearchRO: function (oEvent, id) {
+			var oFilter = [],
+				table = this.getView().byId(id),
+				oBinding = table.getBinding("items"),
+				sValue = oEvent.getSource().getValue();
+			if (sValue !== "") {
+				var oFilter1 = new Filter("Location_RO_EmployeeID", FilterOperator.Contains, sValue),
+					oFilter2 = new Filter("DEPARTMENT", FilterOperator.Contains, sValue),
+					oFilter3 = new Filter("DIVISION", FilterOperator.Contains, sValue),
+					oFilter4 = new Filter("DEPARTMENT_ID", FilterOperator.Contains, sValue),
+					oFilter5 = new Filter("DIVISION_ID", FilterOperator.Contains, sValue),
+					oFilter6 = new Filter("Location_RO_Name", FilterOperator.Contains, sValue);
+				oFilter = new Filter([oFilter1, oFilter2, oFilter3, oFilter4, oFilter5, oFilter6], false);
+			} else {
+				oFilter = "";
+			}
+			oBinding.filter(oFilter);
+		},
+
+		onSearchCC: function (oEvent, id) {
+			var oFilter = [],
+				table = this.getView().byId(id),
+				oBinding = table.getBinding("items"),
+				sValue = oEvent.getSource().getValue();
+			if (sValue !== "") {
+				var oFilter1 = new Filter("Company", FilterOperator.Contains, sValue),
+					oFilter2 = new Filter("Claim_code", FilterOperator.Contains, sValue),
+					oFilter3 = new Filter("Description", FilterOperator.Contains, sValue),
+					oFilter4 = new Filter("Category_Code", FilterOperator.Contains, sValue),
+					oFilter5 = new Filter("Category_Desc", FilterOperator.Contains, sValue);
+				oFilter = new Filter([oFilter1, oFilter2, oFilter3, oFilter4, oFilter5], false);
+			} else {
+				oFilter = "";
+			}
+			oBinding.filter(oFilter);
+		},
+
+		onSearchWRC: function (oEvent, id) {
+			var oFilter = [],
+				table = this.getView().byId(id),
+				oBinding = table.getBinding("items"),
+				sValue = oEvent.getSource().getValue();
+			if (sValue !== "") {
+				var oFilter1 = new Filter("CLAIM_CODE", FilterOperator.Contains, sValue),
+					oFilter2 = new Filter("DAY_TYPE", FilterOperator.Contains, sValue),
+					oFilter3 = new Filter("PAY_GRADE", FilterOperator.Contains, sValue);
+				oFilter = new Filter([oFilter1, oFilter2, oFilter3], false);
+			} else {
+				oFilter = "";
+			}
+			oBinding.filter(oFilter);
+		},
+
+		onSearchENT: function (oEvent, id) {
+			var oFilter = [],
+				table = this.getView().byId(id),
+				oBinding = table.getBinding("items"),
+				sValue = oEvent.getSource().getValue();
+			if (sValue !== "") {
+				var oFilter1 = new Filter("emp_Id", FilterOperator.Contains, sValue),
+					oFilter2 = new Filter("Emp_Name", FilterOperator.Contains, sValue),
+					oFilter3 = new Filter("Claim_code", FilterOperator.Contains, sValue),
+					oFilter4 = new Filter("Year", FilterOperator.Contains, sValue);
+				oFilter = new Filter([oFilter1, oFilter2, oFilter3, oFilter4], false);
+			} else {
+				oFilter = "";
+			}
+			oBinding.filter(oFilter);
+		},
+
+		onDownload: function (model, id) {
+			var data = [],
+				oData = this.getView().byId(id).getBinding("items").getAllCurrentContexts();
+			for (var i = 0; i < oData.length; i++) {
+				data.push(oData[i].getObject());
+			}
+			this.JSONToCSVConvertor(data, "Table", true);
+			/*if (key) {
 				data = this.getView().getModel(model).getData();
 				this.JSONToCSVConvertor(data, "Data", true);
 			} else {
-				data = this.getView().getModel("ComboDetails").getData()[model];
+				 data = this.getView().getModel("ComboDetails").getData()[model];
 				this.JSONToCSVConvertor(data, model, true);
-			}
+			}*/
 		}
 
 	});

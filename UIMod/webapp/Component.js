@@ -41,64 +41,67 @@ sap.ui.define([
 			this.setModel(oDeviceModel, "ViewData");
 			oDeviceModel.setSizeLimit(5000);
 			sap.ui.core.BusyIndicator.show();
-
-			$.ajax({
-				url: "/BenefietCAP/claim/userValidation(USERID='')",
-				type: "GET",
-				method: "GET",
-				crossDomain: true,
-				success: function (data, oResponse) {
-					var oData = JSON.parse(data.value);
-					if (oData) {
-						sap.ui.core.BusyIndicator.hide();
-						this.getRouter().initialize();
-						this.getModel("ViewData").setProperty("/EmpID", oData.USERID);
-						this.getModel("ViewData").setProperty("/LoginID", oData.USERID);
-						this.getModel("ViewData").setProperty("/ADMIN", oData.ADMIN);
-						this.getModel("ViewData").setProperty("/MANAGER", oData.MANAGER);
-						this.getModel("ViewData").setProperty("/CLAIM_COORD", oData.CLAIM_COORD);
-						this.setModel(new sap.ui.model.json.JSONModel(oData), "oEmpData");
-						this._fnRoleDef(oData);
-						if (oData.CLAIM_COORD === "X") {
-							this._fnCoordin(oData.USERID);
+			try {
+				$.ajax({
+					url: "/BenefietCAP/claim/userValidation(USERID='')",
+					type: "GET",
+					method: "GET",
+					crossDomain: true,
+					success: function (data, oResponse) {
+						var oData = JSON.parse(data.value);
+						if (oData) {
+							sap.ui.core.BusyIndicator.hide();
+							this.getRouter().initialize();
+							this.getModel("ViewData").setProperty("/EmpID", oData.USERID);
+							this.getModel("ViewData").setProperty("/LoginID", oData.USERID);
+							this.getModel("ViewData").setProperty("/ADMIN", oData.ADMIN);
+							this.getModel("ViewData").setProperty("/MANAGER", oData.MANAGER);
+							this.getModel("ViewData").setProperty("/CLAIM_COORD", oData.CLAIM_COORD);
+							this.setModel(new sap.ui.model.json.JSONModel(oData), "oEmpData");
+							this._fnRoleDef(oData);
+							if (oData.CLAIM_COORD === "X") {
+								this._fnCoordin(oData.USERID);
+							}
+						} else {
+							sap.ui.core.BusyIndicator.hide();
+							sErrorMsg = "User Data Not Found";
+							this.getModel("ViewData").setProperty("/PageNotFoundMsgText", sErrorMsg);
+							this.getRouter().getTargets().display("notFound");
 						}
-					} else {
+					}.bind(this),
+					error: function (response) {
+						try {
+							sErrorMsg = JSON.parse(response.responseText).error.message;
+						} catch (e) {
+							sErrorMsg = response.responseText;
+						}
 						sap.ui.core.BusyIndicator.hide();
-						sErrorMsg = "User Data Not Found";
 						this.getModel("ViewData").setProperty("/PageNotFoundMsgText", sErrorMsg);
 						this.getRouter().getTargets().display("notFound");
-					}
-				}.bind(this),
-				error: function (response) {
-					try {
-						sErrorMsg = JSON.parse(response.responseText).error.message;
-					} catch (e) {
-						sErrorMsg = response.responseText;
-					}
-					sap.ui.core.BusyIndicator.hide();
-					this.getModel("ViewData").setProperty("/PageNotFoundMsgText", sErrorMsg);
-					this.getRouter().getTargets().display("notFound");
-				}.bind(this)
-			});
+					}.bind(this)
+				});
 
-			$(document).idle({
-				onIdle: function () {
-					MessageBox.warning("Session got timeout, Continue?", {
-						actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
-						emphasizedAction: MessageBox.Action.OK,
-						onClose: function (sAction) {
-							if (sAction === "OK") {
-								window.location.reload();
-							} else {
-								window.location = "/do/logout";
+				$(document).idle({
+					onIdle: function () {
+						MessageBox.warning("Session got timeout, Continue?", {
+							actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+							emphasizedAction: MessageBox.Action.OK,
+							onClose: function (sAction) {
+								if (sAction === "OK") {
+									window.location.reload();
+								} else {
+									window.location = "/do/logout";
+								}
 							}
-						}
-					});
-				},
-				idle: 600000,
-				// idle: 9000,
-				keepTracking: true
-			});
+						});
+					},
+					idle: 600000,
+					// idle: 9000,
+					keepTracking: true
+				});
+			} catch (e) {
+				sap.ui.core.BusyIndicator.hide();
+			}
 
 		},
 

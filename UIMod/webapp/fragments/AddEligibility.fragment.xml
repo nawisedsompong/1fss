@@ -8,9 +8,10 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="{i18n>LBL_BEN_CODE}" required="true"/>
-							<Input id="cbClaimcodeE" visible="{=${ViewData>/DMode} &amp;&amp; ${ViewData>/TMode}==='Submit'}" fieldGroupIds="fgInput" required="true" enabled="{=${ViewData>/TMode}==='Submit'}"
-								value="{oEligibileData>/Claim_Code}" valueHelpRequest="onBenefitOpen($event,'oEligibileData')" showValueHelp="true" showSuggestion="true"
-								valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
+							<Input id="cbClaimcodeE" visible="{=${ViewData>/DMode} &amp;&amp; ${ViewData>/TMode}==='Submit'}" fieldGroupIds="fgInput" required="true"
+								enabled="{=${ViewData>/TMode}==='Submit'}" value="{oEligibileData>/Claim_Code}" valueHelpRequest="onBenefitOpen($event,'oEligibileData')"
+								showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1"
+								showTableSuggestionValueHelp="false"/>
 							<Text visible="{= !${ViewData>/DMode} || ${ViewData>/TMode}==='Edit'}" text="{oEligibileData>/Claim_Code}"/>
 						</VBox>
 						<VBox class="sapUiMediumMarginEnd">
@@ -26,7 +27,8 @@
 							<HBox visible="{=${ViewData>/DMode} &amp;&amp; ${ViewData>/TMode}==='Submit'}">
 								<core:HTML content='&lt;input class="datePicker1"/&gt;'></core:HTML>
 							</HBox>
-							<Text visible="{= !${ViewData>/DMode} || ${ViewData>/TMode}==='Edit'}" text="{ path: 'oEligibileData>/Effective_Date', formatter: '.formatter.oClaimDate' }"/>
+							<Text visible="{= !${ViewData>/DMode} || ${ViewData>/TMode}==='Edit'}"
+								text="{ path: 'oEligibileData>/Effective_Date', formatter: '.formatter.oClaimDate' }"/>
 						</VBox>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="{i18n>LBL_END_DATE}" required="true"/>
@@ -140,11 +142,11 @@
 						</VBox>
 					</l:content>
 				</l:Grid>
-				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0" visible="false">
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
-							<Label text="{i18n>LBL_SEQUENCE}" required="true"/>
-							<Input id="inpSequence_EG" visible="{ViewData>/DMode}" required="true" fieldGroupIds="fgInput" enabled="{=${ViewData>/TMode}==='Submit'}"
+							<Label text="{i18n>LBL_SEQUENCE}"/>
+							<Input id="inpSequence_EG" enabled="{=${ViewData>/TMode}==='Submit'}"
 								value="{ type : 'sap.ui.model.type.Integer', path:'oEligibileData>/Sequence', constraints : { minimun:0, maximum:100 }}"
 								liveChange="onValidateNumericValue"/>
 							<Text visible="{= !${ViewData>/DMode}}"

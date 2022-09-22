@@ -31,14 +31,14 @@
 					<core:HTML content='&lt;input class="InvDateSMS"/&gt;'></core:HTML>
 				</fb:control>
 			</fb:FilterGroupItem>
-			<fb:FilterGroupItem id="fgiEDateSMS" groupName="Basic" name="CI" label="End Date" partOfCurrentVariant="true" visibleInFilterBar="false">
+			<fb:FilterGroupItem id="fgiEDateSMS" groupName="Basic" name="CI" label="Post Date" partOfCurrentVariant="true" visibleInFilterBar="true">
 				<fb:control>
-					<core:HTML content='&lt;input class="EdateSMS"/&gt;'></core:HTML>
+					<core:HTML content='&lt;input class="PostdateSMS"/&gt;'></core:HTML>
 				</fb:control>
 			</fb:FilterGroupItem>
 			<fb:FilterGroupItem id="fgiScholarSMS" groupName="Basic" name="D" label="Scholar ID" partOfCurrentVariant="true" visibleInFilterBar="true">
 				<fb:control>
-					<Input width="100%" value="{ViewData>/Emp_SMS}" valueHelpRequest="onEmpSearchOpen('ViewData', 'SMS')" showValueHelp="true"
+					<Input width="100%" value="{ViewData>/Emp_SMS}" valueHelpRequest="onEmpSearchOpen('ViewData','Inactive', 'SMS')" showValueHelp="true"
 						showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
 				</fb:control>
 			</fb:FilterGroupItem>
@@ -48,16 +48,23 @@
 					<Input width="100%" value="{ViewData>/ClaimNoSMS}"/>
 				</fb:control>
 			</fb:FilterGroupItem>
+			<fb:FilterGroupItem id="fgiScholarLineRef" groupName="Basic" name="F" label="Line Item Reference" partOfCurrentVariant="true"
+				visibleInFilterBar="true">
+				<fb:control>
+					<Input width="100%" value="{ViewData>/ClaimLineNoSMS}"/>
+				</fb:control>
+			</fb:FilterGroupItem>
 		</fb:filterGroupItems>
 	</fb:FilterBar>
 	<Table id="tbSMSDetails" items="{path:'oSMSDetails>/' , sorter: { path: 'CLAIM_CATEGORY', descending: false}}" inset="false"
-		sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true" growing="true" growingThreshold="100">
+		sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true" growing="true" growingThreshold="1000"
+		updateFinished="onCountTable($event,'tbSMSDetails')">
 		<headerToolbar>
 			<OverflowToolbar>
 				<content>
-					<Title text="SMS Claim Details ({= ${oSMSDetails>/}.length})" level="H2"/>
+					<Title text="SMS Claim Details ({ViewData>/tbSMSDetails})" level="H2"/>
 					<ToolbarSpacer/>
-					<Button icon="sap-icon://download" tooltip="EXPORT DATA" press="onDownloadSMSreport"/>
+					<Button icon="sap-icon://download" type="Accept" tooltip="EXPORT DATA" press="onDownloadSMSreport"/>
 				</content>
 			</OverflowToolbar>
 		</headerToolbar>
@@ -71,32 +78,37 @@
 			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '18%'}">
 				<Label text="Claim/LineItem Reference No" design="Bold" wrapping="true"/>
 			</Column>
-			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '13%'}">
+			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '8%'}">
 				<Label text="Invoice No" design="Bold" wrapping="true"/>
 			</Column>
-			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '8%'}">
-				<Label design="Bold" text="Invoice Date" wrapping="true"/>
+			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '9%'}">
+				<Label design="Bold" text="Invoice/Post Date" wrapping="true"/>
 			</Column>
 			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '18%'}">
 				<Label text="Account" design="Bold" wrapping="true"/>
 			</Column>
 			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '8%'}">
-				<Label design="Bold" text="Currency" wrapping="true"/>
+				<Label design="Bold" text="Claim Amount" wrapping="true"/>
+			</Column>
+			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '8%'}">
+				<Label design="Bold" text="Posting Amount" wrapping="true"/>
 			</Column>
 			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '13%'}">
 				<Label text="Claim Status" design="Bold" wrapping="true"/>
 			</Column>
 		</columns>
 		<items>
-			<ColumnListItem type="Navigation" press="onSelectItemApproval($event,'oSMSDetails')">
+			<ColumnListItem press="onSelectItemApproval($event,'oSMSDetails')">
 				<cells>
 					<Text text="{path: 'oSMSDetails>CLAIM_CATEGORY', formatter: '.formatter.oClaimCategDesc'}"/>
-					<Text text="{oSMSDetails>EMPLOYEE_ID} / {oSMSDetails>EMPLOYEE_FIRST_NAME}, {oSMSDetails>EMPLOYEE_LAST_NAME}"/>
+					<ObjectIdentifier title="{oSMSDetails>EMPLOYEE_ID}" text="{oSMSDetails>EMPLOYEE_FULL_NAME}"/>
 					<Text text="{oSMSDetails>CLAIM_REFERENCE} / {oSMSDetails>LINE_ITEM_REFERENCE_NUMBER}"/>
 					<Text text="{oSMSDetails>INVOICE_NUMBER}"/>
-					<Text text="{ path: 'oSMSDetails>INVOICE_DATE', formatter: '.formatter.oClaimDate' }"/>
-					<Text text="{oSMSDetails>ACC_NO} / {oSMSDetails>ACC_NAME}"/>
-					<Text text="{oSMSDetails>CURRENCY}"/>
+					<Text
+						text="{ path: 'oSMSDetails>INVOICE_DATE', formatter: '.formatter.oClaimDate' } / { path: 'oSMSDetails>POST_DATE', formatter: '.formatter.oClaimDate' }"/>
+					<ObjectIdentifier title="{oSMSDetails>BANK_ACCOUNT_NUMBER}" text="{oSMSDetails>BANK_ACCOUNT_NAME}"/>
+					<ObjectNumber number="{oSMSDetails>CLAIM_AMOUNT}" unit="{oSMSDetails>CURRENCY}"/>
+					<ObjectNumber number="{oSMSDetails>POST_CLAIM_AMOUNT}" unit="{oSMSDetails>POST_CURRENCY}"/>
 					<ObjectStatus
 						state="{=${oSMSDetails>CLAIM_STATUS}==='Pending for Approval' ? 'Warning' : ${oSMSDetails>CLAIM_STATUS}==='Approved' ? 'Success' : 'Error' }"
 						text="{oSMSDetails>CLAIM_STATUS}"/>

@@ -99,7 +99,7 @@
 						<Column minScreenWidth="Desktop" demandPopin="true">
 							<Text text="Claim Amount"/>
 						</Column>
-						<Column hAlign="End" visible="{ViewData>/DMode}"></Column>
+						<Column hAlign="End" visible="{=(${ViewData>/DMode} || ${ViewData>/oTile}==='Approvals')}"></Column>
 					</columns>
 					<items>
 						<ColumnListItem type="Active" press="onLineItem($event, 'WorkRelated')">

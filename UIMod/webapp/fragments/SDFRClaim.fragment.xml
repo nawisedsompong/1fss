@@ -23,8 +23,9 @@
 				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0">
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
-							<Label text="{i18n>LBL_ITEM_DESC}"/>
-							<TextArea maxLength="50" width="100%" rows="2" value="{SDFRClaim>/ITEM_DESC}" visible="{ViewData>/DMode}" liveChange="onChangeDataSpl"/>
+							<Label text="{i18n>LBL_ITEM_DESC}" required="true"/>
+							<TextArea id="tasdfrItemDesc" maxLength="50" required="true" fieldGroupIds="fgInput" width="100%" rows="2" value="{SDFRClaim>/ITEM_DESC}"
+								visible="{ViewData>/DMode}" liveChange="onChangeDataSpl"/>
 							<Text visible="{= !${ViewData>/DMode}}" text="{SDFRClaim>/ITEM_DESC}"/>
 						</VBox>
 					</l:content>
@@ -33,9 +34,8 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="Request Cost" required="true"/>
-							<Input id="inp_SDFREstcost" required="true" fieldGroupIds="fgInput"
-								value="{SDFRClaim>/ESTIMATE_COST}"
-								visible="{ViewData>/DMode}" liveChange="onValidateDecimalValue"/>
+							<Input id="inp_SDFREstcost" required="true" fieldGroupIds="fgInput" value="{SDFRClaim>/ESTIMATE_COST}" visible="{ViewData>/DMode}"
+								liveChange="onValidateDecimalValue"/>
 							<Text visible="{= !${ViewData>/DMode}}"
 								text="{ path:'SDFRClaim>/ESTIMATE_COST', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
 						</VBox>
@@ -83,7 +83,8 @@
 			<!--<Button text="SAVE AS DRAFT" type="Emphasized" icon="sap-icon://save" press="onAddData($event, 'SDFRClaim')" visible="{ViewData>/DMode}"/>-->
 			<Button text="{ViewData>/BtnTxt}" press="onAddLineData($event, 'SDFRClaim','SDFRClaim_Master')" type="Emphasized"
 				visible="{ViewData>/DMode}"/>
-			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseLineDialog('SDFRClaim_Master')" type="Reject"/>
+			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseLineDialog('SDFRClaim_Master')" type="Reject" visible="{ViewData>/oFinanc}"/>
+			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseFinance" type="Reject" visible="{=!${ViewData>/oFinanc}}"/>
 		</buttons>
 	</Dialog>
 </core:FragmentDefinition>

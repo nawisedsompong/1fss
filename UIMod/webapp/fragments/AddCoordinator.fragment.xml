@@ -7,17 +7,17 @@
 				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
-							<Label text="Employee" required="true"/>
-							<Input id="inpEmpIDCo" width="100%" visible="{ViewData>/DMode}" required="true" fieldGroupIds="fgInput" value="{oCoordinData>/EMPLOYEE_ID}"
-								valueHelpRequest="onEmpSearchOpen('oCoordinData', 'EMPCOOR')" showValueHelp="true" showSuggestion="true" valueHelpOnly="true"
+							<Label text="Employee"/>
+							<Input id="inpEmpIDCo" width="100%" visible="{ViewData>/DMode}" fieldGroupIds="fgInput" value="{oCoordinData>/EMPLOYEE_ID}"
+								valueHelpRequest="onEmpSearchOpen('oCoordinData', 'Active','EMPCOOR')" showValueHelp="true" showSuggestion="true" valueHelpOnly="true"
 								filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
 							<Text visible="{= !${ViewData>/DMode}}" text="{oCoordinData>/EMPLOYEE_ID}"/>
 						</VBox>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="Coordinator" required="true"></Label>
-							<Input id="inpCoordin" width="100%" visible="{ViewData>/DMode}" required="true" fieldGroupIds="fgInput" value="{oCoordinData>/COORDINATOR}"
-								valueHelpRequest="onEmpSearchOpen('oCoordinData', 'COORD')" showValueHelp="true" showSuggestion="true" valueHelpOnly="true"
-								filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
+							<Input id="inpCoordin" width="100%" visible="{=${ViewData>/DMode}}" required="true" fieldGroupIds="fgInput"
+								value="{oCoordinData>/COORDINATOR}" valueHelpRequest="onEmpSearchOpen('oCoordinData', 'Active','COORD')" showValueHelp="true"
+								showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
 							<Text visible="{= !${ViewData>/DMode}}" text="{oCoordinData>/COORDINATOR}"/>
 						</VBox>
 					</l:content>
@@ -26,7 +26,7 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="{i18n>LBL_SDATE}" required="true"/>
-							<HBox visible="{ViewData>/DMode}">
+							<HBox visible="{=${ViewData>/DMode}}">
 								<core:HTML content='&lt;input class="datePicker1"/&gt;'></core:HTML>
 							</HBox>
 							<Text visible="{= !${ViewData>/DMode}}" text="{ path: 'oCoordinData>/STARTDATE', formatter: '.formatter.oClaimDate' }"/>
@@ -40,20 +40,20 @@
 						</VBox>
 					</l:content>
 				</l:Grid>
-				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0" visible="{=${oCoordinData>/EMPLOYEE_ID}==='N/A'}">
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
-							<Label text="{i18n>LBL_PA}" required="true"/>
-							<ComboBox id="cbPACo" items="{ComboDetails>/PERSONAL_AREA}" required="true" fieldGroupIds="fgInput" width="100%"
-								selectedKey="{oCoordinData>/PERSONNEL_AREA}" visible="{ViewData>/DMode}" change="onValidData">
+							<Label text="{i18n>LBL_PA}" required="{=${oCoordinData>/EMPLOYEE_ID}==='N/A'}"/>
+							<ComboBox id="cbPACo" items="{ComboDetails>/PERSONAL_AREA}" required="{=${oCoordinData>/EMPLOYEE_ID}==='N/A' ? true : false}"
+								fieldGroupIds="fgInput" width="100%" selectedKey="{oCoordinData>/PERSONNEL_AREA}" visible="{ViewData>/DMode}" change="onValidData">
 								<core:Item key="{ComboDetails>Personal_Area}" text="{ComboDetails>Personal_Desc}"/>
 							</ComboBox>
 							<Text visible="{= !${ViewData>/DMode}}" text="{oCoordinData>/PERSONNEL_AREA}"/>
 						</VBox>
 						<VBox class="sapUiMediumMarginEnd">
-							<Label text="{i18n>LBL_PSA}" required="true"></Label>
-							<ComboBox id="cbPSACo" required="true" fieldGroupIds="fgInput" width="100%" selectedKey="{oCoordinData>/PERSONAL_SUBAREA}"
-								visible="{ViewData>/DMode}" change="onValidData"
+							<Label text="{i18n>LBL_PSA}" required="{=${oCoordinData>/EMPLOYEE_ID}==='N/A'}"></Label>
+							<ComboBox id="cbPSACo" required="{=${oCoordinData>/EMPLOYEE_ID}==='N/A' ? true : false}" fieldGroupIds="fgInput" width="100%"
+								selectedKey="{oCoordinData>/PERSONAL_SUBAREA}" visible="{ViewData>/DMode}" change="onValidData"
 								items="{path:'ComboDetails>/PERSONAL_SUB_AREA' , filters : [ { path : 'Company', operator : 'EQ', value1 : 'MOHH'} ]}">
 								<core:Item key="{ComboDetails>Personal_Sub_Area}" text="{ComboDetails>Personal_Sub_Desc}"/>
 							</ComboBox>
@@ -61,7 +61,7 @@
 						</VBox>
 					</l:content>
 				</l:Grid>
-				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0" visible="{=${oCoordinData>/EMPLOYEE_ID}==='N/A'}">
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="{i18n>LBL_EMP_DEPT}"/>
@@ -80,7 +80,7 @@
 						</VBox>
 					</l:content>
 				</l:Grid>
-				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0" visible="{=${oCoordinData>/EMPLOYEE_ID}==='N/A'}">
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="{i18n>LBL_PAY_GRADE}"/>
@@ -98,13 +98,12 @@
 						</VBox>
 					</l:content>
 				</l:Grid>
-				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0" visible="{=${oCoordinData>/EMPLOYEE_ID}==='N/A'}">
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="{i18n>LBL_SPONS_INS}"/>
 							<ComboBox width="100%" value="{oCoordinData>/SPONSOR_INSTITUTION}" visible="{ViewData>/DMode}" change="onValidData">
 								<core:Item key="ALL" text="ALL"/>
-								<core:Item key="N/A" text="N/A"/>
 								<core:Item key="NHG" text="NHG"/>
 								<core:Item key="NUHS" text="NUHS"/>
 							</ComboBox>
@@ -116,7 +115,7 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="Submit" required="true"/>
-							<ComboBox id="cbSubmitCO" required="true" selectedKey="{oCoordinData>/SUBMIT}" visible="{ViewData>/DMode}">
+							<ComboBox id="cbSubmitCO" required="true" fieldGroupIds="fgInput" selectedKey="{oCoordinData>/SUBMIT}" visible="{ViewData>/DMode}">
 								<core:Item key="Yes" text="Yes"/>
 								<core:Item key="No" text="No"/>
 							</ComboBox>
@@ -124,7 +123,7 @@
 						</VBox>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="Report" required="true"></Label>
-							<ComboBox id="cbReportCO" required="true" selectedKey="{oCoordinData>/REPORT}" visible="{ViewData>/DMode}">
+							<ComboBox id="cbReportCO" required="true" fieldGroupIds="fgInput" selectedKey="{oCoordinData>/REPORT}" visible="{ViewData>/DMode}">
 								<core:Item key="Yes" text="Yes"/>
 								<core:Item key="No" text="No"/>
 							</ComboBox>
