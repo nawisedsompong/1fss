@@ -1,0 +1,8 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<SelectDialog class="sapUiSizeCompact" title="Department Search" id="dlgDepart"
+		search="onSearch($event,'Department_Code', 'Department_Desc')" liveChange="onSearch($event,'Department_Code', 'Department_Desc')"
+		confirm="onDepClose" cancel="onSDialogCancel" growing="true"
+		items="{path:'oDeptData>/' , sorter: { path: 'Department_Code', descending: false}}">
+		<StandardListItem title="{oDeptData>Department_Code}" description="{oDeptData>Department_Desc}"/>
+	</SelectDialog>
+</core:FragmentDefinition>

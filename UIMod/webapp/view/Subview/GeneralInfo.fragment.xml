@@ -1,0 +1,61 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core">
+	<Table id="oTableBenefit" inset="false" mode="MultiSelect" items="{ClaimDetails>/}" updateFinished="onUpdateEMis"
+		noDataText="{i18n>MSG_BEN_PLAN}" sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true">
+		<headerToolbar>
+			<OverflowToolbar>
+				<content>
+					<Title text="{i18n>TIT_BEN_PLANS} ({= ${ClaimDetails>/}.length})" class="sapUiSmallMargin"/>
+					<ToolbarSpacer/>
+					<SearchField width="25%" placeholder="Search" liveChange="onSearchAdmin($event, 'oTableBenefit')"/>
+					<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('ClaimDetails')"/>
+					<Button text="{i18n>BTN_NEW_BEN_PLAN}" icon="sap-icon://add" iconFirst="true" type="Emphasized" press="onCreateBenefit"/>
+					<Button text="{i18n>BTN_DELETE}" icon="sap-icon://delete" iconFirst="true" type="Reject" press="onDeleteBenefit"/>
+				</content>
+			</OverflowToolbar>
+		</headerToolbar>
+		<columns>
+			<Column >
+				<Text text="{i18n>LBL_CLAIM_CODE}"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="{i18n>LBL_EFF_DATE}"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="{i18n>LBL_END_DATE}"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="{i18n>LBL_CLAIM_CAT}"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="{i18n>LBL_SM_TYPE}"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="{i18n>LBL_ENT_TYPE}"/>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<Text text="{i18n>LBL_SUB_PERIOD}"/>
+			</Column>
+			<Column hAlign="End" visible="{viewData>/Mode}">
+				<Text text=""/>
+			</Column>
+		</columns>
+		<items>
+			<ColumnListItem type="Active" press="onSubDetail">
+				<cells>
+					<ObjectIdentifier title="{ClaimDetails>Company}" text="{ClaimDetails>Claim_Code}"/>
+					<Text text="{ path: 'ClaimDetails>Start_Date', formatter: '.formatter.oClaimDate'}"/>
+					<Text text="{ path: 'ClaimDetails>End_Date', formatter: '.formatter.oClaimDate'}"/>
+					<Text text="{path: 'ClaimDetails>Claim_Category', formatter: '.formatter.oClaimDesc'}"/>
+					<!--<ObjectStatus text="{ClaimDetails>Status}" state="{= ${ClaimDetails>Statuscode} === '01' ? 'Success' : 'Error'}"/>-->
+					<Text text="{ClaimDetails>Claim_Type}"/>
+					<Text text="{ClaimDetails>Entitlement_Type}"/>
+					<Text text="{ClaimDetails>Period_Number} - {ClaimDetails>Period_Units}"/>
+					<HBox justifyContent="End" visible="{viewData>/oMisf}">
+						<Button icon="sap-icon://copy" tooltip="Copy Data" type="Transparent" press="onCopyBenefit"/>
+						<Button icon="sap-icon://edit" tooltip="{i18n>TLP_EDIT_CLAIMS}" type="Transparent" press="onEditBenefit"/>
+					</HBox>
+				</cells>
+			</ColumnListItem>
+		</items>
+	</Table>
+</core:FragmentDefinition>

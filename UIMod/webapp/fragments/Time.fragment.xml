@@ -1,0 +1,19 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<Dialog id="selectTimeDialog" title="Select Time" contentWidth="20%">
+		<HBox class="sapUiSmallMargin" alignContent="SpaceAround">
+			<ComboBox class="sapUiTinyMargin" placeholder="HH" id="inpHour" items="{oHour>/}" value="{ViewData>/hour}" change="onValidData">
+				<core:Item text="{oHour>Hour}"/>
+			</ComboBox>
+			<ComboBox class="sapUiTinyMargin" placeholder="MM" id="inpMinute" items="{oMinute>/}" value="{ViewData>/minute}" change="onValidData">
+				<core:Item text="{oMinute>Min}"/>
+			</ComboBox>
+			<ComboBox class="sapUiTinyMargin" placeholder="SS" id="inpSecond" items="{oMinute>/}" value="{ViewData>/second}" change="onValidData">
+				<core:Item text="{oMinute>Min}"/>
+			</ComboBox>
+		</HBox>
+		<buttons>
+			<Button text="OK" press="handleOKPress" type="Emphasized"/>
+			<Button text="Cancel" press="handleCancelPress"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

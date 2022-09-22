@@ -1,0 +1,1295 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="BenefitClaim.ZBenefitClaim.controller.Table"
+	xmlns:html="http://www.w3.org/1999/xhtml" xmlns:l="sap.ui.layout">
+	<Page title="Benefit Administration" class="sapUiSizeCompact Dashboard_bg" showFooter="true" navButtonPress="onNavBack" showNavButton="true">
+		<customHeader>
+			<Bar>
+				<contentLeft>
+					<Button icon="sap-icon://nav-back" press="onNavBack"/>
+				</contentLeft>
+				<contentMiddle>
+					<Title text="Benefit Table Maintenance"/>
+				</contentMiddle>
+				<contentRight>
+					<Image src="images/mohh.jpg" width="{ViewData>/width}" height="{ViewData>/height}"></Image>
+					<!--<Button icon="sap-icon://log" press="onLogout"/>-->
+				</contentRight>
+			</Bar>
+		</customHeader>
+		<content>
+			<VBox class="VboxBackground">
+				<HBox justifyContent="Start" class="sapUiSmallMargin">
+					<Label text="Select Table Name" class="sapUiSmallMargin"/>
+					<ComboBox selectedKey="{ViewData>/oTbname}" class="sapUiSmallMargin" change="onChangeComb" visible="{=${ViewData>/oTile} ==='Table'}">
+						<core:Item key="CLMCD" text="Claim Code"/>
+						<core:Item key="CLMCG" text="Claim Category"/>
+						<core:Item key="ADMIN" text="Claim Admin"/>
+						<core:Item key="CUT" text="Claim Cut Off"/>
+						<core:Item key="CLI" text="Clinic Master"/>
+						<core:Item key="COM" text="Company"/>
+						<core:Item key="CLCCC" text="Company,Claim Code and Claim Category"/>
+						<core:Item key="DEP" text="Department"/>
+						<core:Item key="DIV" text="Division"/>
+						<core:Item key="EA" text="Entitlement Adjust"/>
+						<core:Item key="RO" text="Location RO"/>
+						<core:Item key="LOC" text="Location"/>
+						<core:Item key="PA" text="Personal Area"/>
+						<core:Item key="PSA" text="Personal Sub Area"/>
+						<core:Item key="SPL" text="Specialisation"/>
+						<core:Item key="SI" text="Sponsor Institution"/>
+						<core:Item key="TRAN" text="Transport Amount"/>
+						<core:Item key="WRC" text="WRC Claim Amount"/>
+					</ComboBox>
+					<ComboBox selectedKey="{ViewData>/oTbnameSCH}" class="sapUiSmallMargin" change="onChangeSCH" visible="{=${ViewData>/oTile} ==='Tablesch'}">
+						<core:Item key="GC" text="GL Mapping"/>
+						<core:Item key="CURR" text="Currency Exchange"/>
+						<core:Item key="VEND" text="Vendor Code"/>
+					</ComboBox>
+				</HBox>
+				<Panel width="auto" class="sapUiResponsiveMargin" visible="{=${ViewData>/oTbname}==='COM' ? true : false}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<Title text="Company Details"/>
+							<ToolbarSpacer/>
+							<Button icon="sap-icon://add" text="ADD" type="Emphasized" press="onAddValueTable"/>
+							<Button icon="sap-icon://delete" text="DELETE" visible="false" type="Reject"
+								press="onDeleteValueTable($event, 'oTableCompany', 'COMPANY', 'ComboDetails')"/>
+						</OverflowToolbar>
+					</headerToolbar>
+					<content>
+						<Table id="oTableCompany" inset="false" items="{path:'ComboDetails>/COMPANY' , sorter: { path: 'Company', descending: false}}">
+							<headerToolbar>
+								<OverflowToolbar>
+									<content>
+										<Title text="Company Code" class="sapUiSmallMargin"/>
+										<ToolbarSpacer/>
+										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTableCompany', 'Company_Desc' )"
+											liveChange="onSearchTM($event, 'oTableCompany', 'Company_Desc' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('COMPANY')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableCompany', 'Company')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableCompany', 'Company')"/>
+									</content>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column >
+									<Text text="Company ID"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Company Description"/>
+								</Column>
+								<!--<Column hAlign="End"></Column>-->
+							</columns>
+							<items>
+								<ColumnListItem type="Active" press="onEdit">
+									<cells>
+										<Text text="{ComboDetails>Company}"/>
+										<Text text="{ComboDetails>Company_Desc}"/>
+										<!--	<HBox justifyContent="End">
+											<Button icon="sap-icon://copy" type="Transparent" press="onCopyValueTable"/>
+											<Button icon="sap-icon://edit" type="Transparent" press="onEditValueTable($event, 'ComboDetails')"/>
+										</HBox>-->
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</content>
+				</Panel>
+				<Panel width="auto" class="sapUiResponsiveMargin" visible="{=${ViewData>/oTbname}==='CLMCD' ? true : false}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<Title text="Claim Details"/>
+							<ToolbarSpacer/>
+							<Button icon="sap-icon://add" text="ADD" type="Emphasized" press="onAddValueTable" visible="false"/>
+							<Button icon="sap-icon://delete" text="DELETE" visible="false" type="Reject"
+								press="onDeleteValueTable($event, 'oTableClaimCode', 'CLAIM_CODE', 'ComboDetails')"/>
+						</OverflowToolbar>
+					</headerToolbar>
+					<content>
+						<Table id="oTableClaimCode" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+							items="{path:'ComboDetails>/CLAIM_CODE' , sorter: { path: 'Company', descending: false}}">
+							<headerToolbar>
+								<OverflowToolbar>
+									<content>
+										<Title text="Add New Claim Details" class="sapUiSmallMargin"/>
+										<ToolbarSpacer/>
+										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTableClaimCode', 'Description' )"
+											liveChange="onSearchTM($event, 'oTableClaimCode', 'Description' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('CLAIM_CODE')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableClaimCode', 'Claim_code')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableClaimCode', 'Claim_code')"/>
+									</content>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column >
+									<Text text="Company Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Claim Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Claim Description"/>
+								</Column>
+								<Column hAlign="End"></Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Active" press="onEdit">
+									<cells>
+										<Text text="{ComboDetails>Company}"/>
+										<Text text="{ComboDetails>Claim_code}"/>
+										<Text text="{ComboDetails>Description}"/>
+										<HBox justifyContent="End">
+											<Button icon="sap-icon://copy" type="Transparent" press="onCopyValueTable" visible="false"/>
+											<Button icon="sap-icon://edit" type="Transparent" press="onEditValueTable($event, 'ComboDetails')"/>
+										</HBox>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</content>
+				</Panel>
+				<Panel width="auto" class="sapUiResponsiveMargin" visible="{=${ViewData>/oTbname}==='CLMCG' ? true : false}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<Title text="Claim Category Details"/>
+							<ToolbarSpacer/>
+							<Button icon="sap-icon://add" text="ADD" type="Emphasized" press="onAddValueTable" visible="false"/>
+							<Button icon="sap-icon://delete" text="DELETE" visible="false" type="Reject"
+								press="onDeleteValueTable($event, 'oTableClaimCategory', 'CLAIM_CATEGORY', 'ComboDetails')"/>
+						</OverflowToolbar>
+					</headerToolbar>
+					<content>
+						<Table id="oTableClaimCategory" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+							items="{path:'ComboDetails>/CLAIM_CATEGORY' , sorter: { path: 'Company', descending: false}}">
+							<headerToolbar>
+								<OverflowToolbar>
+									<content>
+										<Title text="Add New Claim Category" class="sapUiSmallMargin"/>
+										<ToolbarSpacer/>
+										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTableClaimCategory', 'Category_Desc' )"
+											liveChange="onSearchTM($event, 'oTableClaimCategory', 'Category_Desc' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('CLAIM_CATEGORY')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableClaimCategory', 'Category_Code')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableClaimCategory', 'Category_Code')"/>
+									</content>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column >
+									<Text text="Company Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Category Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Category Description"/>
+								</Column>
+								<Column hAlign="End"></Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Active" press="onEdit">
+									<cells>
+										<Text text="{ComboDetails>Company}"/>
+										<Text text="{ComboDetails>Category_Code}"/>
+										<Text text="{ComboDetails>Category_Desc}"/>
+										<HBox justifyContent="End">
+											<Button icon="sap-icon://copy" type="Transparent" press="onCopyValueTable" visible="false"/>
+											<Button icon="sap-icon://edit" type="Transparent" press="onEditValueTable($event, 'ComboDetails')"/>
+										</HBox>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</content>
+				</Panel>
+				<Panel width="auto" class="sapUiResponsiveMargin" visible="{=${ViewData>/oTbname}==='CLCCC' ? true : false}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<Title text="Company, Claim Code and Claim Category"/>
+							<ToolbarSpacer/>
+							<Button icon="sap-icon://add" text="ADD" type="Emphasized" press="onAddValueTable" visible="false"/>
+							<Button icon="sap-icon://delete" text="DELETE" visible="false" type="Reject"
+								press="onDeleteValueTable($event, 'oTableClaimCodeCC', 'CLAIM_CODE', 'ComboDetails')"/>
+						</OverflowToolbar>
+					</headerToolbar>
+					<content>
+						<Table id="oTableClaimCodeCC" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+							items="{path:'ComboDetails>/COMPANY_CLAIM_CATEGORY' , sorter: { path: 'Company', descending: false}}">
+							<headerToolbar>
+								<OverflowToolbar>
+									<content>
+										<Title text="Add New Claim Details" class="sapUiSmallMargin"/>
+										<ToolbarSpacer/>
+										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTableClaimCodeCC', 'Description' )"
+											liveChange="onSearchTM($event, 'oTableClaimCodeCC', 'Description' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('COMPANY_CLAIM_CATEGORY')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableClaimCodeCC', 'Claim_code')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableClaimCodeCC', 'Claim_code')"/>
+									</content>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column >
+									<Text text="Company Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Claim Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Claim Description"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Category Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Category Description"/>
+								</Column>
+								<Column hAlign="End"></Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Active" press="onEdit">
+									<cells>
+										<Text text="{ComboDetails>Company}"/>
+										<Text text="{ComboDetails>Claim_code}"/>
+										<Text text="{ComboDetails>Description}"/>
+										<Text text="{ComboDetails>Category_Code}"/>
+										<Text text="{ComboDetails>Category_Desc}"/>
+										<HBox justifyContent="End">
+											<Button icon="sap-icon://copy" type="Transparent" press="onCopyValueTable" visible="false"/>
+											<Button icon="sap-icon://edit" type="Transparent" press="onEditValueTable($event, 'ComboDetails')"/>
+										</HBox>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</content>
+				</Panel>
+				<Panel width="auto" class="sapUiResponsiveMargin" visible="{=${ViewData>/oTbname}==='DEP' ? true : false}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<Title text="Department"/>
+							<ToolbarSpacer/>
+							<Button icon="sap-icon://add" text="ADD" type="Emphasized" press="onAddValueTable" visible="false"/>
+							<Button icon="sap-icon://delete" text="DELETE" type="Reject" visible="false"
+								press="onDeleteValueTable($event, 'oTableClaimCodeDep', 'DEPARTMENT', 'ComboDetails')"/>
+						</OverflowToolbar>
+					</headerToolbar>
+					<content>
+						<Table id="oTableClaimCodeDep" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+							items="{path:'ComboDetails>/DEPARTMENT' , sorter: { path: 'Company', descending: false}}">
+							<headerToolbar>
+								<OverflowToolbar>
+									<content>
+										<Title text="Add New Department" class="sapUiSmallMargin"/>
+										<ToolbarSpacer/>
+										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTableClaimCodeDep', 'Department_Desc' )"
+											liveChange="onSearchTM($event, 'oTableClaimCodeDep', 'Department_Desc' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('DEPARTMENT')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableClaimCodeDep', 'Department_Code')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableClaimCodeDep', 'Department_Code')"/>
+									</content>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column >
+									<Text text="Company Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Department Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Department Description"/>
+								</Column>
+								<Column hAlign="End"></Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Active" press="onEdit">
+									<cells>
+										<Text text="{ComboDetails>Company}"/>
+										<Text text="{ComboDetails>Department_Code}"/>
+										<Text text="{ComboDetails>Department_Desc}"/>
+										<HBox justifyContent="End" visible="false">
+											<Button icon="sap-icon://copy" type="Transparent" press="onCopyValueTable"/>
+											<Button icon="sap-icon://edit" type="Transparent" press="onEditValueTable($event, 'ComboDetails')"/>
+										</HBox>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</content>
+				</Panel>
+				<Panel width="auto" class="sapUiResponsiveMargin" visible="{=${ViewData>/oTbname}==='DIV' ? true : false}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<Title text="Division"/>
+							<ToolbarSpacer/>
+							<Button icon="sap-icon://add" text="ADD" type="Emphasized" press="onAddValueTable" visible="false"/>
+							<Button icon="sap-icon://delete" text="DELETE" visible="false" type="Reject"
+								press="onDeleteValueTable($event, 'oTableClaimCodeDiv', 'DIVISION', 'ComboDetails')"/>
+						</OverflowToolbar>
+					</headerToolbar>
+					<content>
+						<Table id="oTableClaimCodeDiv" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+							items="{path:'ComboDetails>/DIVISION' , sorter: { path: 'Company', descending: false}}">
+							<headerToolbar>
+								<OverflowToolbar>
+									<content>
+										<Title text="Add New Department" class="sapUiSmallMargin"/>
+										<ToolbarSpacer/>
+										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTableClaimCodeDiv', 'Division_Desc' )"
+											liveChange="onSearchTM($event, 'oTableClaimCodeDiv', 'Division_Desc' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('DIVISION')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableClaimCodeDiv', 'Division_Code')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableClaimCodeDiv', 'Division_Code')"/>
+									</content>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column >
+									<Text text="Company Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Division Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Division Description"/>
+								</Column>
+								<Column hAlign="End"></Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Active" press="onEdit">
+									<cells>
+										<Text text="{ComboDetails>Company}"/>
+										<Text text="{ComboDetails>Division_Code}"/>
+										<Text text="{ComboDetails>Division_Desc}"/>
+										<HBox justifyContent="End" visible="false">
+											<Button icon="sap-icon://copy" type="Transparent" press="onCopyValueTable"/>
+											<Button icon="sap-icon://edit" type="Transparent" press="onEditValueTable($event, 'ComboDetails')"/>
+										</HBox>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</content>
+				</Panel>
+				<Panel width="auto" class="sapUiResponsiveMargin" visible="{=${ViewData>/oTbname}==='ADMIN' ? true : false}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<Title text="Claim Admin"/>
+							<ToolbarSpacer/>
+							<Button icon="sap-icon://add" text="ADD" type="Emphasized" press="onAddValueTable"/>
+							<Button icon="sap-icon://delete" text="DELETE" type="Reject"
+								press="onDeleteValueTable($event, 'oTableAdmin', 'CLAIM_ADMIN', 'ComboDetails')"/>
+						</OverflowToolbar>
+					</headerToolbar>
+					<content>
+						<Table id="oTableAdmin" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+							items="{path:'ComboDetails>/CLAIM_ADMIN' , sorter: { path: 'Company', descending: false}}">
+							<headerToolbar>
+								<OverflowToolbar>
+									<content>
+										<Title text="Add New Claim Admin" class="sapUiSmallMargin"/>
+										<ToolbarSpacer/>
+										<SearchField placeholder="Search Claim Description" width="25%" search="onSearchTM($event, 'oTableAdmin', 'Description' )"
+											liveChange="onSearchTM($event, 'oTableAdmin', 'Description' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('CLAIM_ADMIN')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableAdmin', 'Claim_code')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableAdmin', 'Claim_code')"/>
+									</content>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column >
+									<Text text="Claim Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Start Date"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="End Date"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Admin"/>
+								</Column>
+								<Column hAlign="End"></Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Active" press="onEdit">
+									<cells>
+										<ObjectIdentifier title="{ComboDetails>Claim_code}" text="{ComboDetails>Description}"/>
+										<Text text="{ path: 'ComboDetails>Start_Date', formatter: '.formatter.oClaimDate'}"/>
+										<Text text="{ path: 'ComboDetails>End_Date', formatter: '.formatter.oClaimDate'}"/>
+										<Text text="{ComboDetails>Admin}"/>
+										<HBox justifyContent="End">
+											<Button icon="sap-icon://copy" type="Transparent" press="onCopyValueTable"/>
+											<Button icon="sap-icon://edit" type="Transparent" press="onEditValueTable($event, 'ComboDetails')"/>
+										</HBox>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</content>
+				</Panel>
+				<Panel width="auto" class="sapUiResponsiveMargin" visible="{=${ViewData>/oTbname}==='PAY' ? true : false}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<Title text="Pay Component Details"/>
+							<ToolbarSpacer/>
+							<!--<Button icon="sap-icon://add" text="ADD" type="Emphasized" press="onAddValueTable"/>
+							<Button icon="sap-icon://delete" text="DELETE" visible="false" type="Reject"
+								press="onDeleteValueTable($event, 'oTablePayComponent', 'PAY_COMPONENT', 'ComboDetails')"/>-->
+						</OverflowToolbar>
+					</headerToolbar>
+					<content>
+						<Table id="oTablePayComponent" inset="false" growing="true" growingThreshold="1000"
+							items="{path:'ComboDetails>/PAY_COMPONENT' , sorter: { path: 'Company', descending: false}}">
+							<headerToolbar>
+								<OverflowToolbar>
+									<content>
+										<Title text="Add New PayComponent" class="sapUiSmallMargin"/>
+										<ToolbarSpacer/>
+										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTablePayComponent', 'PayComponent_Desc' )"
+											liveChange="onSearchTM($event, 'oTablePayComponent', 'PayComponent_Desc' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('PAY_COMPONENT')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTablePayComponent', 'PayComponent_ID')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTablePayComponent', 'PayComponent_ID')"/>
+									</content>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column >
+									<Text text="Company Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="PayComponent ID"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="PayComponent Description"/>
+								</Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Active" press="onEdit">
+									<cells>
+										<Text text="{ComboDetails>Company}"/>
+										<Text text="{ComboDetails>PayComponent_ID}"/>
+										<Text text="{ComboDetails>PayComponent_Desc}"/>
+										<!--<HBox justifyContent="End">
+											<Button icon="sap-icon://copy" type="Transparent" press="onCopyValueTable"/>
+											<Button icon="sap-icon://edit" type="Transparent" press="onEditValueTable($event, 'ComboDetails')"/>
+										</HBox>-->
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</content>
+				</Panel>
+				<Panel width="auto" class="sapUiResponsiveMargin" visible="{=${ViewData>/oTbname}==='CLI' ? true : false}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<Title text="Clinic Master"/>
+							<ToolbarSpacer/>
+							<Button icon="sap-icon://add" text="ADD" type="Emphasized" press="onAddValueTable"/>
+							<Button icon="sap-icon://delete" text="DELETE" type="Reject"
+								press="onDeleteValueTable($event, 'oTableClinic', 'CLINIC_MASTER', 'ComboDetails')"/>
+						</OverflowToolbar>
+					</headerToolbar>
+					<content>
+						<Table id="oTableClinic" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+							items="{path:'ComboDetails>/CLINIC_MASTER' , sorter: { path: 'Company', descending: false}}">
+							<headerToolbar>
+								<OverflowToolbar>
+									<content>
+										<Title text="Add New Clinic" class="sapUiSmallMargin"/>
+										<ToolbarSpacer/>
+										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTableClinic', 'Clinic_Name' )"
+											liveChange="onSearchTM($event, 'oTableClinic', 'Clinic_Name' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('CLINIC_MASTER')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableClinic', 'Clinic_Code')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableClinic', 'Clinic_Code')"/>
+									</content>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column >
+									<Text text="Company Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Clinic Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Clinic Description"/>
+								</Column>
+								<Column hAlign="End"></Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Active" press="onEdit">
+									<cells>
+										<Text text="{ComboDetails>Company}"/>
+										<Text text="{ComboDetails>Clinic_Code}"/>
+										<Text text="{ComboDetails>Clinic_Name}"/>
+										<HBox justifyContent="End">
+											<Button icon="sap-icon://copy" type="Transparent" press="onCopyValueTable"/>
+											<Button icon="sap-icon://edit" type="Transparent" press="onEditValueTable($event, 'ComboDetails')"/>
+										</HBox>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</content>
+				</Panel>
+				<Panel width="auto" class="sapUiResponsiveMargin" visible="{=${ViewData>/oTbname}==='PA' ? true : false}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<Title text="Personal Area"/>
+							<ToolbarSpacer/>
+							<!--<Button icon="sap-icon://add" text="ADD" type="Emphasized" press="onAddValueTable"/>
+							<Button icon="sap-icon://delete" text="DELETE" visible="false" type="Reject" press="onDeleteValueTable($event, 'oTablePA', 'PERSONAL_AREA', 'ComboDetails')"/>-->
+						</OverflowToolbar>
+					</headerToolbar>
+					<content>
+						<Table id="oTablePA" inset="false" growing="true" growingThreshold="1000"
+							items="{path:'ComboDetails>/PERSONAL_AREA' , sorter: { path: 'COMPANY', descending: false}}">
+							<headerToolbar>
+								<OverflowToolbar>
+									<content>
+										<Title text="Add New Personal Area" class="sapUiSmallMargin"/>
+										<ToolbarSpacer/>
+										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTablePA', 'PERSONAL_DESC' )"
+											liveChange="onSearchTM($event, 'oTablePA', 'Personal_Desc' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('Personal_Area')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTablePA', 'Personal_Area')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTablePA', 'Personal_Area')"/>
+									</content>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column >
+									<Text text="Company Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Personal Area"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Personal Area Description"/>
+								</Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Active" press="onEdit">
+									<cells>
+										<Text text="{ComboDetails>Company}"/>
+										<Text text="{ComboDetails>Personal_Area}"/>
+										<Text text="{ComboDetails>Personal_Desc}"/>
+										<!--<HBox justifyContent="End">
+											<Button icon="sap-icon://copy" type="Transparent" press="onCopyValueTable"/>
+											<Button icon="sap-icon://edit" type="Transparent" press="onEditValueTable($event, 'ComboDetails')"/>
+										</HBox>-->
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</content>
+				</Panel>
+				<Panel width="auto" class="sapUiResponsiveMargin" visible="{=${ViewData>/oTbname}==='PSA' ? true : false}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<Title text="Personal Sub Area"/>
+							<ToolbarSpacer/>
+							<!--<Button icon="sap-icon://add" text="ADD" type="Emphasized" press="onAddValueTable"/>
+							<Button icon="sap-icon://delete" text="DELETE" visible="false" type="Reject"
+								press="onDeleteValueTable($event, 'oTablePSA', 'PERSONAL_SUB_AREA', 'ComboDetails')"/>-->
+						</OverflowToolbar>
+					</headerToolbar>
+					<content>
+						<Table id="oTablePSA" inset="false" growing="true" growingThreshold="1000"
+							items="{path:'ComboDetails>/PERSONAL_SUB_AREA' , sorter: { path: 'Company', descending: false}}">
+							<headerToolbar>
+								<OverflowToolbar>
+									<content>
+										<Title text="Add New Personal Sub Area" class="sapUiSmallMargin"/>
+										<ToolbarSpacer/>
+										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTablePSA', 'Personal_Sub_Area' )"
+											liveChange="onSearchTM($event, 'oTablePSA', 'Personal_Sub_Area' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('PERSONAL_SUB_AREA')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTablePSA', 'Personal_Sub_Area')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTablePSA', 'Personal_Sub_Area')"/>
+									</content>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column >
+									<Text text="Company Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Personal Sub Area"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Personal Sub Area Description"/>
+								</Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Active" press="onEdit">
+									<cells>
+										<Text text="{ComboDetails>Company}"/>
+										<Text text="{ComboDetails>Personal_Sub_Area}"/>
+										<Text text="{ComboDetails>Personal_Sub_Desc}"/>
+										<!--	<HBox justifyContent="End">
+											<Button icon="sap-icon://copy" type="Transparent" press="onCopyValueTable"/>
+											<Button icon="sap-icon://edit" type="Transparent" press="onEditValueTable($event, 'ComboDetails')"/>
+										</HBox>-->
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</content>
+				</Panel>
+				<Panel width="auto" class="sapUiResponsiveMargin" visible="{=${ViewData>/oTbname}==='SI' ? true : false}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<Title text="Sponsor Institution"/>
+							<ToolbarSpacer/>
+							<!--<Button icon="sap-icon://add" text="ADD" type="Emphasized" press="onAddValueTable"/>
+							<Button icon="sap-icon://delete" text="DELETE" visible="false" type="Reject" press="onDeleteValueTable($event, 'oTableSI', 'SPONSOR_SPL', 'ComboDetails')"/>-->
+						</OverflowToolbar>
+					</headerToolbar>
+					<content>
+						<Table id="oTableSI" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+							items="{path:'ComboDetails>/SPONSOR_SPL' , sorter: { path: 'Company', descending: false}}">
+							<headerToolbar>
+								<OverflowToolbar>
+									<content>
+										<Title text="Add New Sponsor Institution" class="sapUiSmallMargin"/>
+										<ToolbarSpacer/>
+										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTableSI', 'Sponsor_Desc' )"
+											liveChange="onSearchTM($event, 'oTableSI', 'Sponsor_Desc' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('SPONSOR_SPL')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableSI', 'Sponsor_Desc')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableSI', 'Sponsor_Desc')"/>
+									</content>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column >
+									<Text text="Company Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Sponsor Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Sponsor Description"/>
+								</Column>
+								<Column hAlign="End"></Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Active" press="onEdit">
+									<cells>
+										<Text text="{ComboDetails>Company}"/>
+										<Text text="{ComboDetails>Sponsor_Code}"/>
+										<Text text="{ComboDetails>Sponsor_Desc}"/>
+										<HBox justifyContent="End" visible="false">
+											<Button icon="sap-icon://copy" type="Transparent" press="onCopyValueTable"/>
+											<Button icon="sap-icon://edit" type="Transparent" press="onEditValueTable($event, 'ComboDetails')"/>
+										</HBox>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</content>
+				</Panel>
+				<Panel width="auto" class="sapUiResponsiveMargin" visible="{=${ViewData>/oTbname}==='SPL' ? true : false}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<Title text="Specialisation"/>
+							<ToolbarSpacer/>
+							<!--<Button icon="sap-icon://add" text="ADD" type="Emphasized" press="onAddValueTable"/>
+							<Button icon="sap-icon://delete" text="DELETE" visible="false" type="Reject"
+								press="onDeleteValueTable($event, 'oTableSPL', 'SPECIALISATION', 'ComboDetails')"/>-->
+						</OverflowToolbar>
+					</headerToolbar>
+					<content>
+						<Table id="oTableSPL" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+							items="{path:'ComboDetails>/SPECIALISATION' , sorter: { path: 'Company', descending: false}}">
+							<headerToolbar>
+								<OverflowToolbar>
+									<content>
+										<Title text="Add New Specialisation" class="sapUiSmallMargin"/>
+										<ToolbarSpacer/>
+										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTableSPL', 'Special_Desc' )"
+											liveChange="onSearchTM($event, 'oTableSPL', 'Special_Desc' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('SPECIALISATION')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableSPL', 'Special_Code')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableSPL', 'Special_Code')"/>
+									</content>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column >
+									<Text text="Company Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Specialisation Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Specialisation Description"/>
+								</Column>
+								<Column hAlign="End"></Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Active" press="onEdit">
+									<cells>
+										<Text text="{ComboDetails>Company}"/>
+										<Text text="{ComboDetails>Special_Code}"/>
+										<Text text="{ComboDetails>Special_Desc}"/>
+										<HBox justifyContent="End" visible="false">
+											<Button icon="sap-icon://copy" type="Transparent" press="onCopyValueTable"/>
+											<Button icon="sap-icon://edit" type="Transparent" press="onEditValueTable($event, 'ComboDetails')"/>
+										</HBox>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</content>
+				</Panel>
+				<Panel width="auto" class="sapUiResponsiveMargin" visible="{=${ViewData>/oTbname}==='RO' ? true : false}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<Title text="Location RO ({= ${oLocationRO>/}.length})"/>
+							<ToolbarSpacer/>
+							<Button icon="sap-icon://add" text="ADD" type="Emphasized" press="onAddValueTable"/>
+							<Button icon="sap-icon://delete" text="DELETE" type="Reject" press="onDeleteValueTable($event, 'oTableRO', 'LOCATION_RO', 'oLocationRO')"/>
+						</OverflowToolbar>
+					</headerToolbar>
+					<content>
+						<Table id="oTableRO" inset="false" mode="MultiSelect" updateFinished="updatingLoc" growing="true" growingThreshold="1000"
+							items="{path:'oLocationRO>/' , sorter: { path: 'Company', descending: false}}" enableBusyIndicator="false" busy="true">
+							<headerToolbar>
+								<OverflowToolbar>
+									<content>
+										<Title text="Add New RO" class="sapUiSmallMargin"/>
+										<ToolbarSpacer/>
+										<SearchField placeholder="Search Location RO" width="25%" search="onSearchTM($event, 'oTableRO', 'Location_RO_EmployeeID' )"
+											liveChange="onSearchTM($event, 'oTableRO', 'Location_RO_EmployeeID' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oLocationRO', true)"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableRO', 'Location_RO_EmployeeID')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableRO', 'Location_RO_EmployeeID')"/>
+									</content>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Department"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Division"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Location RO"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Start Date"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="End Date"/>
+								</Column>
+								<Column hAlign="End"></Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Active" press="onEdit">
+									<cells>
+										<Text text="{oLocationRO>DEPARTMENT} - {oLocationRO>DEPARTMENT_ID}"/>
+										<Text text="{oLocationRO>DIVISION} - {oLocationRO>DIVISION_ID}"/>
+										<ObjectIdentifier title="{oLocationRO>Location_RO_EmployeeID}"/>
+										<Text text="{ path: 'oLocationRO>START_DATE', formatter: '.formatter.oClaimDate' }"/>
+										<Text text="{ path: 'oLocationRO>END_DATE', formatter: '.formatter.oClaimDate' }"/>
+										<HBox justifyContent="End">
+											<Button icon="sap-icon://copy" type="Transparent" press="onCopyValueTable"/>
+											<Button icon="sap-icon://edit" type="Transparent" press="onEditValueTable($event, 'oLocationRO')"/>
+										</HBox>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</content>
+				</Panel>
+				<Panel width="auto" class="sapUiResponsiveMargin" visible="{=${ViewData>/oTbname}==='EA' ? true : false}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<Title text="Entitlement Adjustment"/>
+							<ToolbarSpacer/>
+							<Button icon="sap-icon://add" text="ADD" type="Emphasized" press="onAddValueTable"/>
+							<Button icon="sap-icon://delete" text="DELETE" type="Reject" press="onDeleteValueTable($event, 'oTableEA', 'oEntitAjus','oEntitAdjus')"/>
+						</OverflowToolbar>
+					</headerToolbar>
+					<content>
+						<Table id="oTableEA" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+							items="{path:'oEntitAdjus>/' , sorter: { path: 'Claim_code', descending: false}}">
+							<headerToolbar>
+								<OverflowToolbar>
+									<content>
+										<Title text="Add Entitlement Adjustment" class="sapUiSmallMargin"/>
+										<ToolbarSpacer/>
+										<SearchField placeholder="Search Claim Code" width="25%" search="onSearchTM($event, 'oTableEA', 'Claim_code' )"
+											liveChange="onSearchTM($event, 'oTableEA', 'Claim_code' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oEntitAdjus', true)"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableEA', 'Claim_code')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableEA', 'Claim_code')"/>
+									</content>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column >
+									<Text text="Employee ID"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Claim Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Year"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Adjustment"/>
+								</Column>
+								<Column hAlign="End"></Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Active" press="onEdit">
+									<cells>
+										<ObjectIdentifier title="{oEntitAdjus>emp_Id}"/>
+										<Text text="{oEntitAdjus>Claim_code}"/>
+										<Text text="{oEntitAdjus>Year}"/>
+										<Text
+											text="{ path:'oEntitAdjus>Adjustment', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+										<HBox justifyContent="End">
+											<Button icon="sap-icon://copy" type="Transparent" press="onCopyValueTable"/>
+											<Button icon="sap-icon://edit" type="Transparent" press="onEditValueTable($event, 'oEntitAdjus')"/>
+										</HBox>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</content>
+				</Panel>
+				<Panel width="auto" class="sapUiResponsiveMargin" visible="{=${ViewData>/oTbname}==='WRC' ? true : false}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<Title text="Work Related Claim Amount"/>
+							<ToolbarSpacer/>
+							<Button icon="sap-icon://add" text="ADD" type="Emphasized" press="onAddValueTable"/>
+							<Button icon="sap-icon://delete" text="DELETE" type="Reject" press="onDeleteValueTable($event, 'oTableWRC', 'oWRCamnt', 'oWRCamnt')"/>
+						</OverflowToolbar>
+					</headerToolbar>
+					<content>
+						<Table id="oTableWRC" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+							items="{path:'oWRCamnt>/' , sorter: { path: 'CLAIM_CODE', descending: false}}">
+							<headerToolbar>
+								<OverflowToolbar>
+									<content>
+										<Title text="Add WRC Amount" class="sapUiSmallMargin"/>
+										<ToolbarSpacer/>
+										<SearchField placeholder="Search Claim Code" width="25%" search="onSearchTM($event, 'oTableWRC', 'CLAIM_CODE' )"
+											liveChange="onSearchTM($event, 'oTableWRC', 'CLAIM_CODE' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oWRCamnt', true)"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableWRC', 'CLAIM_CODE')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableWRC', 'CLAIM_CODE')"/>
+									</content>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column >
+									<Text text="Claim Code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Start Date"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="End Date"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Date Type"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Pay Grade"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Amount"/>
+								</Column>
+								<Column hAlign="End"></Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Active" press="onEdit">
+									<cells>
+										<ObjectIdentifier title="{oWRCamnt>CLAIM_CODE}"/>
+										<Text text="{ path: 'oWRCamnt>START_DATE', formatter: '.formatter.oClaimDate' }"/>
+										<Text text="{ path: 'oWRCamnt>END_DATE', formatter: '.formatter.oClaimDate' }"/>
+										<Text text="{oWRCamnt>DAY_TYPE}"/>
+										<Text text="{oWRCamnt>PAY_GRADE}"/>
+										<Text text="{ path:'oWRCamnt>AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+										<HBox justifyContent="End">
+											<Button icon="sap-icon://copy" type="Transparent" press="onCopyValueTable"/>
+											<Button icon="sap-icon://edit" type="Transparent" press="onEditValueTable($event, 'oWRCamnt')"/>
+										</HBox>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</content>
+				</Panel>
+				<Panel width="auto" class="sapUiResponsiveMargin" visible="{=${ViewData>/oTbname}==='TRAN' ? true : false}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<Title text="Transport Amount"/>
+							<ToolbarSpacer/>
+							<Button icon="sap-icon://add" text="ADD" type="Emphasized" press="onAddValueTable"/>
+							<Button icon="sap-icon://delete" text="DELETE" type="Reject" press="onDeleteValueTable($event, 'oTableTRA', 'oTransAmnt', 'oTransAmnt')"/>
+						</OverflowToolbar>
+					</headerToolbar>
+					<content>
+						<Table id="oTableTRA" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+							items="{path:'oTransAmnt>/' , sorter: { path: 'TRANSPORT_DESC', descending: false}}">
+							<headerToolbar>
+								<OverflowToolbar>
+									<content>
+										<Title text="Add Transport Amount" class="sapUiSmallMargin"/>
+										<ToolbarSpacer/>
+										<SearchField placeholder="Search Vehicle Type" width="25%" search="onSearchTM($event, 'oTableTRA', 'TRANSPORT_DESC' )"
+											liveChange="onSearchTM($event, 'oTableTRA', 'TRANSPORT_DESC' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oTransAmnt', true)"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableTRA', 'TRANSPORT_DESC')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableTRA', 'TRANSPORT_DESC')"/>
+									</content>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column >
+									<Text text="Start Date"/>
+								</Column>
+								<Column >
+									<Text text="End Date"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Vehicle Type"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Rate"/>
+								</Column>
+								<Column hAlign="End"></Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Active" press="onEdit">
+									<cells>
+										<Text text="{ path: 'oTransAmnt>START_DATE', formatter: '.formatter.oClaimDate' }"/>
+										<Text text="{ path: 'oTransAmnt>END_DATE', formatter: '.formatter.oClaimDate' }"/>
+										<Text text="{oTransAmnt>TRANSPORT_DESC}"/>
+										<Text text="{ path:'oTransAmnt>RATE', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+										<HBox justifyContent="End">
+											<Button icon="sap-icon://copy" type="Transparent" press="onCopyValueTable"/>
+											<Button icon="sap-icon://edit" type="Transparent" press="onEditValueTable($event, 'oTransAmnt')"/>
+										</HBox>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</content>
+				</Panel>
+				<Panel width="auto" class="sapUiResponsiveMargin" visible="{=${ViewData>/oTbname}==='LOC' ? true : false}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<Title text="Location"/>
+							<ToolbarSpacer/>
+							<Button icon="sap-icon://add" text="ADD" type="Emphasized" press="onAddValueTable"/>
+							<Button icon="sap-icon://delete" text="DELETE" type="Reject" press="onDeleteValueTable($event, 'oTableLOC', 'LOCATION', 'ComboDetails')"/>
+						</OverflowToolbar>
+					</headerToolbar>
+					<content>
+						<Table id="oTableLOC" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+							items="{path:'ComboDetails>/LOCATION' , sorter: { path: 'LOCATION', descending: false}}">
+							<headerToolbar>
+								<OverflowToolbar>
+									<content>
+										<Title text="Add Location" class="sapUiSmallMargin"/>
+										<ToolbarSpacer/>
+										<SearchField placeholder="Search Location" width="25%" search="onSearchTM($event, 'oTableLOC', 'LOCATION' )"
+											liveChange="onSearchTM($event, 'oTableLOC', 'LOCATION' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('LOCATION')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableLOC', 'LOCATION')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableLOC', 'LOCATION')"/>
+									</content>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column >
+									<Text text="Start Date"/>
+								</Column>
+								<Column >
+									<Text text="End Date"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Location"/>
+								</Column>
+								<Column hAlign="End"></Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Active" press="onEdit">
+									<cells>
+										<Text text="{ path: 'ComboDetails>START_DATE', formatter: '.formatter.oClaimDate' }"/>
+										<Text text="{ path: 'ComboDetails>END_DATE', formatter: '.formatter.oClaimDate' }"/>
+										<Text text="{ComboDetails>LOCATION}"/>
+										<HBox justifyContent="End">
+											<Button icon="sap-icon://copy" type="Transparent" press="onCopyValueTable"/>
+											<Button icon="sap-icon://edit" type="Transparent" press="onEditValueTable($event, 'ComboDetails')"/>
+										</HBox>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</content>
+				</Panel>
+				<Panel width="auto" class="sapUiResponsiveMargin" visible="{=${ViewData>/oTbname}==='CUT' ? true : false}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<Title text="Claim Cut-Off"/>
+							<ToolbarSpacer/>
+							<Button icon="sap-icon://add" text="ADD" type="Emphasized" press="onAddValueTable"/>
+							<Button icon="sap-icon://delete" text="DELETE" type="Reject" press="onDeleteValueTable($event, 'oTableCUT', 'oPostCutoff', 'oPostCutoff')"/>
+						</OverflowToolbar>
+					</headerToolbar>
+					<content>
+						<Table id="oTableCUT" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+							items="{path:'oPostCutoff>/' , sorter: { path: 'payrollArea', descending: false}}">
+							<headerToolbar>
+								<OverflowToolbar>
+									<content>
+										<Title text="Add Claim Cut-Off" class="sapUiSmallMargin"/>
+										<ToolbarSpacer/>
+										<SearchField placeholder="Search PayrollArea" width="25%" search="onSearchTM($event, 'oTableCUT', 'payrollArea' )"
+											liveChange="onSearchTM($event, 'oTableCUT', 'payrollArea' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oPostCutoff', true)"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableCUT', 'payrollArea')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableCUT', 'payrollArea')"/>
+									</content>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column >
+									<Text text="Company"/>
+								</Column>
+								<Column >
+									<Text text="Payroll Area"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Payroll Peroid"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Claim Final Approval"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Estimated Payment Date"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Posting cutt-off Date"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Replication-Restart"/>
+								</Column>
+								<Column hAlign="End"></Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Active" press="onEdit">
+									<cells>
+										<Text text="{oPostCutoff>company}"/>
+										<Text text="{oPostCutoff>payrollArea}"/>
+										<Text text="{oPostCutoff>payrollPeriod}"/>
+										<Text
+											text="{ path: 'oPostCutoff>claimFinalApprovalDateFrom', formatter: '.formatter.oClaimDate' } - { path: 'oPostCutoff>claimFinalApprovalDateTo', formatter: '.formatter.oClaimDate' }"/>
+										<Text text="{ path: 'oPostCutoff>estimatePaymentDate', formatter: '.formatter.oClaimDate' }"/>
+										<Text text="{ path: 'oPostCutoff>postingCutoffDate', formatter: '.formatter.oClaimDate' }"/>
+										<Text text="{ path: 'oPostCutoff>replicationRestart', formatter: '.formatter.oClaimDate' }"/>
+										<HBox justifyContent="End">
+											<Button icon="sap-icon://copy" type="Transparent" press="onCopyValueTable"/>
+											<Button icon="sap-icon://edit" type="Transparent" press="onEditValueTable($event, 'oPostCutoff')"/>
+										</HBox>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</content>
+				</Panel>
+				<Panel width="auto" class="sapUiResponsiveMargin" visible="{=${ViewData>/oTbnameSCH}==='GC' ? true : false}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<Title text="GL Mapping"/>
+							<ToolbarSpacer/>
+							<Button icon="sap-icon://add" text="ADD" type="Emphasized" press="onScholarOpen"/>
+							<Button icon="sap-icon://delete" text="DELETE" type="Reject" press="onDeleteSch($event, 'oTableGLmap', 'oScholar')"/>
+						</OverflowToolbar>
+					</headerToolbar>
+					<content>
+						<Table id="oTableGLmap" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+							items="{path:'oScholar>/' , sorter: { path: 'START_DATE', descending: false}}">
+							<headerToolbar>
+								<OverflowToolbar>
+									<content>
+										<Title text="Add New Details" class="sapUiSmallMargin"/>
+										<ToolbarSpacer/>
+										<SearchField placeholder="Search Scheme" width="25%" search="onSearchTM($event, 'oTableGLmap', 'SCHOLAR_SCHEME' )"
+											liveChange="onSearchTM($event, 'oTableGLmap', 'SCHOLAR_SCHEME' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oScholar', true)"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableGLmap', 'START_DATE')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableGLmap', 'START_DATE')"/>
+									</content>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column >
+									<Text text="Start Date"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="End Date"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="GL Account"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Scholar Scheme"/>
+								</Column>
+								<Column hAlign="End"></Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Active" press="onEditSch">
+									<cells>
+										<Text text="{ path: 'oScholar>START_DATE', formatter: '.formatter.oClaimDate'}"/>
+										<Text text="{ path: 'oScholar>END_DATE', formatter: '.formatter.oClaimDate'}"/>
+										<Text text="{oScholar>GL_ACC}"/>
+										<Text text="{oScholar>SCHOLAR_SCHEME}"/>
+										<HBox justifyContent="End">
+											<Button icon="sap-icon://copy" type="Transparent" press="onCopyValueTable" visible="false"/>
+											<Button icon="sap-icon://edit" type="Transparent" press="onEditSch($event, 'oScholar')"/>
+										</HBox>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</content>
+				</Panel>
+				<Panel width="auto" class="sapUiResponsiveMargin" visible="{=${ViewData>/oTbnameSCH}==='CURR' ? true : false}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<Title text="Currency Exchange"/>
+							<ToolbarSpacer/>
+							<Button icon="sap-icon://add" text="ADD" type="Emphasized" press="onScholarOpen"/>
+							<Button icon="sap-icon://delete" text="DELETE" type="Reject" press="onDeleteSch($event, 'oTableCurren', 'oScholar')"/>
+						</OverflowToolbar>
+					</headerToolbar>
+					<content>
+						<Table id="oTableCurren" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+							items="{path:'oScholar>/' , sorter: { path: 'START_DATE', descending: false}}">
+							<headerToolbar>
+								<OverflowToolbar>
+									<content>
+										<Title text="Add New Details" class="sapUiSmallMargin"/>
+										<ToolbarSpacer/>
+										<SearchField placeholder="Search Currency" width="25%" search="onSearchTM($event, 'oTableCurren', 'CURRENCY' )"
+											liveChange="onSearchTM($event, 'oTableCurren', 'CURRENCY' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oScholar', true)"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableCurren', 'START_DATE')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableCurren', 'START_DATE')"/>
+									</content>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column >
+									<Text text="Start Date"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="End Date"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Currency"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="RATE"/>
+								</Column>
+								<Column hAlign="End"></Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Active" press="onEditSch">
+									<cells>
+										<Text text="{ path: 'oScholar>START_DATE', formatter: '.formatter.oClaimDate'}"/>
+										<Text text="{ path: 'oScholar>END_DATE', formatter: '.formatter.oClaimDate'}"/>
+										<Text text="{oScholar>CURRENCY}"/>
+										<Text text="{ path:'oScholar>RATE', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 4, maxFractionDigits: 4 } }"/>
+										<HBox justifyContent="End">
+											<Button icon="sap-icon://copy" type="Transparent" press="onCopyValueTable" visible="false"/>
+											<Button icon="sap-icon://edit" type="Transparent" press="onEditSch($event, 'oScholar')"/>
+										</HBox>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</content>
+				</Panel>
+				<Panel width="auto" class="sapUiResponsiveMargin" visible="{=${ViewData>/oTbnameSCH}==='VEND' ? true : false}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<Title text="Vendor Code"/>
+							<ToolbarSpacer/>
+							<Button icon="sap-icon://add" text="ADD" type="Emphasized" press="onScholarOpen"/>
+							<Button icon="sap-icon://delete" text="DELETE" type="Reject" press="onDeleteSch($event, 'oTableVendor', 'oScholar')"/>
+						</OverflowToolbar>
+					</headerToolbar>
+					<content>
+						<Table id="oTableVendor" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+							items="{path:'oScholar>/' , sorter: { path: 'START_DATE', descending: false}}">
+							<headerToolbar>
+								<OverflowToolbar>
+									<content>
+										<Title text="Add New Details" class="sapUiSmallMargin"/>
+										<ToolbarSpacer/>
+										<SearchField placeholder="Search Vendor" width="25%" search="onSearchTM($event, 'oTableVendor', 'VEDNOR_CODE' )"
+											liveChange="onSearchTM($event, 'oTableVendor', 'VEDNOR_CODE' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oScholar', true)"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableVendor', 'START_DATE')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableVendor', 'START_DATE')"/>
+									</content>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column >
+									<Text text="Start Date"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="End Date"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Vendor code"/>
+								</Column>
+								<Column minScreenWidth="Desktop" demandPopin="true">
+									<Text text="Vendor Description"/>
+								</Column>
+								<Column hAlign="End"></Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Active" press="onEditSch">
+									<cells>
+										<Text text="{ path: 'oScholar>START_DATE', formatter: '.formatter.oClaimDate'}"/>
+										<Text text="{ path: 'oScholar>END_DATE', formatter: '.formatter.oClaimDate'}"/>
+										<Text text="{oScholar>VENDOR_CODE}"/>
+										<Text text="{oScholar>VENDOR_DESC}"/>
+										<HBox justifyContent="End">
+											<Button icon="sap-icon://copy" type="Transparent" press="onCopyValueTable" visible="false"/>
+											<Button icon="sap-icon://edit" type="Transparent" press="onEditSch($event, 'oScholar')"/>
+										</HBox>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</content>
+				</Panel>
+			</VBox>
+		</content>
+		<!--	<footer>
+			<OverflowToolbar>
+				<Button text="Submit" press="onPostCall"/>
+			</OverflowToolbar>
+		</footer>-->
+	</Page>
+</mvc:View>

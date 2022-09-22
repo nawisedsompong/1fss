@@ -1,0 +1,66 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<Table id="tbAdminApprovalDetails" items="{path:'AdminApprovalModel>/' , sorter: { path: 'CATEGORY_CODE', descending: false}}" inset="false"
+		updateFinished="onTotalAmount($event,'AdminApprovalModel')" sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true"
+		mode="MultiSelect">
+		<headerToolbar>
+			<OverflowToolbar>
+				<content>
+					<Title text="Pending Claim ({= ${AdminApprovalModel>/}.length})" level="H2"/>
+					<ToolbarSpacer/>
+					<Input id="inpEmpIDAdm" width="18%" value="{ViewData>/oReRouteEmp}" valueHelpRequest="onEmpSearchOpen('ViewData','RE','RE')"
+						showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1"
+						showTableSuggestionValueHelp="false"/>
+					<Button text="SEARCH" press="onSearchReroute" width="8%" type="Emphasized"/>
+				</content>
+			</OverflowToolbar>
+		</headerToolbar>
+		<columns>
+			<Column minScreenWidth="Tablet" demandPopin="true" mergeDuplicates="true" width="{=${device>/isPhone}=== true ? 'auto' : '9%'}">
+				<Label text="Claim Category" design="Bold" wrapping="true"/>
+			</Column>
+			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '21%'}">
+				<Label text="Claim Type" design="Bold" wrapping="true"/>
+			</Column>
+			<Column width="{=${device>/isPhone}=== true ? 'auto' : '19%'}">
+				<Label wrapping="true" text="Employee" design="Bold"/>
+			</Column>
+			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '18%'}">
+				<Label text="Claim Reference No" design="Bold" wrapping="true"/>
+			</Column>
+			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '8%'}">
+				<Label design="Bold" text="Claim / Receipt Date" wrapping="true"/>
+			</Column>
+			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '13%'}">
+				<Label text="Claim Status" design="Bold" wrapping="true"/>
+			</Column>
+			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '6%'}" hAlign="End">
+				<Label design="Bold" text="Amount" wrapping="true"/>
+				<!--<footer>
+					<ObjectAttribute title="Total"
+						text="{ path:'ViewData>/TotalClaim', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"></ObjectAttribute>
+				</footer>-->
+			</Column>
+		</columns>
+		<items>
+			<ColumnListItem type="Navigation" press="onSelectItem($event, false, 'AdminApprovalModel')">
+				<cells>
+					<Text text="{path: 'AdminApprovalModel>CATEGORY_CODE', formatter: '.formatter.oClaimDesc'}"/>
+					<Text text="{path: 'AdminApprovalModel>CLAIM_CATEGORY', formatter: '.formatter.oClaimCategDesc'}"/>
+					<!--Sahas FirstName Last Name Change-->
+					<Text text="{AdminApprovalModel>CLAIM_OWNER_ID} / {AdminApprovalModel>Claim_Owner_FullName}"/>
+					<!--<Text text="{AdminApprovalModel>CLAIM_OWNER_ID} / {AdminApprovalModel>CLAIM_OWNER_FIRSTNAME}, {AdminApprovalModel>CLAIM_OWNER_LASTNAME}"/>-->
+					<!--End Sahas FirstName Last Name Change-->
+					<Text text="{AdminApprovalModel>CLAIM_REFERENCE}"/>
+					<Text
+						text="{ path: 'AdminApprovalModel>CLAIM_DATE', formatter: '.formatter.oClaimDate' } / { path: 'AdminApprovalModel>RECEIPT_DATE', formatter: '.formatter.oClaimDate' }"/>
+					<ObjectStatus
+						state="{=${AdminApprovalModel>CLAIM_STATUS}==='Pending for Approval' ? 'Warning' : ${AdminApprovalModel>CLAIM_STATUS}==='Approved' ? 'Success' : 'Error' }"
+						text="{AdminApprovalModel>CLAIM_STATUS}"/>
+					<Text
+						text="{ path:'AdminApprovalModel>AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+				</cells>
+			</ColumnListItem>
+		</items>
+	</Table>
+</core:FragmentDefinition>

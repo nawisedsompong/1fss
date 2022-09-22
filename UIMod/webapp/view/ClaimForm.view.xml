@@ -1,0 +1,49 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m"
+	controllerName="BenefitClaim.ZBenefitClaim.controller.ClaimForm" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:l="sap.ui.layout">
+	<Page title="{ViewData>/ClaimDesc}" class="sapUiSizeCompact Dashboard_bg" navButtonPress="onNavBackForm"
+		showFooter="{=${ViewData>/oTile} === 'MassR'}" showNavButton="true">
+		<customHeader>
+			<Bar>
+				<contentLeft>
+					<Button icon="sap-icon://nav-back" press="onNavBackForm"/>
+				</contentLeft>
+				<contentMiddle>
+					<Title text="{ViewData>/ClaimDesc}"/>
+				</contentMiddle>
+				<contentRight>
+					<Image src="images/mohh.jpg" width="{ViewData>/width}" height="{ViewData>/height}"></Image>
+					<!--<Button icon="sap-icon://log" press="onLogout"/>-->
+				</contentRight>
+			</Bar>
+		</customHeader>
+		<content>
+			<VBox class="VboxBackground"
+				visible="{=${ViewData>/oTile}==='Form' ? true : ( (${ViewData>/oTile}==='Admin' || ${ViewData>/oTile}==='AdminSch' || ${ViewData>/oTile}==='CoordinatSch' || ${ViewData>/oTile}==='Coordinat') &amp;&amp; ${ViewData>/oAdminHis}==='F') ? true : false}">
+				<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.ClaimForm" type="XML"/>
+			</VBox>
+			<VBox class="VboxBackground"
+				visible="{=${ViewData>/oTile}==='History' ? true : ${ViewData>/oTile}==='PaymentUpload' ? true : ${ViewData>/oTile}==='HistoryCoord' ? true : ${ViewData>/oTile}==='HistoryCoordSch' ? true : (( ${ViewData>/oTile}==='Admin' &amp;&amp; ${ViewData>/oAdminHis}==='H') || ( ${ViewData>/oTile}==='AdminSch' &amp;&amp; ${ViewData>/oAdminHis}==='H') || ( ${ViewData>/oTile}==='CoordinatSch' &amp;&amp; ${ViewData>/oAdminHis}==='H') || ( ${ViewData>/oTile}==='Coordinat' &amp;&amp; ${ViewData>/oAdminHis}==='H') )? true : false}">
+				<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.History" type="XML"/>
+			</VBox>
+			<VBox class="VboxBackground" visible="{=${ViewData>/oTile}==='Approvals' ? true : ${ViewData>/oTile}==='SMSApprovals' ? true : false}">
+				<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.Approvals" type="XML"/>
+			</VBox>
+			<VBox class="VboxBackground" visible="{=${ViewData>/oTile}==='HisRep' ? true : false}">
+				<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.AdminHistory" type="XML"/>
+			</VBox>
+			<VBox class="VboxBackground" visible="{=${ViewData>/oTile}==='MassR' ? true : false}">
+				<core:Fragment id="fgRoute" fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.Reroute" type="XML"/>
+			</VBox>
+		</content>
+		<footer>
+			<OverflowToolbar>
+				<ToolbarSpacer/>
+				<Button text="RE-ROUTE" type="Emphasized" icon="sap-icon://action" iconFirst="true" press="onEmpSearchOpen('ViewData', 'TR')"/>
+				<!--<Button text="APPROVE" type="Accept" icon="sap-icon://accept" iconFirst="true" press="onSubmit($event,'A')"/>
+				<Button text="REJECT" type="Reject" icon="sap-icon://decline" iconFirst="true" press="onSubmit($event,'R')"/>
+				<Button text="SUBMIT" type="Accept" icon="sap-icon://complete" press="onSubmitApproval" {=${ViewData>/oTile}==='Approvals' ? true :false }
+					visible="{=${ViewData>/oTile}==='Form' ? true : ${ViewData>/oTile}==='Admin' ? true :false}"/>-->
+			</OverflowToolbar>
+		</footer>
+	</Page>
+</mvc:View>

@@ -1,0 +1,8 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<SelectDialog class="sapUiSizeCompact" title="Currency Search" id="dlgCurrency" search="onSearch($event,'CURRENCY')"
+		liveChange="onSearch($event,'CURRENCY')" confirm="onCurrencyClose" cancel="onSDialogCancel" growing="true"
+		items="{path:'oCurrency>/' , sorter: { path: 'CURRENCY', descending: false}}">
+		<StandardListItem title="{oCurrency>CURRENCY}"
+			description="Exchange Rate: { path:'oCurrency>RATE', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 4, maxFractionDigits: 4 } }"/>
+	</SelectDialog>
+</core:FragmentDefinition>

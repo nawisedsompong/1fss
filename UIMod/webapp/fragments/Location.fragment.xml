@@ -1,0 +1,7 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<SelectDialog class="sapUiSizeCompact" title="Location Search" id="dlgLocation" search="onSearch($event,'LOCATION', 'LOCATION')"
+		liveChange="onSearch($event,'LOCATION', 'LOCATION')" confirm="onLocClose" cancel="onSDialogCancel" growing="true"
+		items="{path:'ComboDetails>/LOCATION' , sorter: { path: 'LOCATION', descending: false}}">
+		<StandardListItem title="{ComboDetails>LOCATION}" />
+	</SelectDialog>
+</core:FragmentDefinition>

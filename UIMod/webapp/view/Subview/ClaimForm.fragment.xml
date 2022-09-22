@@ -1,0 +1,90 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<Title class="sapUiSmallMargin" text="{i18n>TIT_GNRL_INFO}" titleStyle="H3" visible="{=${ViewData>/ClaimType}==='PAY_UP' ? false : true}"/>
+	<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0" visible="{=${ViewData>/ClaimType}==='PAY_UP' ? false : true}">
+		<l:content>
+			<VBox class="sapUiMediumMarginEnd">
+				<Label text="{i18n>LBL_EMPID}" wrapping="true" visible="{=${oEmpData>/COMPANY} !== 'MOHHSCH'}"/>
+				<Label text="{i18n>LBL_SCH_ID}" wrapping="true" visible="{=${oEmpData>/COMPANY} === 'MOHHSCH'}"/>
+				<Text text="{oEmpData>/USERID}"/>
+			</VBox>
+			<VBox class="sapUiMediumMarginEnd">
+				<Label text="{i18n>LBL_EMP_NAME}" visible="{=${oEmpData>/COMPANY} !== 'MOHHSCH'}"/>
+				<Label text="{i18n>LBL_SCH_NAME}" visible="{=${oEmpData>/COMPANY} === 'MOHHSCH'}"/>
+				<Text text="{oEmpData>/FULLNAME}"/>
+			</VBox>
+		</l:content>
+	</l:Grid>
+	<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0" visible="{=${ViewData>/ClaimType}==='PAY_UP' ? false : true}">
+		<l:content>
+			<VBox class="sapUiMediumMarginEnd">
+				<Label text="{i18n>LBL_DEPT}" wrapping="true"/>
+				<Text text="{oEmpData>/DEPARTMENT} / {oEmpData>/DEPARTMENT_DESC}"/>
+			</VBox>
+			<VBox class="sapUiMediumMarginEnd">
+				<Label text="{i18n>LBL_DIVISION}"/>
+				<Text text="{oEmpData>/DIVISION} / {oEmpData>/DIVISION_DESC}"/>
+			</VBox>
+		</l:content>
+	</l:Grid>
+	<VBox class="sapUiSmallMargin VboxBackground" visible="{=${ViewData>/ClaimType}==='MC' ? true : false}">
+		<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.ClaimTypes.Hospital" type="XML"/>
+	</VBox>
+	<VBox class="sapUiSmallMargin VboxBackground" visible="{=${ViewData>/ClaimType}==='TC' ? true : false}">
+		<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.ClaimTypes.Transport" type="XML"/>
+	</VBox>
+	<VBox class="sapUiSmallMargin VboxBackground" visible="{=${ViewData>/ClaimType}==='WRC' ? true : false}">
+		<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.ClaimTypes.WorkReleted" type="XML"/>
+	</VBox>
+	<VBox class="sapUiSmallMargin VboxBackground" visible="{=${ViewData>/ClaimType}==='WRC_HR' ? true : false}">
+		<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.ClaimTypes.WorkReletedHR" type="XML"/>
+	</VBox>
+	<VBox class="sapUiSmallMargin VboxBackground" visible="{=${ViewData>/ClaimType}==='WIC' ? true : false}">
+		<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.ClaimTypes.WorkInjured" type="XML"/>
+	</VBox>
+	<VBox class="sapUiSmallMargin VboxBackground" visible="{=${ViewData>/ClaimType}==='PC' ? true : false}">
+		<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.ClaimTypes.PettiCash" type="XML"/>
+	</VBox>
+	<VBox class="sapUiSmallMargin VboxBackground" visible="{=${ViewData>/ClaimType}==='PTF' ? true : false}">
+		<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.ClaimTypes.PTF" type="XML"/>
+	</VBox>
+	<VBox class="sapUiSmallMargin VboxBackground" visible="{=${ViewData>/ClaimType}==='CLS' ? true : false}">
+		<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.ClaimTypes.Acls" type="XML"/>
+	</VBox>
+	<VBox class="sapUiSmallMargin VboxBackground" visible="{=${ViewData>/ClaimType}==='AHP' ? true : false}">
+		<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.ClaimTypes.Ahp" type="XML"/>
+	</VBox>
+	<VBox class="sapUiSmallMargin VboxBackground" visible="{=${ViewData>/ClaimType}==='LIC' ? true : false}">
+		<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.ClaimTypes.License" type="XML"/>
+	</VBox>
+	<VBox class="sapUiSmallMargin VboxBackground" visible="{parts:[{path:'ViewData>/ClaimType'}],formatter:'.formatter.oSPVisible'}">
+		<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.ClaimTypes.Sponsorships" type="XML"/>
+	</VBox>
+	<VBox class="sapUiSmallMargin VboxBackground" visible="{=${ViewData>/ClaimType}==='MSR' ? true : false}">
+		<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.ClaimTypes.MedicalStaff" type="XML"/>
+	</VBox>
+	<VBox class="sapUiSmallMargin VboxBackground" visible="{=${ViewData>/ClaimType}==='TIM' ? true : false}">
+		<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.ClaimTypes.Overtime" type="XML"/>
+	</VBox>
+	<VBox class="sapUiSmallMargin VboxBackground" visible="{=${ViewData>/ClaimType}==='COV' ? true : false}">
+		<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.ClaimTypes.Covid" type="XML"/>
+	</VBox>
+	<VBox class="sapUiSmallMargin VboxBackground" visible="{=${ViewData>/ClaimType}==='CPC' ? true : false}">
+		<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.ClaimTypes.PlacementClaim" type="XML"/>
+	</VBox>
+	<VBox class="sapUiSmallMargin VboxBackground" visible="{=${ViewData>/ClaimType}==='CPR' ? true : false}">
+		<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.ClaimTypes.PlacementRequest" type="XML"/>
+	</VBox>
+	<VBox class="sapUiSmallMargin VboxBackground" visible="{=${ViewData>/ClaimType}==='OC' ? true : false}">
+		<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.ClaimTypes.OtherClaim" type="XML"/>
+	</VBox>
+	<VBox class="sapUiSmallMargin VboxBackground" visible="{=${ViewData>/ClaimType}==='PAY_UP' ? true : false}">
+		<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.ClaimTypes.PaymentUpload" type="XML"/>
+	</VBox>
+	<VBox class="sapUiSmallMargin VboxBackground" visible="{=${ViewData>/ClaimType}==='SDFC' ? true : false}">
+		<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.ClaimTypes.SDFClaim" type="XML"/>
+	</VBox>
+	<VBox class="sapUiSmallMargin VboxBackground" visible="{=${ViewData>/ClaimType}==='SDFR' ? true : false}">
+		<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.ClaimTypes.SDFRequest" type="XML"/>
+	</VBox>
+</core:FragmentDefinition>

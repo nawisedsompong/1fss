@@ -1,0 +1,15 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:u="sap.ui.unified" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<Dialog class="sapUiSizeCompact" resizable="true" title="File Upload" horizontalScrolling="false" draggable="true" busy="{appView>/busy}">
+		<content>
+			<VBox class="sapUiSmallMargin">
+				<u:FileUploader id="fileUploaderpayup" name="myFileUpload" uploadUrl="upload/" tooltip="Upload your file to the local server"
+					uploadComplete="handleUploadCompletes" change="onChangeup" fileType="xls,xlsx" typeMissmatch="onTypeMissmatch"/>
+			</VBox>
+		</content>
+		<buttons>
+			<Button text="UPLOAD" type="Emphasized" press="onUploadTemplate('Pay_Up', 'fileUploaderpayup')"/>
+			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseUpDialog" type="Reject"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

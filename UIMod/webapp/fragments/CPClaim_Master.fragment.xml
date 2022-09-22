@@ -1,0 +1,217 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<Dialog contentWidth="65%" class="sapUiSizeCompact" resizable="true" title="Clinical Placement Claim" horizontalScrolling="false"
+		draggable="true" busy="{appView>/busy}">
+		<content>
+			<VBox class="sapUiSmallMargin">
+				<Title class="sapUiSmallMargin" text="{i18n>TIT_ELIG_SEC}" titleStyle="H3" visible="false"/>
+				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0" visible="false">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<FlexBox alignItems="Start" justifyContent="SpaceBetween">
+								<Label text="Clinical Placement Approved Amount"/>
+								<Text
+									text="{ path:'oEligCalData>/BALANCE', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+							</FlexBox>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<Title class="sapUiSmallMargin" text="{i18n>TIT_CLAIM_SEC}" titleStyle="H3"/>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_CLAIM_NUM}" wrapping="true"/>
+							<Text text="{CPClaim_Master>/CLAIM_REFERENCE}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_PLACE_REQ_REF}" required="true"/>
+							<Input id="inp_cpcreqnumb" visible="{ViewData>/DMode}" fieldGroupIds="fgInput" width="100%" required="true"
+								value="{CPClaim_Master>/CPR_REFERENCE}" valueHelpRequest="onReferenOpen('CPClaim_Master')" showValueHelp="true" showSuggestion="true"
+								valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
+							<Text visible="{= !${ViewData>/DMode}}" text="{CPClaim_Master>/CPR_REFERENCE}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_PAY_BANK}" wrapping="true"/>
+							<Text text="{CPClaim_Master>/PAY_TO_BANK}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_ACC_NAME}"/>
+							<Text text="{CPClaim_Master>/ACC_NAME}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_ACC_NO}"/>
+							<Text text="{CPClaim_Master>/ACC_NO}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_BANK_CURR}"/>
+							<Text text="{CPClaim_Master>/BANK_CURRENCY}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_CPC_REQ_AMNT}"/>
+							<ObjectNumber unit="{CPClaim_Master>/CPR_CURRENCY}"
+								number="{ path:'CPClaim_Master>/CPR_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_TOT_AMNT}"/>
+							<ObjectNumber unit="{CPClaim_Master>/CURRENCY}"
+								number="{ path:'CPClaim_Master>/CLAIM_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0"
+					visible="{=${CPClaim_Master>/EMPLOYEE_ID} === ${ViewData>/EmpID} ? false : true}">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_VEND_CODE}"/>
+							<Text text="{CPClaim_Master>/VENDOR_CODE}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_GL_ACC}"/>
+							<Text text="{CPClaim_Master>/GL_ACCOUNT}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0"
+					visible="{=!${CPClaim_Master>/ORIGINAL_CLAIM_REFERENCE}? false : true}">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="Original Claim Reference"/>
+							<Text text="{CPClaim_Master>/ORIGINAL_CLAIM_REFERENCE}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL9 L9 M9 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd"
+							visible="{=${CPClaim_Master>/CLAIM_STATUS}==='Pending for Submission' ? true : ${CPClaim_Master>/CLAIM_STATUS}===undefined ? true : false}">
+							<Label text="Select Approver" required="true"/>
+							<ComboBox id="cb_sdfrapprover" items="{oApprovers>/}" selectedKey="{CPClaim_Master>/FIRST_LEVEL_APPROVER}" width="100%" required="true"
+								fieldGroupIds="fgInput" editable="{ViewData>/DMode}" change="onValidData">
+								<core:Item key="{oApprovers>EMPLOYEE_ID}" text="{oApprovers>EMPLOYEE_ID} - {oApprovers>FULLNAME}"/>
+							</ComboBox>
+							<!--<Text visible="{= !${ViewData>/DMode}}" text="{CPClaim_Master>/FIRST_LEVEL_APPROVER}"/>-->
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<!--<l:Grid defaultSpan="XL9 L9 M9 S12" hSpacing="1" defaultIndent="L0 M0 S0"
+					visible="{=${CPClaim_Master}==='Pending for Submission' ? true : ${CPClaim_Master>/CLAIM_STATUS}===undefined ? true : false}">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd" visible="{=${ViewData>/oTile}==='Admin' ? true : false}">
+							<Label text="HR Checker"/>
+							<Text text="{ViewData>/oHRCheckerID} - {ViewData>/HRcheckfname}, {ViewData>/HRchecklname}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>-->
+				<Table id="tbCPClaim_Master" inset="false" items="{CPClaim_Master>/LINE_ITEM}" mode="MultiSelect"
+					updateFinished="onUpdateWRC($event,'CPClaim_Master')">
+					<headerToolbar>
+						<OverflowToolbar>
+							<content>
+								<Title text="Line Items ({=${CPClaim_Master>/LINE_ITEM}.length})" class="sapUiNoMargin"/>
+								<ToolbarSpacer/>
+								<Button visible="{ViewData>/DMode}" icon="sap-icon://add" text="ADD" press="onAddWRC('CPClaim')" type="Emphasized"
+									enabled="{= ${CPClaim_Master>/LINE_ITEM}.length=== 5 ? false : true}"/>
+								<Button visible="{ViewData>/DMode}" icon="sap-icon://delete" text="DELETE" press="onDeleteLineItem('tbCPClaim_Master','CPClaim_Master')"
+									type="Reject"/>
+							</content>
+						</OverflowToolbar>
+					</headerToolbar>
+					<columns>
+						<Column>
+							<Text text="Claim"/>
+						</Column>
+						<Column minScreenWidth="Desktop" demandPopin="true">
+							<Text text="Claim Date"/>
+						</Column>
+						<Column minScreenWidth="Desktop" demandPopin="true">
+							<Text text="Invoice Date"/>
+						</Column>
+						<Column minScreenWidth="Desktop" demandPopin="true">
+							<Text text="Invoice Number"/>
+						</Column>
+						<Column minScreenWidth="Desktop" demandPopin="true">
+							<Text text="Claim Amount"/>
+						</Column>
+						<!--<Column minScreenWidth="Desktop" demandPopin="true">
+							<Text text="Remarks"/>
+						</Column>-->
+						<Column hAlign="End" visible="{ViewData>/DMode}"></Column>
+					</columns>
+					<items>
+						<ColumnListItem type="Active" press="onLineItem($event, 'CPClaim')">
+							<cells>
+								<ObjectIdentifier title="{CPClaim_Master>CLAIM_CATEGORY}"/>
+								<Text text="{ path: 'CPClaim_Master>CLAIM_DATE', formatter: '.formatter.oClaimDate' }"/>
+								<Text text="{ path: 'CPClaim_Master>INVOICE_DATE', formatter: '.formatter.oClaimDate' }"/>
+								<Text text="{CPClaim_Master>INVOICE_NUMBER}"/>
+								<ObjectNumber unit="{CPClaim_Master>CURRENCY}"
+									number="{ path:'CPClaim_Master>CLAIM_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+								<!--<ExpandableText maxCharacters="50" class="sapUiTinyMarginBottom sapUiTinyMarginTop" text="{CPClaim_Master>REMARKS_EMPLOYEE}"
+									overflowMode="Popover"/>-->
+								<HBox justifyContent="End">
+									<Button icon="sap-icon://edit" type="Transparent" press="onLineItem($event, 'CPClaim', 'Edit')"/>
+								</HBox>
+							</cells>
+						</ColumnListItem>
+					</items>
+				</Table>
+			</VBox>
+			<!--<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0"
+				visible="{=${CPClaim_Master>/CLAIM_STATUS}==='Pending for Submission' ? false : ${CPClaim_Master>/CLAIM_STATUS}===undefined ? false : true}">
+				<l:content>
+					<VBox class="sapUiMediumMarginEnd">
+						<List headerText="Approver's Comment">
+							<FeedListItem text="{CPClaim_Master>/REMARKS_APPROVER1}"
+								timestamp=" Approved On: { path: 'CPClaim_Master>/FIRST_LEVEL_APPROVED_ON', formatter: '.formatter.oClaimDate' }"
+								visible="{=${CPClaim_Master>/REMARKS_APPROVER1} ==='' ? false : ${CPClaim_Master>/REMARKS_APPROVER1} ===null ? false : true}"></FeedListItem>
+							<FeedListItem text="{CPClaim_Master>/REMARKS_APPROVER2}"
+								timestamp=" Approved On: { path: 'CPClaim_Master>/SECOND_LEVEL_APPROVED_ON', formatter: '.formatter.oClaimDate' }"
+								visible="{=${CPClaim_Master>/REMARKS_APPROVER2} ==='' ? false : ${CPClaim_Master>/REMARKS_APPROVER2} ===null ? false : true}"></FeedListItem>
+							<FeedListItem text="{CPClaim_Master>/REMARKS_APPROVER3}"
+								timestamp=" Approved On: { path: 'CPClaim_Master>/THIRD_LEVEL_APPROVED_ON', formatter: '.formatter.oClaimDate' }"
+								visible="{=${CPClaim_Master>/REMARKS_APPROVER3} ==='' ? false : ${CPClaim_Master>/REMARKS_APPROVER3} ===null ? false : true}"></FeedListItem>
+							<FeedListItem text="{CPClaim_Master>/REMARKS_REJECTION}"
+								visible="{=${CPClaim_Master>/REMARKS_REJECTION} ==='' ? false : ${CPClaim_Master>/REMARKS_REJECTION} ===null ? false : true}"></FeedListItem>
+						</List>
+					</VBox>
+				</l:content>
+			</l:Grid>-->
+			<VBox visible="{= ${oCancelClaims>/}.length > 0 ? true : false}">
+				<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.fragments.CancelClaim" type="XML"/>
+			</VBox>
+			<VBox
+				visible="{=${CPClaim_Master>/CLAIM_STATUS}==='Pending for Submission' ? false : ${CPClaim_Master>/CLAIM_STATUS}===undefined ? false : true}">
+				<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.fragments.ApproverRemarks" type="XML"/>
+			</VBox>
+		</content>
+		<buttons>
+			<!--<Button text="SAVE AS DRAFT" type="Emphasized" icon="sap-icon://save" press="onAddData($event, 'WorkRelated')" visible="{ViewData>/DMode}"/>
+			<Button text="{i18n>BTN_TXT_CANCELLATION}" press="onCancellation($event,'COV', 'CPClaim_Master', 'tbCPClaim_Master')" type="Emphasized"
+				visible="{ViewData>/oCan}"/>-->
+			<Button text="{i18n>BTN_TXT_CANCELLATION}" press="onSelectItemCancel($event, 'CPClaim_Master')" type="Emphasized" visible="{ViewData>/oCan}"/>
+			<Button text="SUBMIT" press="onAddData($event, 'CPClaim_Master', 'H')" type="Emphasized"
+				enabled="{= ${CPClaim_Master>/LINE_ITEM}.length > 0 ? true : false}"
+				visible="{parts:[{path:'ViewData>/App'},{path:'ViewData>/DMode'},{path:'ViewData>/oTile'},{path:'ViewData>/oAdminHis'}],formatter:'.formatter.oSubmitVisible'}"/>
+			<Button text="{ViewData>/BtnTxt}" press="onAddData($event, 'CPClaim_Master')" type="Emphasized"
+				enabled="{= ${CPClaim_Master>/LINE_ITEM}.length > 0 ? true : false}"
+				visible="{parts:[{path:'ViewData>/App'},{path:'ViewData>/DMode'},{path:'ViewData>/oTile'},{path:'ViewData>/oAdminHis'}],formatter:'.formatter.oSubmitVisible'}"/>
+			<Button text="APPROVE" type="Accept" icon="sap-icon://accept" iconFirst="true" press="onSubmitD($event,'CPC', 'CPClaim_Master','A')"
+				visible="{=${ViewData>/oHis} === true ? false : ${ViewData>/App}}"/>
+			<Button text="REJECT" type="Reject" icon="sap-icon://decline" iconFirst="true" press="onSubmitD($event, 'CPC','CPClaim_Master','R')"
+				visible="{=${ViewData>/oHis} === true ? false : ${ViewData>/App}}"/>
+			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseDialogM('CPClaim_Master')" type="Reject"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

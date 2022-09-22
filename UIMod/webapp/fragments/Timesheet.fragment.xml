@@ -1,0 +1,218 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<Dialog contentWidth="{=${device>/isPhone}=== true ? 'auto' : '45%'}" class="sapUiSizeCompact" resizable="true"
+		title="{Timesheet>/CLAIM_CATEGORY}" horizontalScrolling="false" draggable="true" busy="{appView>/busy}">
+		<content>
+			<VBox class="sapUiSmallMargin">
+				<Title class="sapUiSmallMargin" text="{i18n>TIT_CLAIM_SEC}" titleStyle="H3"/>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_CLAIM_NUM}" wrapping="true"/>
+							<Text text="{Timesheet>/CLAIM_REFERENCE}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_CLAIM_DATE}" required="true"/>
+							<HBox visible="{ViewData>/DMode}">
+								<core:HTML content='&lt;input class="datePicker"/&gt;'></core:HTML>
+							</HBox>
+							<Text visible="{= !${ViewData>/DMode}}" text="{ path: 'Timesheet>/CLAIM_DATE', formatter: '.formatter.oClaimDate' }"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_TSTART_TIME}" required="true"/>
+							<Input valueHelpRequest="handleOpenDialog($event, 'Timesheet', 'START_TIME')" showValueHelp="true" showSuggestion="true"
+								valueHelpOnly="false" valueHelpIconSrc="sap-icon://time-entry-request" id="tpStime" required="true" fieldGroupIds="fgInput" width="100%"
+								visible="{ViewData>/DMode}" value="{Timesheet>/START_TIME}" liveChange="onStartTime($event,'Timesheet')"></Input>
+							<Text visible="{= !${ViewData>/DMode}}" text="{Timesheet>/START_TIME}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_TEND_TIME}" wrapping="true" required="true"/>
+							<Input valueHelpRequest="handleOpenDialog($event, 'Timesheet', 'END_TIME')" showValueHelp="true" showSuggestion="true" valueHelpOnly="false"
+								valueHelpIconSrc="sap-icon://time-entry-request" id="tpEtime" required="true" fieldGroupIds="fgInput" width="100%"
+								visible="{ViewData>/DMode}" value="{Timesheet>/END_TIME}" liveChange="onEndTime($event,'Timesheet')"></Input>
+							<Text visible="{= !${ViewData>/DMode}}" text="{Timesheet>/END_TIME}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<!--<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_WORK_STATUS}" required="true"/>
+							<ComboBox visible="{ViewData>/DMode}" value="{Timesheet>/WORK_STATUS}">
+								<core:Item key="Work Day" text="Work Day"/>
+								<core:Item key="Off Day" text="Off Day"/>
+								<core:Item key="Rest Day" text="Rest Day"/>
+							</ComboBox>
+							<Text visible="{= !${ViewData>/DMode}}" text="{Timesheet>/WORK_STATUS}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_PUB_HOLID}" required="true"/>
+							<ComboBox visible="{ViewData>/DMode}" value="{Timesheet>/PUBLIC_HOLIDAY}">
+								<core:Item key="Y" text="Yes"/>
+								<core:Item key="N" text="No"/>
+							</ComboBox>
+							<Text text="{Timesheet>/PUBLIC_HOLIDAY}" visible="{= !${ViewData>/DMode}}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_DED_BREAK}"/>
+							<CheckBox selected="{Timesheet>/DEDUCT_BREAK}" visible="{ViewData>/DMode}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_TIMESHEET_CLAIM}"/>
+							<ComboBox visible="{ViewData>/DMode}" value="{Timesheet>/TIMESHEET_CLAIM_ITEM}">
+								<core:Item key="Normal" text="Normal"/>
+								<core:Item key="PH" text="PH"/>
+								<core:Item key="Rest" text="Rest"/>
+							</ComboBox>
+							<Text visible="{= !${ViewData>/DMode}}" text="{Timesheet>/TIMESHEET_CLAIM_ITEM}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>-->
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_WRK_HR_ACT}"/>
+							<Input
+								value="{ path:'Timesheet>/WORK_HOURS_ACTUAL', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"
+								visible="{ViewData>/DMode}"/>
+							<Text visible="{= !${ViewData>/DMode}}"
+								text="{ path:'Timesheet>/WORK_HOURS_ACTUAL', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_WRK_HR_PD}" wrapping="true"></Label>
+							<Input
+								value="{ path:'Timesheet>/WORK_HOURS_PAID', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"
+								visible="{ViewData>/DMode}"/>
+							<Text visible="{= !${ViewData>/DMode}}"
+								text="{ path:'Timesheet>/WORK_HOURS_PAID', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_DED_BREAK}" wrapping="true"/>
+							<ComboBox width="100%" value="{Timesheet>/DEDUCT_BREAK}" visible="{ViewData>/DMode}" change="onDedBrk($event,'Timesheet')">
+								<core:Item key="Y" text="Yes"/>
+								<core:Item key="N" text="No"/>
+							</ComboBox>
+							<Text visible="{= !${ViewData>/DMode}}" text="{Timesheet>/DEDUCT_BREAK}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_REMARK}" required="true"/>
+							<TextArea id="taOTremark" required="true" fieldGroupIds="fgInput" maxLength="500" width="100%" rows="3"
+								value="{Timesheet>/REMARKS_EMPLOYEE}" visible="{ViewData>/DMode}" liveChange="onChangeData"/>
+							<Text visible="{= !${ViewData>/DMode}}" text="{Timesheet>/REMARKS_EMPLOYEE}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<Title class="sapUiSmallMargin" text="Approver Section" titleStyle="H3"
+					visible="{=${Timesheet>/CLAIM_STATUS}==='Pending for Submission' ? true : ${Timesheet>/CLAIM_STATUS}===undefined ? true : false}"/>
+				<l:Grid defaultSpan="XL9 L9 M9 S12" hSpacing="1" defaultIndent="L0 M0 S0"
+					visible="{=${Timesheet>/CLAIM_STATUS}==='Pending for Submission' ? true : ${Timesheet>/CLAIM_STATUS}===undefined ? true : false}">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="Select Approver" required="true"/>
+							<ComboBox id="cbTIM_Approver" width="100%" selectedKey="{Timesheet>/FIRST_LEVEL_APPROVER}" editable="{ViewData>/DMode}"
+								enabled="{=${Timesheet>/CLAIM_DATE}===undefined ? false : true }"
+								required="{=${ViewData>/oTile}==='Approvals' ? false : ${ViewData>/DMode}}" fieldGroupIds="fgInput" items="{oApprovers>/}"
+								change="onChangeApprover">
+								<core:Item key="{oApprovers>EMPLOYEE_ID}" text="{oApprovers>EMPLOYEE_ID} - {oApprovers>FULLNAME}"/>
+							</ComboBox>
+							<!--<Text visible="{= !${ViewData>/DMode}}" text="{Timesheet>/FIRST_LEVEL_APPROVER}"/>-->
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<!--<l:Grid defaultSpan="XL9 L9 M9 S12" hSpacing="1" defaultIndent="L0 M0 S0"
+					visible="{=${Timesheet>/CLAIM_STATUS}==='Pending for Submission' ? true : ${Timesheet>/CLAIM_STATUS}===undefined ? true : false}">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd" visible="{=${ViewData>/oTile}==='Admin' ? true : false}">
+							<Label text="HR Checker"/>
+							<Text text="{ViewData>/oHRCheckerID} - {ViewData>/HRcheckfname}, {ViewData>/HRchecklname}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>-->
+				<!--	<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0"
+					visible="{=${Timesheet>/CLAIM_STATUS}==='Pending for Submission' ? false : ${Timesheet>/CLAIM_STATUS}===undefined ? false : true}">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<List headerText="Approver's Comment">
+								<FeedListItem text="{Timesheet>/REMARKS_APPROVER1}"
+									timestamp=" Approved On: { path: 'Timesheet>/FIRST_LEVEL_APPROVED_ON', formatter: '.formatter.oClaimDate' }"
+									visible="{=${Timesheet>/REMARKS_APPROVER1} ==='' ? false : ${Timesheet>/REMARKS_APPROVER1} ===null ? false : true}"></FeedListItem>
+								<FeedListItem text="{Timesheet>/REMARKS_APPROVER2}"
+									timestamp=" Approved On: { path: 'Timesheet>/SECOND_LEVEL_APPROVED_ON', formatter: '.formatter.oClaimDate' }"
+									visible="{=${Timesheet>/REMARKS_APPROVER2} ==='' ? false : ${Timesheet>/REMARKS_APPROVER2} ===null ? false : true}"></FeedListItem>
+								<FeedListItem text="{Timesheet>/REMARKS_APPROVER3}"
+									timestamp=" Approved On: { path: 'Timesheet>/THIRD_LEVEL_APPROVED_ON', formatter: '.formatter.oClaimDate' }"
+									visible="{=${Timesheet>/REMARKS_APPROVER3} ==='' ? false : ${Timesheet>/REMARKS_APPROVER3} ===null ? false : true}"></FeedListItem>
+								<FeedListItem text="{Timesheet>/REMARKS_REJECTION}"
+									visible="{=${Timesheet>/REMARKS_REJECTION} ==='' ? false : ${Timesheet>/REMARKS_REJECTION} ===null ? false : true}"></FeedListItem>
+							</List>
+						</VBox>
+					</l:content>
+				</l:Grid>-->
+				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<UploadCollection id="TIMUploadCollection" maximumFilenameLength="50" filenameLengthExceed="onFileNameExceed" maximumFileSize="10"
+								multiple="false" uploadButtonInvisible="{= !${ViewData>/DMode}}" fileType="jpg,jpeg,png,pdf"
+								change="onChange($event, ${Timesheet>/CLAIM_REFERENCE})" fileSizeExceed="onFileSizeExceed" selectionChange="onSelectionChange"
+								typeMissmatch="onTypeMissmatch" uploadComplete="onUploadComplete(${Timesheet>/CLAIM_REFERENCE})" fileDeleted="onFileDeleted"
+								beforeUploadStarts="onBeforeUploadStarts" items="{ path: 'oAttachItems>/', templateShareable: false }">
+								<toolbar>
+									<OverflowToolbar>
+										<Title id="attachmentTitleTIM" text="Attachments ({ViewData>/ALength})"/>
+										<Link text="{i18n>LBL_INFO_TXT}" wrapping="false" press="handleUploadPopover"></Link>
+										<ToolbarSpacer/>
+										<UploadCollectionToolbarPlaceholder/>
+									</OverflowToolbar>
+								</toolbar>
+								<items>
+									<UploadCollectionItem documentId="{oAttachItems>ID}" fileName="{oAttachItems>fileName}" visibleEdit="false"
+										visibleDelete="{oAttachItems>delete}" press="onDownloadFile">
+										<attributes>
+											<ObjectAttribute title="{i18n>TIT_UPLOADEDON}" text="{ path: 'oAttachItems>date', formatter: '.formatter.oClaimDate'}" active="false"/>
+											<ObjectAttribute title="{i18n>TIT_UPLOADEDBY}" text="{oAttachItems>name}" active="false"/>
+										</attributes>
+									</UploadCollectionItem>
+								</items>
+							</UploadCollection>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<VBox visible="{= ${oCancelClaims>/}.length > 0 ? true : false}">
+					<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.fragments.CancelClaim" type="XML"/>
+				</VBox>
+				<VBox visible="{=${Timesheet>/CLAIM_STATUS}==='Pending for Submission' ? false : ${Timesheet>/CLAIM_STATUS}===undefined ? false : true}">
+					<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.fragments.ApproverRemarks" type="XML"/>
+				</VBox>
+			</VBox>
+		</content>
+		<buttons>
+			<!--<Button text="{i18n>BTN_TXT_CANCELLATION}" press="onCancellation($event,'TIM', 'Timesheet')" type="Emphasized" visible="{ViewData>/oCan}"/>-->
+			<Button text="{i18n>BTN_TXT_CANCELLATION}" press="onSelectItemCancel($event, 'Timesheet')" type="Emphasized" visible="{ViewData>/oCan}"/>
+			<Button text="SUBMIT" press="onAddData($event, 'Timesheet', 'H')" type="Emphasized"
+				visible="{parts:[{path:'ViewData>/App'},{path:'ViewData>/DMode'},{path:'ViewData>/oTile'},{path:'ViewData>/oAdminHis'}],formatter:'.formatter.oSubmitVisible'}"/>
+			<Button text="{ViewData>/BtnTxt}" press="onAddData($event, 'Timesheet')" type="Emphasized"
+				visible="{parts:[{path:'ViewData>/App'},{path:'ViewData>/DMode'},{path:'ViewData>/oTile'},{path:'ViewData>/oAdminHis'}],formatter:'.formatter.oSubmitVisible'}"/>
+			<Button text="APPROVE" type="Accept" icon="sap-icon://accept" iconFirst="true" press="onSubmitD($event,'TIM', 'Timesheet','A')"
+				visible="{=${ViewData>/oHis} === true ? false : ${ViewData>/App}}"/>
+			<Button text="REJECT" type="Reject" icon="sap-icon://decline" iconFirst="true" press="onSubmitD($event,'TIM', 'Timesheet','R')"
+				visible="{=${ViewData>/oHis} === true ? false : ${ViewData>/App}}"/>
+			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseDialog('Timesheet')" type="Reject"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

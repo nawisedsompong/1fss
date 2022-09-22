@@ -1,0 +1,167 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<Dialog contentWidth="{=${device>/isPhone}=== true ? 'auto' : '45%'}" class="sapUiSizeCompact" resizable="true"
+		title="{PRequest>/CLAIM_CATEGORY}" horizontalScrolling="false" draggable="true" busy="{appView>/busy}">
+		<content>
+			<VBox class="sapUiSmallMargin">
+				<Title class="sapUiSmallMargin" text="{i18n>TIT_CLAIM_SEC}" titleStyle="H3"/>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_CLAIM_NUM}"/>
+							<Text text="{PRequest>/CLAIM_REFERENCE}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_CLAIM_NAME}"/>
+							<Text text="{PRequest>/CLAIM_CATEGORY}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_CURR}" required="true"/>
+							<!--<Input id="inp_CPRCurrency" visible="{ViewData>/DMode}" fieldGroupIds="fgInput" width="100%" required="true" value="{PRequest>/CURRENCY}"
+								valueHelpRequest="onCurrencyOpen('PRequest')" showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true"
+								startSuggestion="1" showTableSuggestionValueHelp="false"/>-->
+							<Text text="{PRequest>/CURRENCY}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_CLAIM_AMNT}"></Label>
+							<Input id="inp_ABclaimamnt" editable="true" required="true" fieldGroupIds="fgInput" value="{PRequest>/CLAIM_AMOUNT}"
+								visible="{ViewData>/DMode}" liveChange="onValidateNumericValue"/>
+							<!--<layoutData>
+										<l:GridData span="XL1 L2 M2 S4"/>
+									</layoutData>
+								</Input>
+								<Button visible="{ViewData>/DMode}" text="COMPUTE" type="Emphasized" press="onCopayCal($event,'PRequest')"></Button>-->
+							<Text visible="{= !${ViewData>/DMode}}"
+								text="{ path:'PRequest>/CLAIM_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0" visible="{=!${PRequest>/ORIGINAL_CLAIM_REFERENCE}? false : true}">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="Original Claim Reference"/>
+							<Text text="{PRequest>/ORIGINAL_CLAIM_REFERENCE}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0" visible="false">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="Template"/>
+							<Link visible="{ViewData>/DMode}" text="Download here" press="onTemplateDownloadPR"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_REMARK}"/>
+							<TextArea id="ta_remarkPRequest" fieldGroupIds="fgInput" maxLength="500" width="100%" rows="3" value="{PRequest>/REMARKS_EMPLOYEE}"
+								visible="{ViewData>/DMode}" liveChange="onChangeData"/>
+							<Text visible="{= !${ViewData>/DMode}}" text="{PRequest>/REMARKS_EMPLOYEE}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<Title class="sapUiSmallMargin" text="Approver Section" titleStyle="H3"
+					visible="{=${PRequest>/CLAIM_STATUS}==='Pending for Submission' ? true : ${PRequest>/CLAIM_STATUS}===undefined ? true : false}"/>
+				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent=" L0 M0 S0"
+					visible="{=${PRequest>/CLAIM_STATUS}==='Pending for Submission' ? true : ${PRequest>/CLAIM_STATUS}===undefined ? true : false}">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="Select Approver" required="true"/>
+							<ComboBox id="cbCPR_Approver" width="100%" selectedKey="{PRequest>/FIRST_LEVEL_APPROVER}" editable="{ViewData>/DMode}"
+								required="{=${ViewData>/oTile}==='Approvals' ? true : ${ViewData>/DMode}}" fieldGroupIds="fgInput" items="{oApprovers>/}"
+								change="onValidData">
+								<core:Item key="{oApprovers>EMPLOYEE_ID}" text="{oApprovers>EMPLOYEE_ID} - {oApprovers>FULLNAME}"/>
+							</ComboBox>
+							<!--<Text visible="{= !${ViewData>/DMode}}" text="{PRequest>/FIRST_LEVEL_APPROVER}"/>-->
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<!--<l:Grid defaultSpan="XL9 L9 M9 S12" hSpacing="1" defaultIndent="L0 M0 S0"
+					visible="{=${PRequest>/CLAIM_STATUS}==='Pending for Submission' ? true : ${PRequest>/CLAIM_STATUS}===undefined ? true : false}">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd" visible="{=${ViewData>/oTile}==='Admin' ? true : false}">
+							<Label text="HR Checker"/>
+							<Text text="{ViewData>/oHRCheckerID} - {ViewData>/HRcheckfname}, {ViewData>/HRchecklname}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>-->
+				<!--<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0"
+					visible="{=${PRequest>/CLAIM_STATUS}==='Pending for Submission' ? false : ${PRequest>/CLAIM_STATUS}===undefined ? false : true}">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<List headerText="Approver's Comment">
+								<FeedListItem text="{PRequest>/REMARKS_APPROVER1}"
+									timestamp=" Approved On: { path: 'PRequest>/FIRST_LEVEL_APPROVED_ON', formatter: '.formatter.oClaimDate' }"
+									visible="{=${PRequest>/REMARKS_APPROVER1} ==='' ? false : ${PRequest>/REMARKS_APPROVER1} ===null ? false : true}"></FeedListItem>
+								<FeedListItem text="{PRequest>/REMARKS_APPROVER2}"
+									timestamp=" Approved On: { path: 'PRequest>/SECOND_LEVEL_APPROVED_ON', formatter: '.formatter.oClaimDate' }"
+									visible="{=${PRequest>/REMARKS_APPROVER2} ==='' ? false : ${PRequest>/REMARKS_APPROVER2} ===null ? false : true}"></FeedListItem>
+								<FeedListItem text="{PRequest>/REMARKS_APPROVER3}"
+									timestamp=" Approved On: { path: 'PRequest>/THIRD_LEVEL_APPROVED_ON', formatter: '.formatter.oClaimDate' }"
+									visible="{=${PRequest>/REMARKS_APPROVER3} ==='' ? false : ${PRequest>/REMARKS_APPROVER3} ===null ? false : true}"></FeedListItem>
+								<FeedListItem text="{PRequest>/REMARKS_REJECTION}"
+									visible="{=${PRequest>/REMARKS_REJECTION} ==='' ? false : ${PRequest>/REMARKS_REJECTION} ===null ? false : true}"></FeedListItem>
+							</List>
+						</VBox>
+					</l:content>
+				</l:Grid>-->
+				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<UploadCollection id="CPRUploadCollection" maximumFilenameLength="50" filenameLengthExceed="onFileNameExceed" maximumFileSize="10"
+								multiple="false" uploadButtonInvisible="{parts:[{path:'ViewData>/DMode'},{path:'ViewData>/oTile'}],formatter:'.formatter.oPlusVisible'}"
+								fileType="jpg,jpeg,png,pdf" change="onChange($event, ${PRequest>/CLAIM_REFERENCE})" fileSizeExceed="onFileSizeExceed"
+								selectionChange="onSelectionChange" typeMissmatch="onTypeMissmatch" uploadComplete="onUploadComplete(${PRequest>/CLAIM_REFERENCE})"
+								fileDeleted="onFileDeleted" beforeUploadStarts="onBeforeUploadStarts" items="{ path: 'oAttachItems>/', templateShareable: false }">
+								<toolbar>
+									<OverflowToolbar>
+										<Title id="attachmentTitle" text="Attachments ({ViewData>/ALength})"/>
+										<Link text="{i18n>LBL_INFO_TXT}" wrapping="false" press="handleUploadPopover"></Link>
+										<ToolbarSpacer/>
+										<UploadCollectionToolbarPlaceholder/>
+									</OverflowToolbar>
+								</toolbar>
+								<items>
+									<UploadCollectionItem documentId="{oAttachItems>ID}" fileName="{oAttachItems>fileName}" visibleEdit="false"
+										visibleDelete="{=${oAttachItems>delete} || ${ViewData>/oTile}==='SMSApprovals'}" press="onDownloadFile">
+										<attributes>
+											<ObjectAttribute title="{i18n>TIT_UPLOADEDON}" text="{ path: 'oAttachItems>date', formatter: '.formatter.oClaimDate'}" active="false"/>
+											<ObjectAttribute title="{i18n>TIT_UPLOADEDBY}" text="{oAttachItems>name}" active="false"/>
+										</attributes>
+									</UploadCollectionItem>
+								</items>
+							</UploadCollection>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<VBox visible="{= ${oCancelClaims>/}.length > 0 ? true : false}">
+					<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.fragments.CancelClaim" type="XML"/>
+				</VBox>
+				<VBox visible="{=${PRequest>/CLAIM_STATUS}==='Pending for Submission' ? false : ${PRequest>/CLAIM_STATUS}===undefined ? false : true}">
+					<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.fragments.ApproverRemarks" type="XML"/>
+				</VBox>
+			</VBox>
+		</content>
+		<buttons>
+			<!--<Button text="SAVE AS DRAFT" type="Emphasized" icon="sap-icon://save" press="onAddData($event, 'PRequest')"
+				visible="false"/>
+			<Button text="{i18n>BTN_TXT_CANCELLATION}" press="onCancellation($event,'CLS', 'PRequest')" type="Emphasized" visible="{ViewData>/oCan}"/>-->
+			<Button text="{i18n>BTN_TXT_CANCELLATION}" press="onSelectItemCancel($event, 'PRequest')" type="Emphasized" visible="{ViewData>/oCan}"/>
+			<Button text="SUBMIT" press="onAddData($event, 'PRequest', 'H')" type="Emphasized"
+				visible="{parts:[{path:'ViewData>/App'},{path:'ViewData>/DMode'},{path:'ViewData>/oTile'},{path:'ViewData>/oAdminHis'}],formatter:'.formatter.oSubmitVisible'}"/>
+			<Button text="{ViewData>/BtnTxt}" press="onAddData($event, 'PRequest')" type="Emphasized"
+				visible="{parts:[{path:'ViewData>/App'},{path:'ViewData>/DMode'},{path:'ViewData>/oTile'},{path:'ViewData>/oAdminHis'}],formatter:'.formatter.oSubmitVisible'}"/>
+			<Button text="APPROVE" type="Accept" icon="sap-icon://accept" iconFirst="true" press="onSubmitD($event, 'CPR','PRequest','A')"
+				visible="{=${ViewData>/oHis} === true ? false : ${ViewData>/App}}"/>
+			<Button text="REJECT" type="Reject" icon="sap-icon://decline" iconFirst="true" press="onSubmitD($event, 'CPR','PRequest','R')"
+				visible="{=${ViewData>/oHis} === true ? false : ${ViewData>/App}}"/>
+			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseDialog('PRequest')" type="Reject"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

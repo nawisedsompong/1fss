@@ -1,0 +1,89 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<Dialog class="sapUiSizeCompact" resizable="true" title="{SDFRClaim>/CLAIM_CATEGORY}" horizontalScrolling="false" draggable="true"
+		busy="{appView>/busy}">
+		<content>
+			<VBox class="sapUiSmallMargin">
+				<Title class="sapUiSmallMargin" text="{i18n>TIT_CLAIM_SEC}" titleStyle="H3"/>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_CLAIM_NUM}" wrapping="true"/>
+							<Text text="{SDFRClaim>/CLAIM_REFERENCE}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_CLAIM_DATE}"/>
+							<!--<DatePicker required="true" width="100%" fieldGroupIds="fgInput" id="dp_COVClaimDate" displayFormat="dd.MM.yyyy" valueFormat="yyyy-MM-dd"
+								value="{ path: 'SDFRClaim>/CLAIM_DATE', formatter: '.formatter.oClaimDate' }"
+								visible="{ViewData>/DMode}"/>-->
+							<Text text="{ path: 'SDFRClaim>/CLAIM_DATE', formatter: '.formatter.oClaimDate' }"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_ITEM_DESC}"/>
+							<TextArea maxLength="50" width="100%" rows="2" value="{SDFRClaim>/ITEM_DESC}" visible="{ViewData>/DMode}" liveChange="onChangeDataSpl"/>
+							<Text visible="{= !${ViewData>/DMode}}" text="{SDFRClaim>/ITEM_DESC}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="Request Cost" required="true"/>
+							<Input id="inp_SDFREstcost" required="true" fieldGroupIds="fgInput"
+								value="{SDFRClaim>/ESTIMATE_COST}"
+								visible="{ViewData>/DMode}" liveChange="onValidateDecimalValue"/>
+							<Text visible="{= !${ViewData>/DMode}}"
+								text="{ path:'SDFRClaim>/ESTIMATE_COST', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_CURR}"/>
+							<!--	<Input id="inp_SDFRCurr" visible="{ViewData>/DMode}" fieldGroupIds="fgInput" width="100%" required="true" value="{SDFRClaim>/CURRENCY}"
+								valueHelpRequest="onCurrencyOpen('SDFRClaim')" showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true"
+								startSuggestion="1" showTableSuggestionValueHelp="false"/>-->
+							<Text text="{SDFRClaim>/CURRENCY}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_COST_SGD}"/>
+							<HBox alignContent="SpaceAround">
+								<Input id="inp_COVclaimamnt" required="true" fieldGroupIds="fgInput" editable="false"
+									value="{ path:'SDFRClaim>/CLAIM_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"
+									visible="{ViewData>/DMode}" liveChange="onValidateNumericValue">
+									<layoutData>
+										<l:GridData span="XL1 L2 M2 S4"/>
+									</layoutData>
+								</Input>
+								<Button visible="{ViewData>/DMode}" text="COMPUTE" type="Emphasized" press="onSchCal($event,'SDFRClaim')"></Button>
+							</HBox>
+							<Text visible="{= !${ViewData>/DMode}}"
+								text="{ path:'SDFRClaim>/CLAIM_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_REMARK}"/>
+							<TextArea maxLength="500" width="100%" rows="3" value="{SDFRClaim>/ITEM_LINE_REMARKS_EMPLOYEE}" visible="{ViewData>/DMode}"
+								liveChange="onChangeDataSpl"/>
+							<Text visible="{= !${ViewData>/DMode}}" text="{SDFRClaim>/ITEM_LINE_REMARKS_EMPLOYEE}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+			</VBox>
+		</content>
+		<buttons>
+			<!--<Button text="SAVE AS DRAFT" type="Emphasized" icon="sap-icon://save" press="onAddData($event, 'SDFRClaim')" visible="{ViewData>/DMode}"/>-->
+			<Button text="{ViewData>/BtnTxt}" press="onAddLineData($event, 'SDFRClaim','SDFRClaim_Master')" type="Emphasized"
+				visible="{ViewData>/DMode}"/>
+			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseLineDialog('SDFRClaim_Master')" type="Reject"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

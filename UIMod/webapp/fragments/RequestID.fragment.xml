@@ -1,0 +1,8 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<SelectDialog class="sapUiSizeCompact" title="Claim Reference" search="onSearch($event,'CLAIM_REFERENCE')"
+		liveChange="onSearch($event,'CLAIM_REFERENCE')" confirm="onReqidClose" cancel="onSDialogCancelR" growing="true"
+		items="{path:'oReqID>/' , sorter: { path: 'CLAIM_REFERENCE', descending: false}}">
+		<StandardListItem title="{oReqID>CLAIM_REFERENCE}"
+			description="Claim Date: { path: 'oReqID>CLAIM_DATE', formatter: '.formatter.oClaimDate' }"/>
+	</SelectDialog>
+</core:FragmentDefinition>

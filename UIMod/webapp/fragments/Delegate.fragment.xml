@@ -1,0 +1,64 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<Dialog contentWidth="45%" class="sapUiSizeCompact" resizable="true" title="Delegatee Details" horizontalScrolling="false" draggable="true"
+		busy="{appView>/busy}">
+		<content>
+			<VBox class="sapUiSmallMargin">
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="Start Date" required="true"/>
+							<HBox visible="{=${ViewData>/DMode} &amp;&amp; ${ViewData>/TMode}==='Submit'}">
+								<core:HTML content='&lt;input class="datePicker1"/&gt;'></core:HTML>
+							</HBox>
+							<Text visible="{= !${ViewData>/DMode} || ${ViewData>/TMode}==='Edit'}"
+								text="{ path: 'oDelegate>/START_DATE', formatter: '.formatter.oClaimDate' }"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="End Date" required="true"/>
+							<HBox visible="{ViewData>/DMode}">
+								<core:HTML content='&lt;input class="datePicker2"/&gt;'></core:HTML>
+							</HBox>
+							<Text text="{ path: 'oDelegate>/END_DATE', formatter: '.formatter.oClaimDate' }" visible="{= !${ViewData>/DMode}}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd" visible="{=${ViewData>/oTile}==='ADDelegate'}">
+							<Label text="Approver ID" required="{=${ViewData>/oTile}==='ADDelegate'}"/>
+							<Input id="inpAppID" visible="{=${ViewData>/DMode} &amp;&amp; ${ViewData>/TMode}==='Submit'}" fieldGroupIds="fgInput"
+								required="{=${ViewData>/oTile}==='ADDelegate'}" value="{oDelegate>/APPROVER_ID}" valueHelpRequest="onEmpSearchOpen('oDelegate','ADDE')"
+								showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1"
+								showTableSuggestionValueHelp="false"/>
+							<Text visible="{= !${ViewData>/DMode} || ${ViewData>/TMode}==='Edit'}" text="{oDelegate>/APPROVER_ID}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd" visible="{=${ViewData>/oTile}==='ADDelegate'}">
+							<Label text="Approver Name"/>
+							<Text text="{oDelegate>/APP_FIRST_NAME}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="Delegatee ID" required="true"/>
+							<Input id="inpDelegID" visible="{=${ViewData>/DMode} &amp;&amp; ${ViewData>/TMode}==='Submit'}" fieldGroupIds="fgInput" required="true"
+								value="{oDelegate>/DELEGATOR_ID}" valueHelpRequest="onEmpSearchOpen('oDelegate','DE')" showValueHelp="true" showSuggestion="true"
+								valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
+							<Text visible="{= !${ViewData>/DMode} || ${ViewData>/TMode}==='Edit'}" text="{oDelegate>/DELEGATOR_ID}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="Delegatee Name"/>
+							<Text text="{oDelegate>/FIRST_NAME}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+			</VBox>
+		</content>
+		<buttons>
+			<Button text="SAVE" press="onAddDelegator" type="Emphasized" visible="{ViewData>/DMode}"/>
+			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseDeleg" type="Reject"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

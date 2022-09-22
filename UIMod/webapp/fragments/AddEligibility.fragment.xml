@@ -1,0 +1,163 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<Dialog class="sapUiSizeCompact" resizable="true" title="{= ${ViewData>/DMode} === true ? ${ViewData>/TitDlg} : ${i18n>TIT_ELIG_DATA}}"
+		horizontalScrolling="false" draggable="true" busy="{appView>/busy}">
+		<content>
+			<VBox class="sapUiSmallMargin">
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_BEN_CODE}" required="true"/>
+							<Input id="cbClaimcodeE" visible="{=${ViewData>/DMode} &amp;&amp; ${ViewData>/TMode}==='Submit'}" fieldGroupIds="fgInput" required="true" enabled="{=${ViewData>/TMode}==='Submit'}"
+								value="{oEligibileData>/Claim_Code}" valueHelpRequest="onBenefitOpen($event,'oEligibileData')" showValueHelp="true" showSuggestion="true"
+								valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
+							<Text visible="{= !${ViewData>/DMode} || ${ViewData>/TMode}==='Edit'}" text="{oEligibileData>/Claim_Code}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_BEN_DESC}" required="true"/>
+							<Text text="{oEligibileData>/Description}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_EFF_DATE}" required="true"/>
+							<HBox visible="{=${ViewData>/DMode} &amp;&amp; ${ViewData>/TMode}==='Submit'}">
+								<core:HTML content='&lt;input class="datePicker1"/&gt;'></core:HTML>
+							</HBox>
+							<Text visible="{= !${ViewData>/DMode} || ${ViewData>/TMode}==='Edit'}" text="{ path: 'oEligibileData>/Effective_Date', formatter: '.formatter.oClaimDate' }"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_END_DATE}" required="true"/>
+							<HBox visible="{=${ViewData>/DMode} &amp;&amp; ${ViewData>/TMode}==='Submit'}">
+								<core:HTML content='&lt;input class="datePicker2"/&gt;'></core:HTML>
+							</HBox>
+							<Text visible="{= !${ViewData>/DMode} || ${ViewData>/TMode}==='Edit'}"
+								text="{ path: 'oEligibileData>/End_Date', formatter: '.formatter.oClaimDate'}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_PA}" required="true"/>
+							<ComboBox id="cbPA" items="{ComboDetails>/PERSONAL_AREA}" required="true" fieldGroupIds="fgInput" width="100%"
+								selectedKey="{oEligibileData>/Personal_Area}" visible="{ViewData>/DMode}" change="onValidData">
+								<core:Item key="{ComboDetails>Personal_Area}" text="{ComboDetails>Personal_Desc}"/>
+							</ComboBox>
+							<Text visible="{= !${ViewData>/DMode}}" text="{oEligibileData>/Personal_Area}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_PSA}" required="true"></Label>
+							<ComboBox id="cbPSA" required="true" fieldGroupIds="fgInput" width="100%" selectedKey="{oEligibileData>/Personal_Sub_Area}"
+								visible="{ViewData>/DMode}" change="onValidData"
+								items="{path:'ComboDetails>/PERSONAL_SUB_AREA' , filters : [ { path : 'Company', operator : 'EQ', value1 : 'MOHH'} ]}">
+								<core:Item key="{ComboDetails>Personal_Sub_Area}" text="{ComboDetails>Personal_Sub_Desc}"/>
+							</ComboBox>
+							<Text visible="{= !${ViewData>/DMode}}" text="{oEligibileData>/Personal_Sub_Area}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_EMP_TYPE}"/>
+							<ComboBox width="100%" selectedKey="{oEligibileData>/Employee_Class}" visible="{ViewData>/DMode}" change="onValidData">
+								<core:Item key="ALL" text="ALL"/>
+								<core:Item key="CF" text="CF - Contract Full Time"/>
+								<core:Item key="CP" text="CP - Contract Part Time"/>
+								<core:Item key="PF" text="PF - Reemployed Full Time"/>
+								<core:Item key="PP" text="PP - Reemployed Part Time"/>
+								<core:Item key="FT" text="FT - Regular Full Time"/>
+								<core:Item key="PT" text="PT - Regular Part Time"/>
+								<core:Item key="TH" text="TH - Temporary Hourly"/>
+								<core:Item key="TM" text="TM - Temporary Monthly"/>
+								<core:Item key="PA" text="PA - Intern"/>
+								<core:Item key="CFSVC" text="CFSVC - Contract For Service"/>
+								<core:Item key="CTNONESTAB" text="CTNONESTAB - Contract(Non-Estab Headcount)"/>
+								<core:Item key="FTNONESTAB" text="FTNONESTAB - Regular(Non-Estab Headcount)"/>
+								<core:Item key="NPAY" text="NPAY - Not in Payroll"/>
+								<core:Item key="SECIN" text="SECIN - Second In"/>
+								<core:Item key="SECOUT" text="SECOUT - Second Out"/>
+							</ComboBox>
+							<Text visible="{= !${ViewData>/DMode}}" text="{oEligibileData>/Employee_Class}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_PAY_GRADE}"/>
+							<!--<ComboBox width="100%" value="{oEligibileData>/Pay_Grade}" visible="{ViewData>/DMode}">
+								<core:Item key="ALL" text="ALL"/>
+								<core:Item key="ALL" text="N/A"/>
+							</ComboBox>-->
+							<Input visible="{ViewData>/DMode}" required="true" value="{oEligibileData>/Pay_Grade}" valueHelpRequest="onPGOpen($event,'oEligibileData')"
+								showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1"
+								showTableSuggestionValueHelp="false"/>
+							<Text visible="{= !${ViewData>/DMode}}" text="{oEligibileData>/Pay_Grade}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_DOC_TYPE}"/>
+							<ComboBox width="100%" selectedKey="{oEligibileData>/Document_Type}" visible="{ViewData>/DMode}" change="onValidData">
+								<core:Item key="ALL" text="ALL"/>
+								<core:Item key="HQ" text="SGP-Letter of Consent (LOC)"/>
+								<core:Item key="HR" text="SGP-Pre-approved Letter of Consent (PLOC)"/>
+								<core:Item key="CR" text="SGP-Work Holiday Pass (under Work Holiday Programme)"/>
+								<core:Item key="MED" text="SGP-Personalised Employment Pass"/>
+								<core:Item key="DEN" text="SGP-Employment Pass"/>
+								<core:Item key="SM" text="SGP-Work Permit"/>
+								<core:Item key="ROPA" text="SGP-Training Employment Pass"/>
+								<core:Item key="SCH" text="SGP-S Pass"/>
+								<core:Item key="NP" text="FIN - Student Pass"/>
+							</ComboBox>
+							<Text visible="{= !${ViewData>/DMode}}" text="{oEligibileData>/Document_Type}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_SPL}"/>
+							<Input visible="{ViewData>/DMode}" required="true" value="{oEligibileData>/Specialisation}"
+								valueHelpRequest="onSPOpen($event,'oEligibileData')" showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true"
+								startSuggestion="1" showTableSuggestionValueHelp="false"/>
+							<Text visible="{= !${ViewData>/DMode}}" text="{oEligibileData>/Specialisation}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_BP}" wrapping="true"/>
+							<Input value="{oEligibileData>/Basic_Pay}" visible="{ViewData>/DMode}"/>
+							<Text visible="{= !${ViewData>/DMode}}" text="{oEligibileData>/Basic_Pay}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_ENTIT}" wrapping="true"/>
+							<Input
+								value="{ path:'oEligibileData>/Entitlement', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"
+								visible="{ViewData>/DMode}"/>
+							<Text visible="{= !${ViewData>/DMode}}"
+								text="{ path:'oEligibileData>/Entitlement', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_SEQUENCE}" required="true"/>
+							<Input id="inpSequence_EG" visible="{ViewData>/DMode}" required="true" fieldGroupIds="fgInput" enabled="{=${ViewData>/TMode}==='Submit'}"
+								value="{ type : 'sap.ui.model.type.Integer', path:'oEligibileData>/Sequence', constraints : { minimun:0, maximum:100 }}"
+								liveChange="onValidateNumericValue"/>
+							<Text visible="{= !${ViewData>/DMode}}"
+								text="{ type : 'sap.ui.model.type.Integer', path:'oEligibileData>/Sequence', constraints : { minimun:0, maximum:100 }}"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+			</VBox>
+		</content>
+		<buttons>
+			<!--<Button text="{i18n>BTN_TXT_ATTACH}" press="onFileUpload" enabled="{=${oClaimData>/AttachReq}==='R'}" visible="{ViewData>/Mode}"/>-->
+			<Button text="{ViewData>/BtnTxt}" press="onAddEligibility" type="Emphasized" visible="{ViewData>/DMode}"/>
+			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseEligibility" type="Reject"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>
