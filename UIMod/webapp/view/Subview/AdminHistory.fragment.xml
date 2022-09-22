@@ -48,7 +48,7 @@
 			</fb:FilterGroupItem>-->
 			<fb:FilterGroupItem id="fgiIntEmpRepAHs" groupName="Basic" name="H" label="Employee" partOfCurrentVariant="true" visibleInFilterBar="false">
 				<fb:control>
-					<Input id="inpEmpIDAppRep" width="100%" value="{ViewData>/EmpID_App_Rep}" valueHelpRequest="onEmpSearchOpen('ViewData','Inactive','HR')"
+					<Input id="inpEmpIDAppRep" width="100%" value="{ViewData>/EmpID_App_Rep}" valueHelpRequest="onEmpSearchOpen('ViewData','HR')"
 						showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1"
 						showTableSuggestionValueHelp="false"/>
 				</fb:control>
@@ -62,7 +62,7 @@
 					</ComboBox>
 				</fb:control>
 			</fb:FilterGroupItem>
-			<fb:FilterGroupItem id="fgiClaimTypeAH" groupName="Basic" name="D" label="Claim Code" partOfCurrentVariant="true" visibleInFilterBar="false">
+			<fb:FilterGroupItem id="fgiClaimTypeAH" groupName="Basic" name="D" label="Claim Type" partOfCurrentVariant="true" visibleInFilterBar="false">
 				<fb:control>
 					<Input width="100%" value="{ViewData>/ClaimCate}" valueHelpRequest="onClaimTypeOpen" showValueHelp="true" showSuggestion="true"
 						valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"
@@ -73,22 +73,20 @@
 				<fb:control>
 					<ComboBox id="cbCsidAH" selectedKey="{ViewData>/Status}" change="onValidData">
 						<core:Item key="Approved" text="Approved"/>
-						<core:Item key="Cancelled" text="Cancelled"/>
-						<core:Item key="Cancellation Approved" text="Cancellation Approved"/>
-						<core:Item key="Cancellation Pending for approval, Level 1" text="Cancellation Pending for approval, Level 1"/>
-						<core:Item key="Cancellation Pending for approval, Level 2" text="Cancellation Pending for approval, Level 2"/>
-						<core:Item key="Cancellation Pending for approval, Level 3" text="Cancellation Pending for approval, Level 3"/>
+						<core:Item key="Rejected" text="Rejected"/>
 						<core:Item key="Pending for approval, Level 1" text="Pending for approval, Level 1"/>
 						<core:Item key="Pending for approval, Level 2" text="Pending for approval, Level 2"/>
-						<core:Item key="Pending for approval, Level 3" text="Pending for approval, Level 3"/>
-						<core:Item key="Rejected" text="Rejected"/>
+						<core:Item key="Cancelled" text="Cancelled"/>
+						<core:Item key="Cancellation Pending for approval, Level 1" text="Cancellation Pending for approval, Level 1"/>
+						<core:Item key="Cancellation Pending for approval, Level 2" text="Cancellation Pending for approval, Level 2"/>
+						<core:Item key="Cancellation Approved" text="Cancellation Approved"/>
 					</ComboBox>
 				</fb:control>
 			</fb:FilterGroupItem>
 			<fb:FilterGroupItem id="fgiIntEmpRepAH" groupName="Basic" name="G" label="Employee" partOfCurrentVariant="true"
 				visibleInFilterBar="{=${ViewData>/oTile}==='PaymentUpload' ? false: true}">
 				<fb:control>
-					<MultiInput id="inpEmpIDHis" width="100%" valueHelpOnly="true" valueHelpRequest="onEmpSearchOpen('ViewData','Inactive','HR','M')"
+					<MultiInput id="inpEmpIDHis" width="100%" valueHelpOnly="true" valueHelpRequest="onEmpSearchOpen('ViewData','HR','M')"
 						tokens="{path:'oFilEmp>/', templateShareable: false}">
 						<tokens>
 							<Token id="tkn" key="{oFilEmp>userId}" text="{oFilEmp>userId}"/>
@@ -102,16 +100,10 @@
 					<Input value="{ViewData>/oClaimNo}"/>
 				</fb:control>
 			</fb:FilterGroupItem>
-			<!--<fb:FilterGroupItem id="fgiReceiptdate" groupName="Basic" name="J" label="Receipt Date" partOfCurrentVariant="true"
-				visibleInFilterBar="{=${ViewData>/oTile}==='PaymentUpload' ? false: true}">
-				<fb:control>
-					<core:HTML content='&lt;input class="receiptdate"/&gt;'></core:HTML>
-				</fb:control>
-			</fb:FilterGroupItem>-->
 		</fb:filterGroupItems>
 	</fb:FilterBar>
 	<Table id="tbClaimRecord"
-		items="{path:'ApprovalModel>/' ,filters : [ { path : 'CATEGORY_CODE', operator : 'NE', value1 : 'PAY_UP'} ], sorter: [{ path: 'CATEGORY_CODE', descending: false},{ path: 'CLAIM_DATE', descending: false}]}"
+		items="{path:'ApprovalModel>/' , sorter: [{ path: 'CATEGORY_CODE', descending: false},{ path: 'CLAIM_DATE', descending: false}]}"
 		inset="false" sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true">
 		<headerToolbar>
 			<OverflowToolbar>
@@ -127,10 +119,10 @@
 				<Label text="Claim Category" design="Bold" wrapping="true"/>
 			</Column>
 			<Column width="{=${device>/isPhone}=== true ? 'auto' : '18%'}">
-				<Label text="Claim Description" design="Bold" wrapping="true"/>
+				<Label text="Claim Type" design="Bold" wrapping="true"/>
 			</Column>
 			<Column minScreenWidth="Tablet" demandPopin="true">
-				<Label text="Employee" design="Bold" wrapping="true"/>
+				<Label text="Employee ID" design="Bold" wrapping="true"/>
 			</Column>
 			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '16%'}">
 				<Label text="Claim Reference No" design="Bold" wrapping="true"/>
@@ -152,9 +144,8 @@
 			<ColumnListItem type="Navigation" press="onSelectItem($event, false, 'ApprovalModel')">
 				<cells>
 					<Text text="{path: 'ApprovalModel>CATEGORY_CODE', formatter: '.formatter.oClaimDesc'}"/>
-					<Text
-						text="{parts:[{path:'ApprovalModel>CLAIM_CATEGORY'},{path:'ApprovalModel>LINE_CLAIM_CODE'},{path:'ApprovalModel>LINE_CLAIM_CATEGORY'}], formatter: '.formatter.oClaimCategDesc'}"/>
-					<ObjectIdentifier text="{ApprovalModel>CLAIM_OWNER_FULLNAME}" title="{ApprovalModel>CLAIM_OWNER_ID}"/>
+					<Text text="{path: 'ApprovalModel>CLAIM_CATEGORY', formatter: '.formatter.oClaimCategDesc'}"/>
+					<Text text="{ApprovalModel>CLAIM_OWNER_ID}"/>
 					<ObjectIdentifier title="{ApprovalModel>CLAIM_REFERENCE}"/>
 					<Text
 						text="{ path: 'ApprovalModel>CLAIM_DATE',formatter: '.formatter.oClaimDate' } / { path: 'ApprovalModel>RECEIPT_DATE', formatter: '.formatter.oClaimDate'}"/>

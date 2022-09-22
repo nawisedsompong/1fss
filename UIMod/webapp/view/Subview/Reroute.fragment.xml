@@ -8,7 +8,7 @@
 				<content>
 					<Title text="Pending Claim ({= ${AdminApprovalModel>/}.length})" level="H2"/>
 					<ToolbarSpacer/>
-					<Input id="inpEmpIDAdm" width="18%" value="{ViewData>/oReRouteEmp}" valueHelpRequest="onEmpSearchOpen('ViewData','Inactive','RE','RE')"
+					<Input id="inpEmpIDAdm" width="18%" value="{ViewData>/oReRouteEmp}" valueHelpRequest="onEmpSearchOpen('ViewData','RE','RE')"
 						showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1"
 						showTableSuggestionValueHelp="false"/>
 					<Button text="SEARCH" press="onSearchReroute" width="8%" type="Emphasized"/>

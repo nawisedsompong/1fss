@@ -204,7 +204,7 @@
 				<l:content>
 					<VBox class="sapUiMediumMarginEnd">
 						<UploadCollection id="SDFRUploadCollection" maximumFilenameLength="50" filenameLengthExceed="onFileNameExceed" maximumFileSize="10"
-							multiple="false" uploadButtonInvisible="{parts:[{path:'ViewData>/DMode'},{path:'ViewData>/oTabValue'}],formatter:'.formatter.oPlusVisible'}"
+							multiple="false" uploadButtonInvisible="{parts:[{path:'ViewData>/DMode'},{path:'ViewData>/oTile'}],formatter:'.formatter.oPlusVisible'}"
 							fileType="jpg,jpeg,png,pdf" change="onChange($event, ${SDFRClaim_Master>/CLAIM_REFERENCE})" fileSizeExceed="onFileSizeExceed"
 							selectionChange="onSelectionChange" typeMissmatch="onTypeMissmatch" uploadComplete="onUploadComplete(${SDFRClaim_Master>/CLAIM_REFERENCE})"
 							fileDeleted="onFileDeleted" beforeUploadStarts="onBeforeUploadStarts" items="{ path: 'oAttachItems>/', templateShareable: false }">
@@ -218,7 +218,7 @@
 							</toolbar>
 							<items>
 								<UploadCollectionItem documentId="{oAttachItems>ID}" fileName="{oAttachItems>fileName}" visibleEdit="false"
-									visibleDelete="{=${oAttachItems>delete} || ${ViewData>/oTabValue}!=='History'}" press="onDownloadFile">
+									visibleDelete="{=${oAttachItems>delete} || ${ViewData>/oTile}==='SMSApprovals'}" press="onDownloadFile">
 									<attributes>
 										<ObjectAttribute title="{i18n>TIT_UPLOADEDON}" text="{ path: 'oAttachItems>date', formatter: '.formatter.oClaimDate'}" active="false"/>
 										<ObjectAttribute title="{i18n>TIT_UPLOADEDBY}" text="{oAttachItems>name}" active="false"/>

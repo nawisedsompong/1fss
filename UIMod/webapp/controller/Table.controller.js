@@ -26,8 +26,6 @@ sap.ui.define([
 		},
 
 		objectMatched: function () {
-			this.oViewData.setProperty("/oTbnameSCH", "");
-			this.oViewData.setProperty("/oTbname", "");
 			if (this.getModel("oEmpData").getProperty("/COMPANY") !== "MOHHSCH") {
 				this._fnValueTable();
 				this._fnEmpJob();
@@ -35,7 +33,7 @@ sap.ui.define([
 		},
 
 		_fnValueTable: function () {
-			this._getBusyIndicator().show();
+			this.getView().setBusy(true);
 			$.ajax({
 				method: "GET",
 				url: "/BenefietCAP/claim/DropDowns()",
@@ -44,10 +42,10 @@ sap.ui.define([
 					var oData = JSON.parse(data.value);
 					this.getView().setModel(new JSONModel(oData), "ComboDetails");
 					this._fnFilterDepDiv();
-					this._getBusyIndicator().hide();
+					this.getView().setBusy(false);
 				}.bind(this),
 				error: function (response) {
-					this._getBusyIndicator().hide();
+					this.getView().setBusy(false);
 					this.handleErrorDialog(response);
 				}.bind(this)
 			});
@@ -59,10 +57,10 @@ sap.ui.define([
 				success: function (data) {
 					var oModel = this._getSizeLimit(data.value);
 					this.getView().setModel(oModel, "oEntitAdjus");
-					this._getBusyIndicator().hide();
+					this.getView().setBusy(false);
 				}.bind(this),
 				error: function (response) {
-					this._getBusyIndicator().hide();
+					this.getView().setBusy(false);
 					this.handleErrorDialog(response);
 				}.bind(this)
 			});
@@ -74,10 +72,10 @@ sap.ui.define([
 				success: function (data) {
 					var oModel = this._getSizeLimit(data.value);
 					this.getView().setModel(oModel, "oWRCamnt");
-					this._getBusyIndicator().hide();
+					this.getView().setBusy(false);
 				}.bind(this),
 				error: function (response) {
-					this._getBusyIndicator().hide();
+					this.getView().setBusy(false);
 					this.handleErrorDialog(response);
 				}.bind(this)
 			});
@@ -89,10 +87,10 @@ sap.ui.define([
 				success: function (data) {
 					var oModel = this._getSizeLimit(data.value);
 					this.getView().setModel(oModel, "oTransAmnt");
-					this._getBusyIndicator().hide();
+					this.getView().setBusy(false);
 				}.bind(this),
 				error: function (response) {
-					this._getBusyIndicator().hide();
+					this.getView().setBusy(false);
 					this.handleErrorDialog(response);
 				}.bind(this)
 			});
@@ -104,10 +102,10 @@ sap.ui.define([
 				success: function (data) {
 					var oModel = this._getSizeLimit(data.value);
 					this.getView().setModel(oModel, "oPostCutoff");
-					this._getBusyIndicator().hide();
+					this.getView().setBusy(false);
 				}.bind(this),
 				error: function (response) {
-					this._getBusyIndicator().hide();
+					this.getView().setBusy(false);
 					this.handleErrorDialog(response);
 				}.bind(this)
 			});
@@ -235,11 +233,11 @@ sap.ui.define([
 					this._fnShowErrorMessage("Please select date");
 					return;
 				}
-				if ((oStrtdate < new Date().toISOString().substring(0, 10)) && (oTableVal !== "LOC"&&oTableVal !== "RO")) {
+				if ((oStrtdate < new Date().toISOString().substring(0, 10)) && oTableVal !== "LOC") {
 					this._fnShowErrorMessage("Start date should be future date");
 					return;
 				}
-				if ((oEnddate < new Date().toISOString().substring(0, 10)) && (oTableVal !== "LOC" && oTableVal !== "RO")) {
+				if ((oEnddate < new Date().toISOString().substring(0, 10)) && oTableVal !== "LOC") {
 					this._fnShowErrorMessage("End date should be future date");
 					return;
 				}
@@ -300,7 +298,6 @@ sap.ui.define([
 			}).then(function (oDialog) {
 				this._oCreateValue = oDialog;
 				this.getView().addDependent(this._oCreateValue);
-				this.oValueTable = $.extend(true, {}, oContext.getObject());
 				this._oCreateValue.setModel(new JSONModel(oContext.getObject()), "oValueTable");
 				if (oTableVal === "CUT") {
 					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "claimFinalApprovalDateFrom", "oValueTable",
@@ -310,10 +307,6 @@ sap.ui.define([
 					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "estimatePaymentDate", "oValueTable", "datePickerp4");
 					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "postingCutoffDate", "oValueTable", "datePickerp5");
 					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "replicationRestart", "oValueTable", "datePickerp6");
-				}
-
-				if (oTableVal === "LOC" || oTableVal === "RO") {
-					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "END_DATE", "oValueTable", "datePicker2");
 				}
 				this._oCreateValue.open();
 			}.bind(this));
@@ -327,7 +320,7 @@ sap.ui.define([
 			Validator.resetValidStates(this, "dlgNewValue", this._oCreateValue);
 
 			var oPayLoad = this._oCreateValue.getModel("oValueTable").getData();
-			this._fnTableName(this.oValueTable);
+			this._fnTableName(oPayLoad);
 			$.ajax({
 				url: this.oViewData.getProperty("/oTableURL"),
 				data: JSON.stringify(oPayLoad),
@@ -349,53 +342,35 @@ sap.ui.define([
 		},
 
 		onCopyValueTable: function (oEvent) {
-			var oContext, oTableVal = this.oViewData.getProperty("/oTbname");
-			if (oTableVal === "RO") {
+			var oContext;
+			if (this.oViewData.getProperty("/oTbname") === "RO") {
 				oContext = oEvent.getSource().getBindingContext("oLocationRO");
-			} else if (oTableVal === "EA") {
+			} else if (this.oViewData.getProperty("/oTbname") === "EA") {
 				oContext = oEvent.getSource().getBindingContext("oEntitAdjus");
-			} else if (oTableVal === "CUT") {
-				oContext = oEvent.getSource().getBindingContext("oPostCutoff");
-			} else if (oTableVal === "TRAN") {
-				oContext = oEvent.getSource().getBindingContext("oTransAmnt");
-			} else if (oTableVal === "WRC") {
-				oContext = oEvent.getSource().getBindingContext("oWRCamnt");
 			} else {
 				oContext = oEvent.getSource().getBindingContext("ComboDetails");
 			}
 			var sPath = oContext.getPath().replace(/^\D+/g, ""),
 				sIndex = parseInt(sPath, 0);
-			this.oViewData.setProperty("/DMode", true);
+			this.oViewData.setProperty("/DMode", false);
 			this.oViewData.setProperty("/eIndex", sIndex);
 			this.oViewData.setProperty("/TMode", "Copy");
 
-			this._oCreateValue = Fragment.load({
-				id: this.createId("dlgNewValue"),
-				name: "BenefitClaim.ZBenefitClaim.fragments.AddValueTable",
-				controller: this
-			}).then(function (oDialog) {
-				this._oCreateValue = oDialog;
-				this.getView().addDependent(this._oCreateValue);
+			if (!this._oCreateValue) {
+				Fragment.load({
+					id: this.createId("dlgNewValue"),
+					name: "BenefitClaim.ZBenefitClaim.fragments.AddValueTable",
+					controller: this
+				}).then(function (oDialog) {
+					this._oCreateValue = oDialog;
+					this.getView().addDependent(this._oCreateValue);
+					this._oCreateValue.setModel(new JSONModel(oContext.getObject()), "oValueTable");
+					this._oCreateValue.open();
+				}.bind(this));
+			} else {
 				this._oCreateValue.setModel(new JSONModel(oContext.getObject()), "oValueTable");
 				this._oCreateValue.open();
-				if (oTableVal === "WRC" || oTableVal === "RO" || oTableVal === "LOC" || oTableVal === "TRAN") {
-					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "START_DATE", "oValueTable", "datePicker1");
-					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "END_DATE", "oValueTable", "datePicker2");
-				}
-				if (oTableVal === "ADMIN") {
-					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "Start_Date", "oValueTable", "datePicker1");
-					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "End_Date", "oValueTable", "datePicker2");
-				}
-				if (oTableVal === "CUT") {
-					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "claimFinalApprovalDateFrom", "oValueTable",
-						"datePickerp2");
-					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "claimFinalApprovalDateTo", "oValueTable",
-						"datePickerp3");
-					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "estimatePaymentDate", "oValueTable", "datePickerp4");
-					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "postingCutoffDate", "oValueTable", "datePickerp5");
-					this.loadDatePicker(this._oCreateValue.getModel("oValueTable"), "edit", "replicationRestart", "oValueTable", "datePickerp6");
-				}
-			}.bind(this));
+			}
 
 		},
 
@@ -754,7 +729,8 @@ sap.ui.define([
 				this.oViewData.setProperty("/oTableURL", url);
 				this.oViewData.setProperty("/oTablePostURL", posturl);
 			} else if (oTable === "LOC") {
-				url = "/BenefietCAP/claim/BEN_LOCATION(START_DATE=" + oPayLoad.START_DATE + ",LOCATION='" + oPayLoad.LOCATION + "')";
+				url = "/BenefietCAP/claim/BEN_LOCATION(START_DATE=" + oPayLoad.START_DATE + ",END_DATE=" + oPayLoad.END_DATE +
+					",LOCATION='" + oPayLoad.LOCATION + "')";
 				posturl = "/BenefietCAP/claim/BEN_LOCATION";
 				this.oViewData.setProperty("/oTableURL", url);
 				this.oViewData.setProperty("/oTablePostURL", posturl);
@@ -828,20 +804,15 @@ sap.ui.define([
 			oBinding.filter([oFilter]);
 		},
 
-		onDownload: function (model, id) {
-			var data = [],
-				oData = this.getView().byId(id).getBinding("items").getAllCurrentContexts();
-			for (var i = 0; i < oData.length; i++) {
-				data.push(oData[i].getObject());
-			}
-			this.JSONToCSVConvertor(data, "Table", true);
-			/*if (key) {
+		onDownload: function (model, key) {
+			var data;
+			if (key) {
 				data = this.getView().getModel(model).getData();
 				this.JSONToCSVConvertor(data, "Data", true);
 			} else {
-				 data = this.getView().getModel("ComboDetails").getData()[model];
+				data = this.getView().getModel("ComboDetails").getData()[model];
 				this.JSONToCSVConvertor(data, model, true);
-			}*/
+			}
 		}
 
 	});

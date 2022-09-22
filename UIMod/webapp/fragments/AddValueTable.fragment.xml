@@ -1,8 +1,6 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form"
 	xmlns:core="sap.ui.core">
-	<Dialog class="sapUiSizeCompact" resizable="true" contentWidth="{=${ViewData>/oTbname}==='LOC' ? '45%' : auto}"
-		title="{=${ViewData>/TMode}==='Copy' ? 'Copy Data' : ${ViewData>/TMode}==='Edit' ? 'Edit Data' : 'Add New Data'}"
-		horizontalScrolling="false" draggable="true" busy="{appView>/busy}">
+	<Dialog class="sapUiSizeCompact" resizable="true" title="Add New Data" horizontalScrolling="false" draggable="true" busy="{appView>/busy}">
 		<content>
 			<VBox class="sapUiSmallMargin">
 				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
@@ -52,7 +50,7 @@
 						<VBox class="sapUiMediumMarginEnd" visible="{=${ViewData>/oTbname}==='RO' ? true : false}">
 							<Label text="Location RO" required="true"/>
 							<Input id="inpRO" width="100%" required="{=${ViewData>/oTbname}==='RO' ? true : false}" fieldGroupIds="fgInput"
-								value="{oValueTable>/Location_RO_EmployeeID}" valueHelpRequest="onEmpSearchOpen('oValueTable', 'Active', 'RO')" showValueHelp="true"
+								value="{oValueTable>/Location_RO_EmployeeID}" valueHelpRequest="onEmpSearchOpen('oValueTable', 'RO')" showValueHelp="true"
 								showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
 						</VBox>
 					</l:content>
@@ -109,9 +107,8 @@
 						<VBox class="sapUiMediumMarginEnd" visible="{=${ViewData>/oTbname}==='EA' ? true : false}">
 							<Label text="Employee ID" required="true"/>
 							<Input id="inpEA_empid" width="100%" required="{=${ViewData>/oTbname}==='EA' ? true : false}" fieldGroupIds="fgInput"
-								enabled="{=${ViewData>/DMode}}" value="{oValueTable>/emp_Id}" valueHelpRequest="onEmpSearchOpen('oValueTable','Active', 'EA')"
-								showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1"
-								showTableSuggestionValueHelp="false"/>
+								enabled="{=${ViewData>/DMode}}" value="{oValueTable>/emp_Id}" valueHelpRequest="onEmpSearchOpen('oValueTable', 'EA')" showValueHelp="true"
+								showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
 						</VBox>
 					</l:content>
 				</l:Grid>
@@ -264,7 +261,7 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="Start Date" required="true"/>
-							<HBox visible="{=${ViewData>/DMode} &amp;&amp; (${ViewData>/TMode}==='Submit' ||${ViewData>/TMode}==='Copy')}">
+							<HBox visible="{=${ViewData>/DMode} &amp;&amp; ${ViewData>/TMode}==='Submit'}">
 								<core:HTML content='&lt;input class="datePicker1"/&gt;'></core:HTML>
 							</HBox>
 							<Text visible="{= !${ViewData>/DMode} || ${ViewData>/TMode}==='Edit'}"
@@ -272,7 +269,7 @@
 						</VBox>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="End Date" required="true"/>
-							<HBox visible="{=${ViewData>/DMode} &amp;&amp; (${ViewData>/TMode}==='Submit' ||${ViewData>/TMode}==='Copy')}">
+							<HBox visible="{=${ViewData>/DMode} &amp;&amp; ${ViewData>/TMode}==='Submit'}">
 								<core:HTML content='&lt;input class="datePicker2"/&gt;'></core:HTML>
 							</HBox>
 							<Text visible="{= !${ViewData>/DMode} || ${ViewData>/TMode}==='Edit'}"
@@ -323,7 +320,7 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="Start Date" required="true"/>
-							<HBox visible="{=${ViewData>/DMode} &amp;&amp; (${ViewData>/TMode}==='Submit' ||${ViewData>/TMode}==='Copy')}">
+							<HBox visible="{=${ViewData>/DMode} &amp;&amp; ${ViewData>/TMode}==='Submit'}">
 								<core:HTML content='&lt;input class="datePicker1"/&gt;'></core:HTML>
 							</HBox>
 							<Text visible="{= !${ViewData>/DMode} || ${ViewData>/TMode}==='Edit'}"
@@ -331,11 +328,10 @@
 						</VBox>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="End Date" required="true"/>
-							<HBox
-								visible="{=(${ViewData>/DMode} &amp;&amp; (${ViewData>/TMode}==='Submit' ||${ViewData>/TMode}==='Copy')) || (${ViewData>/oTbname}==='LOC' || ${ViewData>/oTbname}==='RO')}">
+							<HBox visible="{=${ViewData>/DMode} &amp;&amp; ${ViewData>/TMode}==='Submit'}">
 								<core:HTML content='&lt;input class="datePicker2"/&gt;'></core:HTML>
 							</HBox>
-							<Text visible="{= (!${ViewData>/DMode} || ${ViewData>/TMode}==='Edit') &amp;&amp; !${ViewData>/oTbname}==='LOC'}"
+							<Text visible="{= !${ViewData>/DMode} || ${ViewData>/TMode}==='Edit'}"
 								text="{ path: 'oValueTable>/END_DATE', formatter: '.formatter.oClaimDate' }"/>
 						</VBox>
 					</l:content>
@@ -364,8 +360,7 @@
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="Location" required="true"/>
 							<Input id="inpDiv" width="100%" required="{=${ViewData>/oTbname}==='LOC' ? true : false}" fieldGroupIds="fgInput"
-								value="{oValueTable>/LOCATION}" visible="{=${ViewData>/DMode}}"/>
-							<Text text="{oValueTable>/LOCATION}" visible="{=!${ViewData>/DMode}}"/>
+								value="{oValueTable>/LOCATION}"/>
 						</VBox>
 					</l:content>
 				</l:Grid>
@@ -373,11 +368,10 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="Company Code" required="{=${ViewData>/oTbname}==='CUT' ? true : false}"/>
-							<ComboBox width="100%" id="cbCUT_CompanyCode" required="{=${ViewData>/oTbname}==='CUT' ? true : false}" visible="{=${ViewData>/DMode}}"
+							<ComboBox width="100%" id="cbCUT_CompanyCode" required="{=${ViewData>/oTbname}==='CUT' ? true : false}" enabled="{=${ViewData>/DMode}}"
 								fieldGroupIds="fgInput" selectedKey="{oValueTable>/company}" items="{ComboDetails>/COMPANY}">
 								<core:Item key="{ComboDetails>Company}" text="{ComboDetails>Company_Desc}"/>
 							</ComboBox>
-							<Text text="{oValueTable>/company}" visible="{=!${ViewData>/DMode}}"/>
 						</VBox>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="Payroll Area" required="{=${ViewData>/oTbname}==='CUT' ? true : false}"/>
@@ -390,7 +384,7 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="Payroll Period" required="{=${ViewData>/oTbname}==='CUT' ? true : false}"/>
-							<HBox visible="{=${ViewData>/DMode} &amp;&amp; (${ViewData>/TMode}==='Submit' ||${ViewData>/TMode}==='Copy')}">
+							<HBox visible="{=${ViewData>/DMode} &amp;&amp; ${ViewData>/TMode}==='Submit'}">
 								<core:HTML content='&lt;input class="datePickerp1"/&gt;'></core:HTML>
 							</HBox>
 							<Text visible="{= !${ViewData>/DMode} || ${ViewData>/TMode}==='Edit'}"

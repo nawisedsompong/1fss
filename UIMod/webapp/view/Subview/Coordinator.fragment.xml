@@ -4,10 +4,10 @@
 		<headerToolbar>
 			<OverflowToolbar>
 				<content>
-					<Title text="Coordinator Data ({ViewData>/coordLength})" class="sapUiSmallMargin"/>
+					<Title text="Coordinator Data ({= ${oCoordinData>/}.length})" class="sapUiSmallMargin"/>
 					<ToolbarSpacer/>
-					<SearchField id="search_coord" width="25%" placeholder="Search" liveChange="onSearchCoord($event, 'oTableCoord', 'coordLength')"/>
-					<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oCoordinData','oTableCoord')"/>
+					<SearchField width="25%" placeholder="Search Description" liveChange="onSearchCoord($event, 'oTableCoord')" visible="false"/>
+					<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownloadE('oCoordinData')"/>
 					<Button text="NEW DATA" icon="sap-icon://add" iconFirst="true" type="Emphasized" press="onAddCoord"/>
 					<Button text="{i18n>BTN_DELETE}" icon="sap-icon://delete" iconFirst="true" type="Reject" press="onDeleteCoord"/>
 				</content>
@@ -57,11 +57,11 @@
 					<ObjectIdentifier title="{oCoordinData>EMPLOYEE_ID}" text="{oCoordinData>EMP_FNAME}"/>
 					<Text text="{ path: 'oCoordinData>STARTDATE', formatter: '.formatter.oClaimDate' }"/>
 					<Text text="{path: 'oCoordinData>ENDDATE', formatter: '.formatter.oClaimDate' }"/>
-					<Text text="{parts:[{path:'oCoordinData>PERSONNEL_AREA'},{path:'oCoordinData>PERSONAL_SUBAREA'}], formatter: '.formatter.oSlashLine'}"/>
+					<Text text="{oCoordinData>PERSONNEL_AREA} / {oCoordinData>PERSONAL_SUBAREA}"/>
 					<Text text="{oCoordinData>PAY_GRADE}"/>
 					<Text text="{oCoordinData>SPONSOR_INSTITUTION}"/>
 					<Text text="{oCoordinData>SPECIALISATION}"/>
-					<Text text="{parts:[{path:'oCoordinData>EMPLOYEE_DEPARTMENT'},{path:'oCoordinData>EMPLOYEE_DIVISION'}], formatter: '.formatter.oSlashLine'}"/>
+					<Text text="{oCoordinData>EMPLOYEE_DEPARTMENT} / {oCoordinData>EMPLOYEE_DIVISION}"/>
 					<ObjectIdentifier title="{oCoordinData>COORDINATOR}" text="{oCoordinData>COORD_FNAME}"/>
 					<Text text="{oCoordinData>REPORT}"/>
 					<Text text="{oCoordinData>SUBMIT}"/>

@@ -29,7 +29,7 @@
 				<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.Approval" type="XML"/>
 			</VBox>
 			<VBox class="VboxBackground" visible="{=${ViewData>/oTile}==='Coord'}">
-				<core:Fragment fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.Coordinator" type="XML"/>
+				<core:Fragment id="idCoord" fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.Coordinator" type="XML"/>
 			</VBox>
 			<VBox class="VboxBackground" visible="{=${ViewData>/oTile}==='Role'}">
 				<core:Fragment id="idRole" fragmentName="BenefitClaim.ZBenefitClaim.view.Subview.Role" type="XML"/>

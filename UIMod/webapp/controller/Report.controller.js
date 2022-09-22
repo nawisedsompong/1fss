@@ -32,16 +32,7 @@ sap.ui.define([
 				oFilterInt._oClearButtonOnFB.setProperty("text", "CLEAR");
 				this.getView().setBusy(true);
 				this.loadDatePicker(this.oViewData, "create", "InvDateSMS", "ViewData", "InvDateSMS");
-				this.loadDatePicker(this.oViewData, "create", "PostdateSMS", "ViewData", "PostdateSMS");
-				this.oViewData.setProperty("/Emp_SMS", "");
-				this.oViewData.setProperty("/ClaimNoSMS", "");
-				this.oViewData.setProperty("/ClaimLineNoSMS", "");
-				this.oViewData.setProperty("/StatusSMS", "");
-				this.oViewData.setProperty("/ClaimCategSMS", "");
-				this.oViewData.setProperty("/InvDateSMS", null);
-				this.oViewData.setProperty("/PostdateSMS", null);
-				$(".InvDateSMS").val(null);
-				$(".PostdateSMS").val(null);
+				// this.loadDatePicker(this.oViewData, "create", "EdateSMS", "ViewData", "EdateSMS");
 				$.ajax({
 					url: "/BenefietCAP/claim/SMS_PAYMENT_REPORT",
 					method: "GET",
@@ -51,17 +42,11 @@ sap.ui.define([
 						this.getView().setBusy(false);
 					}.bind(this),
 					error: function (xhr, ajaxOptions, throwError) {
-						this.getOwnerComponent().setModel(new JSONModel([]), "oSMSDetails");
+						this.getOwnerComponent().setModel(new JSONModel({}), "oSMSDetails");
 						this.getView().setBusy(false);
 						this.handleErrorDialog(xhr);
 					}.bind(this)
 				});
-			}
-			if (this.oViewData.getProperty("/oTile") === "Ring") {
-				this.getOwnerComponent().setModel(new JSONModel([]), "oRingAmntDetails");
-				this.oViewData.setProperty("/ClaimCate", "");
-				this.oViewData.setProperty("/EmpIDring", "");
-				this.oViewData.setProperty("/tb_Ringfence", 0);
 			} else {
 				this.loadDatePicker(this.oViewData, "create", "oRepSdate", "ViewData", "datePicker1");
 				this.loadDatePicker(this.oViewData, "create", "oRepEdate", "ViewData", "datePicker2");
@@ -87,7 +72,7 @@ sap.ui.define([
 					this._fnShowErrorMessage("Please select year");
 				} else {
 					var oCategoryIN = this.oViewData.getProperty("/ClaimCate"),
-						oValuei = "";
+						oValuei;
 					if (oCategoryIN) {
 						oValuei = " and CLAIM_CODE_VALUE eq '" + oCategoryIN + "'";
 					}
@@ -95,12 +80,11 @@ sap.ui.define([
 					this._fnADReport(oURL, "EMP");
 				}
 			} else if (this.oViewData.getProperty("/oTile") === "ADReport") {
-				if (!this.oViewData.getProperty("/ClaimCate") || !this.oViewData.getProperty("/oRepYear")) {
-					this._fnShowErrorMessage("Please select all mandatory field");
+				if (this.oViewData.getProperty("/oRepYear") === "" || !this.oViewData.getProperty("/oRepYear")) {
+					this._fnShowErrorMessage("Please select year");
 				} else {
 					var oCategory = this.oViewData.getProperty("/ClaimCate"),
-						oValue = "",
-						seURL;
+						oValue, seURL;
 					if (oCategory) {
 						oValue = " and CLAIM_CODE_VALUE eq '" + oCategory + "'";
 					}
@@ -111,41 +95,18 @@ sap.ui.define([
 			} else if (this.oViewData.getProperty("/oTile") === "INReport") {
 				this.onEmReport();
 			} else {
-				if (this.oViewData.getProperty("/oRepYear")) {
-					var key = "",
-						oUrl = "/BenefietCAP/calclaim/MEDISAVE_REPORT?$filter=YEAR eq '" + year + "'";
-					if (this.oViewData.getProperty("/ClaimCate")) {
-						key = " and CLAIM_CODE_VALUE eq '" + this.oViewData.getProperty(
-							"/ClaimCate") + "'";
-					}
-					if (this.oViewData.getProperty("/EmpIDring")) {
-						key = " and EMPLOYEE eq '" + this.oViewData.getProperty(
-							"/EmpIDring") + "'";
-					}
-					if (this.oViewData.getProperty("/ClaimCate") && this.oViewData.getProperty("/EmpIDring")) {
-						key = " and CLAIM_CODE_VALUE eq '" + this.oViewData.getProperty(
-							"/ClaimCate") + "' and EMPLOYEE eq '" + this.oViewData.getProperty(
-							"/EmpIDring") + "'";
-					}
-					this._getBusyIndicator().show();
-					$.ajax({
-						url: oUrl + key,
-						method: "GET",
-						crossDomain: true,
-						success: function (odata, oResponse) {
-							var oModel = this._getSizeLimit(odata.value);
-							this.getView().setModel(oModel, "oRingAmntDetails");
-							this._getBusyIndicator().hide();
-						}.bind(this),
-						error: function (xhr, ajaxOptions, throwError) {
-							this._getBusyIndicator().hide();
-							this.getOwnerComponent().setModel(new JSONModel([]), "oRingAmntDetails");
-							this.handleErrorDialog(xhr);
-						}.bind(this)
-					});
-				} else {
-					this._fnShowErrorMessage("Please select year");
-				}
+				$.ajax({
+					url: "/BenefietCAP/claim/calculateRingFencing(currentYear='" + year + "')",
+					method: "GET",
+					crossDomain: true,
+					success: function (odata, oResponse) {
+						this.getOwnerComponent().setModel(new JSONModel(odata.value), "oRingAmntDetails");
+					}.bind(this),
+					error: function (xhr, ajaxOptions, throwError) {
+						this.getOwnerComponent().setModel(new JSONModel({}), "oRingAmntDetails");
+						this.handleErrorDialog(xhr);
+					}.bind(this)
+				});
 			}
 		},
 
@@ -162,33 +123,23 @@ sap.ui.define([
 			if (odata.InvDateSMS) {
 				oFilter.push(new Filter("INVOICE_DATE", FilterOperator.EQ, odata.InvDateSMS));
 			}
-			if (odata.PostdateSMS) {
-				oFilter.push(new Filter("POST_DATE", FilterOperator.EQ, odata.PostdateSMS));
-			}
 			if (odata.ClaimNoSMS) {
 				oFilter.push(new Filter("CLAIM_REFERENCE", FilterOperator.Contains, odata.ClaimNoSMS));
-			}
-			if (odata.ClaimLineNoSMS) {
-				oFilter.push(new Filter("LINE_ITEM_REFERENCE_NUMBER", FilterOperator.Contains, odata.ClaimLineNoSMS));
 			}
 			if (odata.Emp_SMS) {
 				oFilter.push(new Filter("EMPLOYEE_ID", FilterOperator.EQ, odata.Emp_SMS));
 			}
 			var oTable = this.getView().byId("tbSMSDetails").getBinding("items");
 			oTable.filter(oFilter, true);
-			this.oViewData.setProperty("/tbSMSDetails", oTable.iLength);
 		},
 
 		onClear: function () {
 			this.oViewData.setProperty("/Emp_SMS", "");
 			this.oViewData.setProperty("/ClaimNoSMS", "");
-			this.oViewData.setProperty("/ClaimLineNoSMS", "");
 			this.oViewData.setProperty("/StatusSMS", "");
 			this.oViewData.setProperty("/ClaimCategSMS", "");
 			this.oViewData.setProperty("/InvDateSMS", null);
-			this.oViewData.setProperty("/PostdateSMS", null);
 			$(".InvDateSMS").val(null);
-			$(".PostdateSMS").val(null);
 			this.onSearchs();
 		},
 
@@ -241,7 +192,7 @@ sap.ui.define([
 				this.oViewData.setProperty("/oRepEdate", null);
 				$(".datePicker1").val(null);
 				$(".datePicker2").val(null);
-				this.getOwnerComponent().setModel(new JSONModel([]), "oEmailReport");
+				this.getOwnerComponent().setModel(new JSONModel({}), "oEmailReport");
 			} else if (this.oViewData.getProperty("/oTile") === "ADReport") {
 				this.getView().byId("inpEmpIDHisAD").setTokens([]);
 				this.getView().setModel(new JSONModel([]), "oReportDetails");
@@ -253,11 +204,6 @@ sap.ui.define([
 				this.oViewData.setProperty("/ClaimCateg", "");
 				this.oViewData.setProperty("/ClaimCate", "");
 				this.oViewData.setProperty("/Status", "");
-			} else if (this.oViewData.getProperty("/oTile") === "Ring") {
-				this.oViewData.setProperty("/ClaimCate", "");
-				this.oViewData.setProperty("/EmpIDring", "");
-				this.oViewData.setProperty("/oRepYear", new Date().getFullYear());
-				this.onSearchRep();
 			} else {
 				this.oViewData.setProperty("/oRepEmp", "");
 			}
@@ -376,7 +322,7 @@ sap.ui.define([
 							}
 							this.getOwnerComponent().setModel(new JSONModel(oData), "oEmailReport");
 						} else {
-							this.getOwnerComponent().setModel(new JSONModel([]), "oEmailReport");
+							this.getOwnerComponent().setModel(new JSONModel({}), "oEmailReport");
 						}
 					}.bind(this),
 					error: function (xhr, ajaxOptions, throwError) {

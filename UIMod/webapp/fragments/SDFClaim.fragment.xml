@@ -20,9 +20,8 @@
 				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0">
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
-							<Label text="{i18n>LBL_ITEM_DESC}" required="true"/>
-							<TextArea id="tasdfcItemDesc" maxLength="50" width="100%" required="true" fieldGroupIds="fgInput" rows="2" value="{SDFClaim>/ITEM_DESC}"
-								visible="{ViewData>/DMode}" liveChange="onChangeDataSpl"/>
+							<Label text="{i18n>LBL_ITEM_DESC}"/>
+							<TextArea maxLength="50" width="100%" rows="2" value="{SDFClaim>/ITEM_DESC}" visible="{ViewData>/DMode}" liveChange="onChangeDataSpl"/>
 							<Text visible="{= !${ViewData>/DMode}}" text="{SDFClaim>/ITEM_DESC}"/>
 						</VBox>
 					</l:content>
@@ -48,8 +47,9 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="{i18n>LBL_AMOUNT}" required="true"/>
-							<Input id="inp_SDFCamnt" required="true" fieldGroupIds="fgInput" value="{SDFClaim>/CLAIM_AMOUNT}" visible="{ViewData>/DMode}"
-								liveChange="onValidateDecimalValue"/>
+							<Input id="inp_SDFCamnt" required="true" fieldGroupIds="fgInput"
+								value="{SDFClaim>/CLAIM_AMOUNT}"
+								visible="{ViewData>/DMode}" liveChange="onValidateDecimalValue"/>
 							<Text visible="{= !${ViewData>/DMode}}"
 								text="{ path:'SDFClaim>/CLAIM_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
 						</VBox>
@@ -89,28 +89,7 @@
 								<Button visible="{ViewData>/DMode}" text="COMPUTE" type="Emphasized" press="onSchCal($event,'SDFClaim')"></Button>
 							</HBox>
 							<Text visible="{= !${ViewData>/DMode}}"
-								text="{ path:'SDFClaim>/CLAIM_AMOUNT_SGD', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
-						</VBox>
-					</l:content>
-				</l:Grid>
-				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
-					<l:content>
-						<VBox class="sapUiMediumMarginEnd">
-							<Label text="{i18n>LBL_POST_CURR}"/>
-							<Text text="{SDFClaim>/POST_CURRENCY}"/>
-						</VBox>
-						<VBox class="sapUiMediumMarginEnd">
-							<Label text="{i18n>LBL_POST_CLAIM_AMNT}"/>
-							<Text
-								text="{ path:'SDFClaim>/POST_CLAIM_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
-						</VBox>
-					</l:content>
-				</l:Grid>
-				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
-					<l:content>
-						<VBox class="sapUiMediumMarginEnd">
-							<Label text="{i18n>LBL_POST_DATE}"/>
-							<Text text="{ path: 'SDFClaim>/POST_DATE', formatter: '.formatter.oClaimDate' }"/>
+								text="{ path:'SDFClaim>/CLAIM_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
 						</VBox>
 					</l:content>
 				</l:Grid>
@@ -128,7 +107,7 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<UploadCollection id="SDFCUploadCollection" maximumFilenameLength="50" filenameLengthExceed="onFileNameExceed" maximumFileSize="10"
-								multiple="false" uploadButtonInvisible="{parts:[{path:'ViewData>/DMode'},{path:'ViewData>/oTabValue'}],formatter:'.formatter.oPlusVisible'}"
+								multiple="false" uploadButtonInvisible="{parts:[{path:'ViewData>/DMode'},{path:'ViewData>/oTile'}],formatter:'.formatter.oPlusVisible'}"
 								fileType="jpg,jpeg,png,pdf" change="onChange($event, ${SDFClaim>/CLAIM_REFERENCE})" fileSizeExceed="onFileSizeExceed"
 								selectionChange="onSelectionChange" typeMissmatch="onTypeMissmatch" uploadComplete="onUploadComplete(${SDFClaim>/CLAIM_REFERENCE})"
 								fileDeleted="onFileDeleted" beforeUploadStarts="onBeforeUploadStarts" items="{ path: 'oAttachItems>/', templateShareable: false }">
@@ -142,7 +121,7 @@
 								</toolbar>
 								<items>
 									<UploadCollectionItem documentId="{oAttachItems>ID}" fileName="{oAttachItems>fileName}" visibleEdit="false"
-										visibleDelete="{=${oAttachItems>delete} || ${ViewData>/oTabValue}!=='History'}" press="onDownloadFile">
+										visibleDelete="{=${oAttachItems>delete} || ${ViewData>/oTile}==='SMSApprovals'}" press="onDownloadFile">
 										<attributes>
 											<ObjectAttribute title="{i18n>TIT_UPLOADEDON}" text="{ path: 'oAttachItems>date', formatter: '.formatter.oClaimDate'}" active="false"/>
 											<ObjectAttribute title="{i18n>TIT_UPLOADEDBY}" text="{oAttachItems>name}" active="false"/>
@@ -158,8 +137,7 @@
 		<buttons>
 			<!--<Button text="SAVE AS DRAFT" type="Emphasized" icon="sap-icon://save" press="onAddData($event, 'SDFClaim')" visible="{ViewData>/DMode}"/>-->
 			<Button text="{ViewData>/BtnTxt}" press="onAddLineData($event, 'SDFClaim','SDFClaim_Master')" type="Emphasized" visible="{ViewData>/DMode}"/>
-			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseLineDialog('SDFClaim_Master')" type="Reject" visible="{ViewData>/oFinanc}"/>
-			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseFinance" type="Reject" visible="{=!${ViewData>/oFinanc}}"/>
+			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseLineDialog('SDFClaim_Master')" type="Reject"/>
 		</buttons>
 	</Dialog>
 </core:FragmentDefinition>

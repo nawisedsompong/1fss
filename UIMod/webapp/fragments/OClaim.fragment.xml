@@ -20,9 +20,8 @@
 				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0">
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
-							<Label text="{i18n>LBL_ITEM_DESC}" required="true"/>
-							<TextArea id="taocItemDesc" maxLength="50" required="true" fieldGroupIds="fgInput" width="100%" rows="2" value="{OClaim>/ITEM_DESC}"
-								visible="{ViewData>/DMode}" liveChange="onChangeDataSpl"/>
+							<Label text="{i18n>LBL_ITEM_DESC}"/>
+							<TextArea maxLength="50" width="100%" rows="2" value="{OClaim>/ITEM_DESC}" visible="{ViewData>/DMode}" liveChange="onChangeDataSpl"/>
 							<Text visible="{= !${ViewData>/DMode}}" text="{OClaim>/ITEM_DESC}"/>
 						</VBox>
 					</l:content>
@@ -48,8 +47,9 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="{i18n>LBL_AMOUNT}" required="true"/>
-							<Input id="inp_SDFCamnt" required="true" fieldGroupIds="fgInput" value="{OClaim>/CLAIM_AMOUNT}" visible="{ViewData>/DMode}"
-								liveChange="onValidateDecimalValue"/>
+							<Input id="inp_SDFCamnt" required="true" fieldGroupIds="fgInput"
+								value="{OClaim>/CLAIM_AMOUNT}"
+								visible="{ViewData>/DMode}" liveChange="onValidateDecimalValue"/>
 							<Text visible="{= !${ViewData>/DMode}}"
 								text="{ path:'OClaim>/CLAIM_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
 						</VBox>
@@ -66,12 +66,13 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="{i18n>LBL_POST_CURR}"/>
+							<!--<Input id="inp_CPCcurr" fieldGroupIds="fgInput" value="{OClaim>/POST_CURRENCY}" visible="{ViewData>/DMode}"/>-->
 							<Text text="{OClaim>/POST_CURRENCY}"/>
 						</VBox>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="{i18n>LBL_POST_CLAIM_AMNT}"/>
-							<Text
-								text="{ path:'OClaim>/POST_CLAIM_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+							<!--<Input id="inp_CPC_amnt" fieldGroupIds="fgInput" value="{OClaim>/POST_CLAIM_AMOUNT}" visible="{ViewData>/DMode}"/>-->
+							<Text text="{OClaim>/POST_CLAIM_AMOUNT}"/>
 						</VBox>
 					</l:content>
 				</l:Grid>
@@ -79,6 +80,8 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="{i18n>LBL_POST_DATE}"/>
+							<!--<DatePicker id="dp_CPCdate" fieldGroupIds="fgInput" value="{OClaim>/POST_DATE}" visible="{ViewData>/DMode}" displayFormat="dd.MM.yyyy"
+								valueFormat="yyyy-MM-dd"/>-->
 							<Text text="{ path: 'OClaim>/POST_DATE', formatter: '.formatter.oClaimDate' }"/>
 						</VBox>
 					</l:content>
@@ -97,7 +100,7 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<UploadCollection id="OCUploadCollection" maximumFilenameLength="50" filenameLengthExceed="onFileNameExceed" maximumFileSize="10"
-								multiple="false" uploadButtonInvisible="{parts:[{path:'ViewData>/DMode'},{path:'ViewData>/oTabValue'}],formatter:'.formatter.oPlusVisible'}"
+								multiple="false" uploadButtonInvisible="{parts:[{path:'ViewData>/DMode'},{path:'ViewData>/oTile'}],formatter:'.formatter.oPlusVisible'}"
 								fileType="jpg,jpeg,png,pdf" change="onChange($event, ${OClaim>/CLAIM_REFERENCE})" fileSizeExceed="onFileSizeExceed"
 								selectionChange="onSelectionChange" typeMissmatch="onTypeMissmatch" uploadComplete="onUploadComplete(${OClaim>/CLAIM_REFERENCE})"
 								fileDeleted="onFileDeleted" beforeUploadStarts="onBeforeUploadStarts" items="{ path: 'oAttachItems>/', templateShareable: false }">
@@ -111,7 +114,7 @@
 								</toolbar>
 								<items>
 									<UploadCollectionItem documentId="{oAttachItems>ID}" fileName="{oAttachItems>fileName}" visibleEdit="false"
-										visibleDelete="{=${oAttachItems>delete} || ${ViewData>/oTabValue}!=='History'}" press="onDownloadFile">
+										visibleDelete="{=${oAttachItems>delete} || ${ViewData>/oTile}==='SMSApprovals'}" press="onDownloadFile">
 										<attributes>
 											<ObjectAttribute title="{i18n>TIT_UPLOADEDON}" text="{ path: 'oAttachItems>date', formatter: '.formatter.oClaimDate'}" active="false"/>
 											<ObjectAttribute title="{i18n>TIT_UPLOADEDBY}" text="{oAttachItems>name}" active="false"/>
@@ -127,8 +130,7 @@
 		<buttons>
 			<!--<Button text="SAVE AS DRAFT" type="Emphasized" icon="sap-icon://save" press="onAddData($event, 'OClaim')" visible="{ViewData>/DMode}"/>-->
 			<Button text="{ViewData>/BtnTxt}" press="onAddLineData($event, 'OClaim','OClaim_Master')" type="Emphasized" visible="{ViewData>/DMode}"/>
-			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseLineDialog('OClaim_Master')" type="Reject" visible="{ViewData>/oFinanc}"/>
-			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseFinance" type="Reject" visible="{=!${ViewData>/oFinanc}}"/>
+			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseLineDialog('OClaim_Master')" type="Reject"/>
 		</buttons>
 	</Dialog>
 </core:FragmentDefinition>

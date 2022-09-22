@@ -9,7 +9,7 @@
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="Employee" required="true"/>
 							<Input id="inpEmpIDRole" width="100%" visible="{ViewData>/DMode}" required="true" value="{oRoleData>/EMPLOYEE_ID}"
-								valueHelpRequest="onEmpSearchOpen('oRoleData','Active', 'EMP_ID')" showValueHelp="true" showSuggestion="true" valueHelpOnly="true"
+								valueHelpRequest="onEmpSearchOpen('oRoleData', 'EMP_ID')" showValueHelp="true" showSuggestion="true" valueHelpOnly="true"
 								filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false" fieldGroupIds="fgInput"/>
 							<Text visible="{= !${ViewData>/DMode}}" text="{oRoleData>/EMPLOYEE_ID}"/>
 						</VBox>

@@ -1,7 +1,7 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
 	<SelectDialog class="sapUiSizeCompact" title="Division Search" id="dlgDivision" search="onSearch($event,'Division_Code', 'Division_Desc')"
 		liveChange="onSearch($event,'Division_Code', 'Division_Desc')" confirm="onDivClose" cancel="onSDialogCancel" growing="true"
-		items="{path:'oDivData>/' , sorter: { path: 'Division_Desc', descending: false}}">
+		items="{path:'oDivData>/' , sorter: { path: 'Division_Code', descending: false}}">
 		<StandardListItem title="{oDivData>Division_Code}" description="{oDivData>Division_Desc}"/>
 	</SelectDialog>
 </core:FragmentDefinition>

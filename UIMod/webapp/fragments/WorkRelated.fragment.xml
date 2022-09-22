@@ -38,9 +38,9 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="{i18n>LBL_REMARK}"/>
-							<TextArea maxLength="500" width="100%" rows="3" value="{WorkRelated>/ITEM_LINE_REMARKS_EMPLOYEE}" visible="{=${ViewData>/DMode} }"
+							<TextArea maxLength="500" width="100%" rows="3" value="{WorkRelated>/ITEM_LINE_REMARKS_EMPLOYEE}" visible="{ViewData>/DMode}"
 								liveChange="onChangeData"/>
-							<Text visible="{=!${ViewData>/DMode} }" text="{WorkRelated>/ITEM_LINE_REMARKS_EMPLOYEE}"/>
+							<Text visible="{= !${ViewData>/DMode}}" text="{WorkRelated>/ITEM_LINE_REMARKS_EMPLOYEE}"/>
 						</VBox>
 					</l:content>
 				</l:Grid>
@@ -77,7 +77,7 @@
 		<buttons>
 			<!--<Button text="SAVE AS DRAFT" type="Emphasized" icon="sap-icon://save" press="onAddData($event, 'WorkRelated')" visible="{ViewData>/DMode}"/>-->
 			<Button text="{ViewData>/BtnTxt}" press="onAddLineData($event, 'WorkRelated', 'WorkRelated_Master')" type="Emphasized"
-				visible="{=${ViewData>/DMode}}"/>
+				visible="{ViewData>/DMode}"/>
 			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseLineDialog('WorkRelated_Master')" type="Reject"/>
 		</buttons>
 	</Dialog>

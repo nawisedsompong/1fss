@@ -5,7 +5,7 @@
 		<l:content>
 			<VBox class="sapUiMediumMarginEnd">
 				<Label text="Claim Owner" wrapping="true"/>
-				<Text text="{oAppRemarks>/EMPLOYEE_ID} - {oAppRemarks>/Employee_FullName}"/>
+				<Text text="{oAppRemarks>/EMPLOYEE_ID}"/>
 			</VBox>
 			<VBox class="sapUiMediumMarginEnd">
 				<Label text="Claim Status" wrapping="true"/>
@@ -19,7 +19,8 @@
 		<l:content>
 			<VBox class="sapUiMediumMarginEnd">
 				<Label text="Submitted By" wrapping="true"/>
-				<Text text="{oAppRemarks>/SUBMITTED_BY} - {oAppRemarks>/SUBMITTEDBY_FullName}"/>
+				<Text
+					text="{=${oAppRemarks>/SUBMITTED_BY}==='' ? ${oAppRemarks>/EMPLOYEE_ID} : ${oAppRemarks>/SUBMITTED_BY}===null ? ${oAppRemarks>/EMPLOYEE_ID} : ${oAppRemarks>/SUBMITTED_BY} }"/>
 			</VBox>
 			<VBox class="sapUiMediumMarginEnd">
 				<Label text="{i18n>LBL_SUBM_DATE}"/>
@@ -40,7 +41,7 @@
 			<VBox class="sapUiMediumMarginEnd">
 				<Table inset="false" items="{oAppRemarks>/LINE_ITEM}">
 					<columns>
-						<Column width="55%">
+						<Column>
 							<Text text="Approver"/>
 						</Column>
 						<Column minScreenWidth="Desktop" demandPopin="true">
@@ -53,8 +54,7 @@
 					<items>
 						<ColumnListItem type="Active">
 							<cells>
-								<ObjectIdentifier title="{parts:[{path:'oAppRemarks>APPROVER'},{path:'oAppRemarks>DELEGATION'}],formatter:'.formatter.oApproverVis'}"
-									text="{parts:[{path:'oAppRemarks>APP_FNAME'},{path:'oAppRemarks>DELEG_FNAME'}],formatter:'.formatter.oApproverVis'}"/>
+								<ObjectIdentifier title="{parts:[{path:'oAppRemarks>APPROVER'},{path:'oAppRemarks>DELEGATION'}],formatter:'.formatter.oApproverVis'}"/>
 								<Text text="{ path: 'oAppRemarks>APPROVED_ON', formatter: '.formatter.oClaimDate' }"/>
 								<ExpandableText maxCharacters="50" class="sapUiTinyMarginBottom sapUiTinyMarginTop" text="{oAppRemarks>APP_REMARKS}" overflowMode="Popover"/>
 							</cells>

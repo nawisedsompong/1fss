@@ -22,6 +22,7 @@
 					<ComboBox selectedKey="{ViewData>/oTbname}" class="sapUiSmallMargin" change="onChangeComb" visible="{=${ViewData>/oTile} ==='Table'}">
 						<core:Item key="CLMCD" text="Claim Code"/>
 						<core:Item key="CLMCG" text="Claim Category"/>
+						<core:Item key="ADMIN" text="Claim Admin"/>
 						<core:Item key="CUT" text="Claim Cut Off"/>
 						<core:Item key="CLI" text="Clinic Master"/>
 						<core:Item key="COM" text="Company"/>
@@ -63,18 +64,18 @@
 										<ToolbarSpacer/>
 										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTableCompany', 'Company_Desc' )"
 											liveChange="onSearchTM($event, 'oTableCompany', 'Company_Desc' )"/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('COMPANY','oTableCompany')"/>
-										<Button icon="sap-icon://sort-ascending" tooltip="Sort by company" press="onSortAscending($event, 'oTableCompany', 'Company')"/>
-										<Button icon="sap-icon://sort-descending" tooltip="Sort by company" press="onSortDescending($event, 'oTableCompany', 'Company')"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('COMPANY')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableCompany', 'Company')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableCompany', 'Company')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column >
-									<Label design="Bold" text="Company Code"/>
+									<Text text="Company ID"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Company Description"/>
+									<Text text="Company Description"/>
 								</Column>
 								<!--<Column hAlign="End"></Column>-->
 							</columns>
@@ -104,30 +105,30 @@
 						</OverflowToolbar>
 					</headerToolbar>
 					<content>
-						<Table id="oTableClaimCode" inset="false" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+						<Table id="oTableClaimCode" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
 							items="{path:'ComboDetails>/CLAIM_CODE' , sorter: { path: 'Company', descending: false}}">
 							<headerToolbar>
 								<OverflowToolbar>
 									<content>
-										<Title text="Claim Code Details" class="sapUiSmallMargin"/>
+										<Title text="Add New Claim Details" class="sapUiSmallMargin"/>
 										<ToolbarSpacer/>
 										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTableClaimCode', 'Description' )"
 											liveChange="onSearchTM($event, 'oTableClaimCode', 'Description' )"/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('CLAIM_CODE','oTableClaimCode')"/>
-										<Button icon="sap-icon://sort-ascending" tooltip="Sort by claim code" press="onSortAscending($event, 'oTableClaimCode', 'Claim_code')"/>
-										<Button icon="sap-icon://sort-descending" tooltip="Sort by claim code" press="onSortDescending($event, 'oTableClaimCode', 'Claim_code')"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('CLAIM_CODE')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableClaimCode', 'Claim_code')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableClaimCode', 'Claim_code')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column >
-									<Label design="Bold" text="Company Code"/>
+									<Text text="Company Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Claim Code"/>
+									<Text text="Claim Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Claim Description"/>
+									<Text text="Claim Description"/>
 								</Column>
 								<Column hAlign="End"></Column>
 							</columns>
@@ -158,32 +159,30 @@
 						</OverflowToolbar>
 					</headerToolbar>
 					<content>
-						<Table id="oTableClaimCategory" inset="false" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+						<Table id="oTableClaimCategory" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
 							items="{path:'ComboDetails>/CLAIM_CATEGORY' , sorter: { path: 'Company', descending: false}}">
 							<headerToolbar>
 								<OverflowToolbar>
 									<content>
-										<Title text="Claim Category" class="sapUiSmallMargin"/>
+										<Title text="Add New Claim Category" class="sapUiSmallMargin"/>
 										<ToolbarSpacer/>
 										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTableClaimCategory', 'Category_Desc' )"
 											liveChange="onSearchTM($event, 'oTableClaimCategory', 'Category_Desc' )"/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('CLAIM_CATEGORY','oTableClaimCategory')"/>
-										<Button icon="sap-icon://sort-ascending" tooltip="Sort by category code"
-											press="onSortAscending($event, 'oTableClaimCategory', 'Category_Code')"/>
-										<Button icon="sap-icon://sort-descending" tooltip="Sort by category code"
-											press="onSortDescending($event, 'oTableClaimCategory', 'Category_Code')"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('CLAIM_CATEGORY')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableClaimCategory', 'Category_Code')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableClaimCategory', 'Category_Code')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column >
-									<Label design="Bold" text="Company Code"/>
+									<Text text="Company Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Category Code"/>
+									<Text text="Category Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Category Description"/>
+									<Text text="Category Description"/>
 								</Column>
 								<Column hAlign="End"></Column>
 							</columns>
@@ -214,36 +213,36 @@
 						</OverflowToolbar>
 					</headerToolbar>
 					<content>
-						<Table id="oTableClaimCodeCC" inset="false" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+						<Table id="oTableClaimCodeCC" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
 							items="{path:'ComboDetails>/COMPANY_CLAIM_CATEGORY' , sorter: { path: 'Company', descending: false}}">
 							<headerToolbar>
 								<OverflowToolbar>
 									<content>
-										<Title text="Claim Details" class="sapUiSmallMargin"/>
+										<Title text="Add New Claim Details" class="sapUiSmallMargin"/>
 										<ToolbarSpacer/>
 										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTableClaimCodeCC', 'Description' )"
 											liveChange="onSearchTM($event, 'oTableClaimCodeCC', 'Description' )"/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('COMPANY_CLAIM_CATEGORY','oTableClaimCodeCC')"/>
-										<Button icon="sap-icon://sort-ascending" tooltip="Sort by claim code" press="onSortAscending($event, 'oTableClaimCodeCC', 'Claim_code')"/>
-										<Button icon="sap-icon://sort-descending" tooltip="Sort by claim code" press="onSortDescending($event, 'oTableClaimCodeCC', 'Claim_code')"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('COMPANY_CLAIM_CATEGORY')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableClaimCodeCC', 'Claim_code')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableClaimCodeCC', 'Claim_code')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column >
-									<Label design="Bold" text="Company Code"/>
+									<Text text="Company Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Claim Code"/>
+									<Text text="Claim Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Claim Description"/>
+									<Text text="Claim Description"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Category Code"/>
+									<Text text="Category Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Category Description"/>
+									<Text text="Category Description"/>
 								</Column>
 								<Column hAlign="End"></Column>
 							</columns>
@@ -276,32 +275,30 @@
 						</OverflowToolbar>
 					</headerToolbar>
 					<content>
-						<Table id="oTableClaimCodeDep" inset="false" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+						<Table id="oTableClaimCodeDep" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
 							items="{path:'ComboDetails>/DEPARTMENT' , sorter: { path: 'Company', descending: false}}">
 							<headerToolbar>
 								<OverflowToolbar>
 									<content>
-										<Title text="Department" class="sapUiSmallMargin"/>
+										<Title text="Add New Department" class="sapUiSmallMargin"/>
 										<ToolbarSpacer/>
 										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTableClaimCodeDep', 'Department_Desc' )"
 											liveChange="onSearchTM($event, 'oTableClaimCodeDep', 'Department_Desc' )"/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('DEPARTMENT','oTableClaimCodeDep')"/>
-										<Button icon="sap-icon://sort-ascending" tooltip="Sort by department code"
-											press="onSortAscending($event, 'oTableClaimCodeDep', 'Department_Code')"/>
-										<Button icon="sap-icon://sort-descending" tooltip="Sort by department code"
-											press="onSortDescending($event, 'oTableClaimCodeDep', 'Department_Code')"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('DEPARTMENT')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableClaimCodeDep', 'Department_Code')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableClaimCodeDep', 'Department_Code')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column >
-									<Label design="Bold" text="Company Code"/>
+									<Text text="Company Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Department Code"/>
+									<Text text="Department Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Department Description"/>
+									<Text text="Department Description"/>
 								</Column>
 								<Column hAlign="End"></Column>
 							</columns>
@@ -332,32 +329,30 @@
 						</OverflowToolbar>
 					</headerToolbar>
 					<content>
-						<Table id="oTableClaimCodeDiv" inset="false" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+						<Table id="oTableClaimCodeDiv" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
 							items="{path:'ComboDetails>/DIVISION' , sorter: { path: 'Company', descending: false}}">
 							<headerToolbar>
 								<OverflowToolbar>
 									<content>
-										<Title text="Division" class="sapUiSmallMargin"/>
+										<Title text="Add New Department" class="sapUiSmallMargin"/>
 										<ToolbarSpacer/>
 										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTableClaimCodeDiv', 'Division_Desc' )"
 											liveChange="onSearchTM($event, 'oTableClaimCodeDiv', 'Division_Desc' )"/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('DIVISION','oTableClaimCodeDiv')"/>
-										<Button icon="sap-icon://sort-ascending" tooltip="Sort by division code"
-											press="onSortAscending($event, 'oTableClaimCodeDiv', 'Division_Code')"/>
-										<Button icon="sap-icon://sort-descending" tooltip="Sort by division code"
-											press="onSortDescending($event, 'oTableClaimCodeDiv', 'Division_Code')"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('DIVISION')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableClaimCodeDiv', 'Division_Code')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableClaimCodeDiv', 'Division_Code')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column >
-									<Label design="Bold" text="Company Code"/>
+									<Text text="Company Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Division Code"/>
+									<Text text="Division Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Division Description"/>
+									<Text text="Division Description"/>
 								</Column>
 								<Column hAlign="End"></Column>
 							</columns>
@@ -393,28 +388,28 @@
 							<headerToolbar>
 								<OverflowToolbar>
 									<content>
-										<Title text="Claim Admin Details" class="sapUiSmallMargin"/>
+										<Title text="Add New Claim Admin" class="sapUiSmallMargin"/>
 										<ToolbarSpacer/>
 										<SearchField placeholder="Search Claim Description" width="25%" search="onSearchTM($event, 'oTableAdmin', 'Description' )"
 											liveChange="onSearchTM($event, 'oTableAdmin', 'Description' )"/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('CLAIM_ADMIN','oTableAdmin')"/>
-										<Button icon="sap-icon://sort-ascending" tooltip="Sort by claim description" press="onSortAscending($event, 'oTableAdmin', 'Description')"/>
-										<Button icon="sap-icon://sort-descending" tooltip="Sort by claim description" press="onSortDescending($event, 'oTableAdmin', 'Description')"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('CLAIM_ADMIN')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableAdmin', 'Claim_code')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableAdmin', 'Claim_code')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column >
-									<Label design="Bold" text="Claim Description"/>
+									<Text text="Claim Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Start Date"/>
+									<Text text="Start Date"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="End Date"/>
+									<Text text="End Date"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Admin"/>
+									<Text text="Admin"/>
 								</Column>
 								<Column hAlign="End"></Column>
 							</columns>
@@ -451,27 +446,25 @@
 							<headerToolbar>
 								<OverflowToolbar>
 									<content>
-										<Title text="PayComponent" class="sapUiSmallMargin"/>
+										<Title text="Add New PayComponent" class="sapUiSmallMargin"/>
 										<ToolbarSpacer/>
 										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTablePayComponent', 'PayComponent_Desc' )"
 											liveChange="onSearchTM($event, 'oTablePayComponent', 'PayComponent_Desc' )"/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('PAY_COMPONENT','oTablePayComponent')"/>
-										<Button icon="sap-icon://sort-ascending" tooltip="Sort by paycomponent id"
-											press="onSortAscending($event, 'oTablePayComponent', 'PayComponent_ID')"/>
-										<Button icon="sap-icon://sort-descending" tooltip="Sort by paycomponent id"
-											press="onSortDescending($event, 'oTablePayComponent', 'PayComponent_ID')"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('PAY_COMPONENT')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTablePayComponent', 'PayComponent_ID')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTablePayComponent', 'PayComponent_ID')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column >
-									<Label design="Bold" text="Company Code"/>
+									<Text text="Company Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="PayComponent ID"/>
+									<Text text="PayComponent ID"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="PayComponent Description"/>
+									<Text text="PayComponent Description"/>
 								</Column>
 							</columns>
 							<items>
@@ -506,25 +499,25 @@
 							<headerToolbar>
 								<OverflowToolbar>
 									<content>
-										<Title text="Clinic Details" class="sapUiSmallMargin"/>
+										<Title text="Add New Clinic" class="sapUiSmallMargin"/>
 										<ToolbarSpacer/>
 										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTableClinic', 'Clinic_Name' )"
 											liveChange="onSearchTM($event, 'oTableClinic', 'Clinic_Name' )"/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('CLINIC_MASTER','oTableClinic')"/>
-										<Button icon="sap-icon://sort-ascending" tooltip="Sort by clinic code" press="onSortAscending($event, 'oTableClinic', 'Clinic_Code')"/>
-										<Button icon="sap-icon://sort-descending" tooltip="Sort by clinic code" press="onSortDescending($event, 'oTableClinic', 'Clinic_Code')"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('CLINIC_MASTER')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableClinic', 'Clinic_Code')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableClinic', 'Clinic_Code')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column >
-									<Label design="Bold" text="Company Code"/>
+									<Text text="Company Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Clinic Code"/>
+									<Text text="Clinic Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Clinic Description"/>
+									<Text text="Clinic Description"/>
 								</Column>
 								<Column hAlign="End"></Column>
 							</columns>
@@ -559,25 +552,25 @@
 							<headerToolbar>
 								<OverflowToolbar>
 									<content>
-										<Title text="Personal Area Details" class="sapUiSmallMargin"/>
+										<Title text="Add New Personal Area" class="sapUiSmallMargin"/>
 										<ToolbarSpacer/>
 										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTablePA', 'PERSONAL_DESC' )"
 											liveChange="onSearchTM($event, 'oTablePA', 'Personal_Desc' )"/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('Personal_Area','oTablePA')"/>
-										<Button icon="sap-icon://sort-ascending" tooltip="Sort by personal area" press="onSortAscending($event, 'oTablePA', 'Personal_Area')"/>
-										<Button icon="sap-icon://sort-descending" tooltip="Sort by personal area" press="onSortDescending($event, 'oTablePA', 'Personal_Area')"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('Personal_Area')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTablePA', 'Personal_Area')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTablePA', 'Personal_Area')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column >
-									<Label design="Bold" text="Company Code"/>
+									<Text text="Company Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Personal Area"/>
+									<Text text="Personal Area"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Personal Area Description"/>
+									<Text text="Personal Area Description"/>
 								</Column>
 							</columns>
 							<items>
@@ -612,27 +605,25 @@
 							<headerToolbar>
 								<OverflowToolbar>
 									<content>
-										<Title text="Personal Sub Area Details" class="sapUiSmallMargin"/>
+										<Title text="Add New Personal Sub Area" class="sapUiSmallMargin"/>
 										<ToolbarSpacer/>
-										<SearchField placeholder="Search Personal Sub Area Description" width="25%" search="onSearchTM($event, 'oTablePSA', 'Personal_Sub_Area' )"
+										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTablePSA', 'Personal_Sub_Area' )"
 											liveChange="onSearchTM($event, 'oTablePSA', 'Personal_Sub_Area' )"/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('PERSONAL_SUB_AREA','oTablePSA')"/>
-										<Button icon="sap-icon://sort-ascending" tooltip="Sort by personal sub area"
-											press="onSortAscending($event, 'oTablePSA', 'Personal_Sub_Area')"/>
-										<Button icon="sap-icon://sort-descending" tooltip="Sort by personal sub area"
-											press="onSortDescending($event, 'oTablePSA', 'Personal_Sub_Area')"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('PERSONAL_SUB_AREA')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTablePSA', 'Personal_Sub_Area')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTablePSA', 'Personal_Sub_Area')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column >
-									<Label design="Bold" text="Company Code"/>
+									<Text text="Company Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Personal Sub Area"/>
+									<Text text="Personal Sub Area"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Personal Sub Area Description"/>
+									<Text text="Personal Sub Area Description"/>
 								</Column>
 							</columns>
 							<items>
@@ -661,30 +652,30 @@
 						</OverflowToolbar>
 					</headerToolbar>
 					<content>
-						<Table id="oTableSI" inset="false" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+						<Table id="oTableSI" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
 							items="{path:'ComboDetails>/SPONSOR_SPL' , sorter: { path: 'Company', descending: false}}">
 							<headerToolbar>
 								<OverflowToolbar>
 									<content>
-										<Title text="Sponsor Institution Details" class="sapUiSmallMargin"/>
+										<Title text="Add New Sponsor Institution" class="sapUiSmallMargin"/>
 										<ToolbarSpacer/>
 										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTableSI', 'Sponsor_Desc' )"
 											liveChange="onSearchTM($event, 'oTableSI', 'Sponsor_Desc' )"/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('SPONSOR_SPL',,'oTableSI')"/>
-										<Button icon="sap-icon://sort-ascending" tooltip="Sort by sponsor code" press="onSortAscending($event, 'oTableSI', 'Sponsor_Desc')"/>
-										<Button icon="sap-icon://sort-descending" tooltip="Sort by sponsor code" press="onSortDescending($event, 'oTableSI', 'Sponsor_Desc')"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('SPONSOR_SPL')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableSI', 'Sponsor_Desc')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableSI', 'Sponsor_Desc')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column >
-									<Label design="Bold" text="Company Code"/>
+									<Text text="Company Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Sponsor Code"/>
+									<Text text="Sponsor Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Sponsor Description"/>
+									<Text text="Sponsor Description"/>
 								</Column>
 								<Column hAlign="End"></Column>
 							</columns>
@@ -715,31 +706,30 @@
 						</OverflowToolbar>
 					</headerToolbar>
 					<content>
-						<Table id="oTableSPL" inset="false" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
+						<Table id="oTableSPL" inset="false" mode="MultiSelect" updateFinished="onSortingTable" growing="true" growingThreshold="1000"
 							items="{path:'ComboDetails>/SPECIALISATION' , sorter: { path: 'Company', descending: false}}">
 							<headerToolbar>
 								<OverflowToolbar>
 									<content>
-										<Title text="Specialisation Details" class="sapUiSmallMargin"/>
+										<Title text="Add New Specialisation" class="sapUiSmallMargin"/>
 										<ToolbarSpacer/>
 										<SearchField placeholder="Search Description" width="25%" search="onSearchTM($event, 'oTableSPL', 'Special_Desc' )"
 											liveChange="onSearchTM($event, 'oTableSPL', 'Special_Desc' )"/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('SPECIALISATION','oTableSPL')"/>
-										<Button icon="sap-icon://sort-ascending" tooltip="Sort by specialisation code" press="onSortAscending($event, 'oTableSPL', 'Special_Code')"/>
-										<Button icon="sap-icon://sort-descending" tooltip="Sort by specialisation code"
-											press="onSortDescending($event, 'oTableSPL', 'Special_Code')"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('SPECIALISATION')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableSPL', 'Special_Code')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableSPL', 'Special_Code')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column >
-									<Label design="Bold" text="Company Code"/>
+									<Text text="Company Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Specialisation Code"/>
+									<Text text="Specialisation Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Specialisation Description"/>
+									<Text text="Specialisation Description"/>
 								</Column>
 								<Column hAlign="End"></Column>
 							</columns>
@@ -774,32 +764,31 @@
 							<headerToolbar>
 								<OverflowToolbar>
 									<content>
-										<Title text="Location RO Details" class="sapUiSmallMargin"/>
+										<Title text="Add New RO" class="sapUiSmallMargin"/>
 										<ToolbarSpacer/>
 										<SearchField placeholder="Search Location RO" width="25%" search="onSearchTM($event, 'oTableRO', 'Location_RO_EmployeeID' )"
 											liveChange="onSearchTM($event, 'oTableRO', 'Location_RO_EmployeeID' )"/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oLocationRO', 'oTableRO')"/>
-										<Button icon="sap-icon://sort-ascending" tooltip="Sort by location RO" press="onSortAscending($event, 'oTableRO', 'Location_RO_EmployeeID')"/>
-										<Button icon="sap-icon://sort-descending" tooltip="Sort by location RO"
-											press="onSortDescending($event, 'oTableRO', 'Location_RO_EmployeeID')"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oLocationRO', true)"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableRO', 'Location_RO_EmployeeID')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableRO', 'Location_RO_EmployeeID')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Department"/>
+									<Text text="Department"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Division"/>
+									<Text text="Division"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Location RO"/>
+									<Text text="Location RO"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Start Date"/>
+									<Text text="Start Date"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="End Date"/>
+									<Text text="End Date"/>
 								</Column>
 								<Column hAlign="End"></Column>
 							</columns>
@@ -836,28 +825,28 @@
 							<headerToolbar>
 								<OverflowToolbar>
 									<content>
-										<Title text="Entitlement Adjustment Details" class="sapUiSmallMargin"/>
+										<Title text="Add Entitlement Adjustment" class="sapUiSmallMargin"/>
 										<ToolbarSpacer/>
 										<SearchField placeholder="Search Claim Code" width="25%" search="onSearchTM($event, 'oTableEA', 'Claim_code' )"
 											liveChange="onSearchTM($event, 'oTableEA', 'Claim_code' )"/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oEntitAdjus', 'oTableEA')"/>
-										<Button icon="sap-icon://sort-ascending" tooltip="Sort by claim code" press="onSortAscending($event, 'oTableEA', 'Claim_code')"/>
-										<Button icon="sap-icon://sort-descending" tooltip="Sort by claim code" press="onSortDescending($event, 'oTableEA', 'Claim_code')"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oEntitAdjus', true)"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableEA', 'Claim_code')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableEA', 'Claim_code')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column >
-									<Label design="Bold" text="Employee ID"/>
+									<Text text="Employee ID"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Claim Code"/>
+									<Text text="Claim Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Year"/>
+									<Text text="Year"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Adjustment"/>
+									<Text text="Adjustment"/>
 								</Column>
 								<Column hAlign="End"></Column>
 							</columns>
@@ -894,34 +883,34 @@
 							<headerToolbar>
 								<OverflowToolbar>
 									<content>
-										<Title text="WRC Amount Details" class="sapUiSmallMargin"/>
+										<Title text="Add WRC Amount" class="sapUiSmallMargin"/>
 										<ToolbarSpacer/>
 										<SearchField placeholder="Search Claim Code" width="25%" search="onSearchTM($event, 'oTableWRC', 'CLAIM_CODE' )"
 											liveChange="onSearchTM($event, 'oTableWRC', 'CLAIM_CODE' )"/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oWRCamnt', 'oTableWRC')"/>
-										<Button icon="sap-icon://sort-ascending" tooltip="Sort by claim code" press="onSortAscending($event, 'oTableWRC', 'CLAIM_CODE')"/>
-										<Button icon="sap-icon://sort-descending" tooltip="Sort by claim code" press="onSortDescending($event, 'oTableWRC', 'CLAIM_CODE')"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oWRCamnt', true)"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableWRC', 'CLAIM_CODE')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableWRC', 'CLAIM_CODE')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column >
-									<Label design="Bold" text="Claim Code"/>
+									<Text text="Claim Code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Start Date"/>
+									<Text text="Start Date"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="End Date"/>
+									<Text text="End Date"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Date Type"/>
+									<Text text="Date Type"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Pay Grade"/>
+									<Text text="Pay Grade"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Amount"/>
+									<Text text="Amount"/>
 								</Column>
 								<Column hAlign="End"></Column>
 							</columns>
@@ -959,28 +948,28 @@
 							<headerToolbar>
 								<OverflowToolbar>
 									<content>
-										<Title text="Transport Amount Details" class="sapUiSmallMargin"/>
+										<Title text="Add Transport Amount" class="sapUiSmallMargin"/>
 										<ToolbarSpacer/>
 										<SearchField placeholder="Search Vehicle Type" width="25%" search="onSearchTM($event, 'oTableTRA', 'TRANSPORT_DESC' )"
 											liveChange="onSearchTM($event, 'oTableTRA', 'TRANSPORT_DESC' )"/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oTransAmnt', 'oTableTRA')"/>
-										<Button icon="sap-icon://sort-ascending" tooltip="Sort by vehicle type" press="onSortAscending($event, 'oTableTRA', 'TRANSPORT_DESC')"/>
-										<Button icon="sap-icon://sort-descending" tooltip="Sort by vehicle type" press="onSortDescending($event, 'oTableTRA', 'TRANSPORT_DESC')"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oTransAmnt', true)"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableTRA', 'TRANSPORT_DESC')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableTRA', 'TRANSPORT_DESC')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column >
-									<Label design="Bold" text="Start Date"/>
+									<Text text="Start Date"/>
 								</Column>
 								<Column >
-									<Label design="Bold" text="End Date"/>
+									<Text text="End Date"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Vehicle Type"/>
+									<Text text="Vehicle Type"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Rate"/>
+									<Text text="Rate"/>
 								</Column>
 								<Column hAlign="End"></Column>
 							</columns>
@@ -1016,25 +1005,25 @@
 							<headerToolbar>
 								<OverflowToolbar>
 									<content>
-										<Title text="Location Details" class="sapUiSmallMargin"/>
+										<Title text="Add Location" class="sapUiSmallMargin"/>
 										<ToolbarSpacer/>
 										<SearchField placeholder="Search Location" width="25%" search="onSearchTM($event, 'oTableLOC', 'LOCATION' )"
 											liveChange="onSearchTM($event, 'oTableLOC', 'LOCATION' )"/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('LOCATION','oTableLOC')"/>
-										<Button icon="sap-icon://sort-ascending" tooltip="Sort by location" press="onSortAscending($event, 'oTableLOC', 'LOCATION')"/>
-										<Button icon="sap-icon://sort-descending" tooltip="Sort by location" press="onSortDescending($event, 'oTableLOC', 'LOCATION')"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('LOCATION')"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableLOC', 'LOCATION')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableLOC', 'LOCATION')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column >
-									<Label design="Bold" text="Start Date"/>
+									<Text text="Start Date"/>
 								</Column>
 								<Column >
-									<Label design="Bold" text="End Date"/>
+									<Text text="End Date"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Location"/>
+									<Text text="Location"/>
 								</Column>
 								<Column hAlign="End"></Column>
 							</columns>
@@ -1069,37 +1058,37 @@
 							<headerToolbar>
 								<OverflowToolbar>
 									<content>
-										<Title text="Claim Cut-Off Details" class="sapUiSmallMargin"/>
+										<Title text="Add Claim Cut-Off" class="sapUiSmallMargin"/>
 										<ToolbarSpacer/>
 										<SearchField placeholder="Search PayrollArea" width="25%" search="onSearchTM($event, 'oTableCUT', 'payrollArea' )"
 											liveChange="onSearchTM($event, 'oTableCUT', 'payrollArea' )"/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oPostCutoff', 'oTableCUT')"/>
-										<Button icon="sap-icon://sort-ascending" tooltip="Sort by payroll area" press="onSortAscending($event, 'oTableCUT', 'payrollArea')"/>
-										<Button icon="sap-icon://sort-descending" tooltip="Sort by payroll area" press="onSortDescending($event, 'oTableCUT', 'payrollArea')"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oPostCutoff', true)"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableCUT', 'payrollArea')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableCUT', 'payrollArea')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column >
-									<Label design="Bold" text="Company"/>
+									<Text text="Company"/>
 								</Column>
 								<Column >
-									<Label design="Bold" text="Payroll Area"/>
+									<Text text="Payroll Area"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Payroll Peroid"/>
+									<Text text="Payroll Peroid"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Claim Final Approval"/>
+									<Text text="Claim Final Approval"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Estimated Payment Date"/>
+									<Text text="Estimated Payment Date"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Posting cutt-off Date"/>
+									<Text text="Posting cutt-off Date"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Replication-Restart"/>
+									<Text text="Replication-Restart"/>
 								</Column>
 								<Column hAlign="End"></Column>
 							</columns>
@@ -1139,28 +1128,28 @@
 							<headerToolbar>
 								<OverflowToolbar>
 									<content>
-										<Title text="GL Account/Scholar Details" class="sapUiSmallMargin"/>
+										<Title text="Add New Details" class="sapUiSmallMargin"/>
 										<ToolbarSpacer/>
 										<SearchField placeholder="Search Scheme" width="25%" search="onSearchTM($event, 'oTableGLmap', 'SCHOLAR_SCHEME' )"
 											liveChange="onSearchTM($event, 'oTableGLmap', 'SCHOLAR_SCHEME' )"/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oScholar', 'oTableGLmap')"/>
-										<Button icon="sap-icon://sort-ascending" tooltip="Sort by start date" press="onSortAscending($event, 'oTableGLmap', 'START_DATE')"/>
-										<Button icon="sap-icon://sort-descending" tooltip="Sort by start date" press="onSortDescending($event, 'oTableGLmap', 'START_DATE')"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oScholar', true)"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableGLmap', 'START_DATE')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableGLmap', 'START_DATE')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column >
-									<Label design="Bold" text="Start Date"/>
+									<Text text="Start Date"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="End Date"/>
+									<Text text="End Date"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="GL Account"/>
+									<Text text="GL Account"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Scholar Scheme"/>
+									<Text text="Scholar Scheme"/>
 								</Column>
 								<Column hAlign="End"></Column>
 							</columns>
@@ -1196,28 +1185,28 @@
 							<headerToolbar>
 								<OverflowToolbar>
 									<content>
-										<Title text="Currency Details" class="sapUiSmallMargin"/>
+										<Title text="Add New Details" class="sapUiSmallMargin"/>
 										<ToolbarSpacer/>
 										<SearchField placeholder="Search Currency" width="25%" search="onSearchTM($event, 'oTableCurren', 'CURRENCY' )"
 											liveChange="onSearchTM($event, 'oTableCurren', 'CURRENCY' )"/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oScholar', 'oTableCurren')"/>
-										<Button icon="sap-icon://sort-ascending" tooltip="Sort by start date" press="onSortAscending($event, 'oTableCurren', 'START_DATE')"/>
-										<Button icon="sap-icon://sort-descending" tooltip="Sort by start date" press="onSortDescending($event, 'oTableCurren', 'START_DATE')"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oScholar', true)"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableCurren', 'START_DATE')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableCurren', 'START_DATE')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column >
-									<Label design="Bold" text="Start Date"/>
+									<Text text="Start Date"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="End Date"/>
+									<Text text="End Date"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Currency"/>
+									<Text text="Currency"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="RATE"/>
+									<Text text="RATE"/>
 								</Column>
 								<Column hAlign="End"></Column>
 							</columns>
@@ -1253,28 +1242,28 @@
 							<headerToolbar>
 								<OverflowToolbar>
 									<content>
-										<Title text="Vendor Details" class="sapUiSmallMargin"/>
+										<Title text="Add New Details" class="sapUiSmallMargin"/>
 										<ToolbarSpacer/>
-										<SearchField placeholder="Search Vendor" width="25%" search="onSearchTM($event, 'oTableVendor', 'VENDOR_CODE' )"
-											liveChange="onSearchTM($event, 'oTableVendor', 'VENDOR_CODE' )"/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oScholar', 'oTableVendor')"/>
-										<Button icon="sap-icon://sort-ascending" tooltip="Sort by vendor code" press="onSortAscending($event, 'oTableVendor', 'VENDOR_CODE')"/>
-										<Button icon="sap-icon://sort-descending" tooltip="Sort by vendor code" press="onSortDescending($event, 'oTableVendor', 'VENDOR_CODE')"/>
+										<SearchField placeholder="Search Vendor" width="25%" search="onSearchTM($event, 'oTableVendor', 'VEDNOR_CODE' )"
+											liveChange="onSearchTM($event, 'oTableVendor', 'VEDNOR_CODE' )"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oScholar', true)"/>
+										<Button icon="sap-icon://sort-ascending" tooltip="Sorting" press="onSortAscending($event, 'oTableVendor', 'START_DATE')"/>
+										<Button icon="sap-icon://sort-descending" tooltip="Sorting" press="onSortDescending($event, 'oTableVendor', 'START_DATE')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column >
-									<Label design="Bold" text="Start Date"/>
+									<Text text="Start Date"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="End Date"/>
+									<Text text="End Date"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Vendor code"/>
+									<Text text="Vendor code"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Label design="Bold" text="Vendor Description"/>
+									<Text text="Vendor Description"/>
 								</Column>
 								<Column hAlign="End"></Column>
 							</columns>

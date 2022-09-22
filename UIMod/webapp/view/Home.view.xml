@@ -100,7 +100,7 @@
 								<ImageContent src="sap-icon://upload-to-cloud"/>
 							</TileContent>
 						</GenericTile>
-						<GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop" header="Admin Delegatee Action"
+						<GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop" header="Admin Delegate Action"
 							press="navToDetailPage($event,'Claims', 'ADDelegate')" visible="{=${oRoleDetails>/DELEG}==='Yes'}">
 							<TileContent>
 								<ImageContent src="sap-icon://journey-change"/>
@@ -127,7 +127,7 @@
 							</TileContent>
 						</GenericTile>
 						<GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop" header="Year to Date Balance Report"
-							press="navToDetailPage($event,'Report','Report')" visible="{=${oEmpData>/COMPANY}!=='MOHHSCH'}">
+							press="navToDetailPage($event,'Report','Report')" visible="true">
 							<TileContent>
 								<ImageContent src="sap-icon://expense-report"/>
 							</TileContent>
@@ -140,19 +140,19 @@
 					</IconTabFilter>
 					<IconTabFilter text="Claim Approval" key="attachments" visible="{=${ViewData>/MANAGER} !== null}">
 						<GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop" header="Claim Approvals"
-							press="navToDetailPage($event,'ClaimForm','Approvals')" visible="{=${oRoleDetails>/APP_SCH}==='Yes' ? false : true}">
+							press="navToDetailPage($event,'ClaimForm','Approvals')">
 							<TileContent>
 								<ImageContent src="sap-icon://payment-approval"/>
 							</TileContent>
 						</GenericTile>
-						<GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop" header="Delegatee Action" press="navToDetailPage($event,'Claims', 'Delegate')"
+						<GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop" header="Delegate Action" press="navToDetailPage($event,'Claims', 'Delegate')"
 							visible="true">
 							<TileContent>
 								<ImageContent src="sap-icon://journey-change"/>
 							</TileContent>
 						</GenericTile>
 						<GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop" header="SMS Approvals"
-							press="navToDetailPage($event,'ClaimForm','SMSApprovals')" visible="{=${oRoleDetails>/APP_SCH}==='Yes'}">
+							press="navToDetailPage($event,'ClaimForm','SMSApprovals')">
 							<TileContent>
 								<ImageContent src="sap-icon://payment-approval"/>
 							</TileContent>
@@ -160,48 +160,43 @@
 					</IconTabFilter>
 					<IconTabFilter text="Claim Coordinator" key="Coordinator" visible="{=${ViewData>/CLAIM_COORD} !== null}">
 						<GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop" header="Claim Request" press="navToDetailPage($event,'Claims', 'Coordinat')"
-							visible="{=${ViewData>/oVisSubmit}==='Yes' &amp;&amp; ${oRoleDetails>/COORQ_SCH}!=='Yes'}">
+							visible="{=${ViewData>/oVisSubmit}==='Yes'}">
 							<TileContent>
 								<ImageContent src="sap-icon://employee-pane"/>
 							</TileContent>
 						</GenericTile>
 						<GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop" header="Claim Records"
-							press="navToDetailPage($event,'ClaimForm','HistoryCoord')"
-							visible="{=${ViewData>/oVisReport}==='Yes' &amp;&amp; ${oRoleDetails>/COORE_SCH}!=='Yes'}">
+							press="navToDetailPage($event,'ClaimForm','HistoryCoord')" visible="{=${ViewData>/oVisReport}==='Yes'}">
 							<TileContent>
 								<ImageContent src="sap-icon://work-history"/>
 							</TileContent>
 						</GenericTile>
 						<GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop" header="Claim Request" subheader="(Scholar)"
-							press="navToDetailPage($event,'Claims', 'CoordinatSch')"
-							visible="{=${ViewData>/oVisSubmit}==='Yes' &amp;&amp; ${oRoleDetails>/COORQ_SCH}==='Yes'}">
+							press="navToDetailPage($event,'Claims', 'CoordinatSch')" visible="{=${ViewData>/oVisSubmit}==='Yes'}">
 							<TileContent>
 								<ImageContent src="sap-icon://employee-pane"/>
 							</TileContent>
 						</GenericTile>
 						<GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop" header="Claim Records" subheader="(Scholar)"
-							press="navToDetailPage($event,'ClaimForm','HistoryCoordSch')"
-							visible="{=${ViewData>/oVisReport}==='Yes' &amp;&amp; ${oRoleDetails>/COORE_SCH}==='Yes'}">
+							press="navToDetailPage($event,'ClaimForm','HistoryCoordSch')" visible="{=${ViewData>/oVisReport}==='Yes'}">
 							<TileContent>
 								<ImageContent src="sap-icon://work-history"/>
 							</TileContent>
 						</GenericTile>
-						<GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop" header="SMS Master Report" press="navToDetailPage($event,'Report', 'SMSRep')"
-							visible="{=${oRoleDetails>/SMS_REP}==='Yes'}">
+						<GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop" header="SMS Master Report" press="navToDetailPage($event,'Report', 'SMSRep')">
 							<TileContent>
 								<ImageContent src="sap-icon://create"/>
 							</TileContent>
 						</GenericTile>
 					</IconTabFilter>
 					<IconTabFilter text="SMS Admin" key="attachments" visible="{=${oRoleDetails>/TAB_ADMSCH}==='Yes'}">
-						<GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop" header="Payment Upload" press="onNext($event,'F')"
-							visible="{=${oRoleDetails>/PAY_UP}==='Yes'}">
+						<GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop" header="Payment Upload" press="onNext($event,'F')">
 							<TileContent>
 								<ImageContent src="sap-icon://journey-change"/>
 							</TileContent>
 						</GenericTile>
 						<GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop" header="Payment Upload Records"
-							press="navToDetailPage($event,'ClaimForm','PaymentUpload')" visible="{=${oRoleDetails>/PAY_HIS}==='Yes'}">
+							press="navToDetailPage($event,'ClaimForm','PaymentUpload')">
 							<TileContent>
 								<ImageContent src="sap-icon://work-history"/>
 							</TileContent>
@@ -213,7 +208,7 @@
 							</TileContent>
 						</GenericTile>
 						<GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop" header="Import Posting" press="navToDetailPage($event,'Claims','Finance')"
-							visible="{=${oRoleDetails>/IMP_POS}==='Yes'}">
+							visible="true">
 							<TileContent>
 								<ImageContent src="sap-icon://upload-to-cloud"/>
 							</TileContent>

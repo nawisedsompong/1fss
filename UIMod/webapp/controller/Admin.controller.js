@@ -32,96 +32,86 @@ sap.ui.define([
 
 		_fnGetTableData: function () {
 			var oTile = this.oViewData.getProperty("/oTile");
-			this._getBusyIndicator().show();
+			this.getView().setBusy(true);
 			if (oTile === "Info") {
-				this.getView().byId("search_benefit").setValue();
 				$.ajax({
 					method: "GET",
 					url: "/BenefietCAP/claim/Benefit_Claim_Admin",
 					dataType: "json",
 					success: function (response) {
 						var oModel = this._getSizeLimit(response.value);
-						this.oViewData.setProperty("/infoLength", response.value.length);
 						this.getView().setModel(oModel, "ClaimDetails");
-						this._getBusyIndicator().hide();
+						this.getView().setBusy(false);
 					}.bind(this),
 					error: function (response) {
-						this._getBusyIndicator().hide();
+						this.getView().setBusy(false);
 						this.handleErrorDialog(response);
 					}.bind(this)
 				});
 			}
 			if (oTile === "Elig") {
-				this.getView().byId("search_elig").setValue();
 				$.ajax({
 					method: "GET",
 					url: "/BenefietCAP/claim/Benefit_Eligibility",
 					dataType: "json",
 					success: function (response) {
 						var oModel = this._getSizeLimit(response.value);
-						this.oViewData.setProperty("/eligibLength", response.value.length);
 						this.getView().setModel(oModel, "oEligibileData");
-						this._getBusyIndicator().hide();
+						this.getView().setBusy(false);
 					}.bind(this),
 					error: function (response) {
-						this._getBusyIndicator().hide();
 						this.handleErrorDialog(response);
+						this.getView().setBusy(false);
 					}.bind(this)
 				});
 			}
 			if (oTile === "Copay") {
-				this.getView().byId("search_copay").setValue();
 				$.ajax({
 					method: "GET",
 					url: "/BenefietCAP/claim/Co_Payment",
 					dataType: "json",
 					success: function (response) {
 						var oModel = this._getSizeLimit(response.value);
-						this.oViewData.setProperty("/copayLength", response.value.length);
 						this.getView().setModel(oModel, "oCopayData");
-						this._getBusyIndicator().hide();
+						this.getView().setBusy(false);
 					}.bind(this),
 					error: function (response) {
-						this._getBusyIndicator().hide();
 						this.handleErrorDialog(response);
+						this.getView().setBusy(false);
 					}.bind(this)
 				});
 			}
 			if (oTile === "Approval" || oTile === "HRMC") {
-				this.getView().byId("search_approval").setValue();
-				var oURL = oTile === "HRMC" ? "&$expand=HR_maker,HR_checker" : "";
+				var oURL = oTile === "HRMC" ? "_hr?$expand=HR_maker,HR_checker" : "";
 				$.ajax({
 					method: "GET",
-					url: "/BenefietCAP/claim/approval_structure_hr?$top=100000" + oURL,
+					url: "/BenefietCAP/claim/approval_structure" + oURL,
 					dataType: "json",
 					success: function (response) {
 						var oModel = this._getSizeLimit(response.value);
-						this.oViewData.setProperty("/apprLength", response.value.length);
 						this.getView().setModel(oModel, "oApprovalData");
-						this._getBusyIndicator().hide();
+						this.getView().setBusy(false);
 					}.bind(this),
 					error: function (response) {
-						this._getBusyIndicator().hide();
 						this.handleErrorDialog(response);
+						this.getView().setBusy(false);
 					}.bind(this)
 				});
 			}
 
 			if (oTile === "Coord") {
-				this.getView().byId("search_coord").setValue();
 				$.ajax({
 					method: "GET",
 					url: "/BenefietCAP/claim/CLAIM_COORDINATOR",
 					dataType: "json",
 					success: function (response) {
 						var oModel = this._getSizeLimit(response.value);
-						this.oViewData.setProperty("/coordLength", response.value.length);
 						this.getView().setModel(oModel, "oCoordinData");
-						this._getBusyIndicator().hide();
+						this.getView().setBusy(false);
 					}.bind(this),
 					error: function (response) {
-						this._getBusyIndicator().hide();
 						this.handleErrorDialog(response);
+						this.getView().setBusy(false);
 					}.bind(this)
 				});
 			}
@@ -133,11 +123,11 @@ sap.ui.define([
 					success: function (response) {
 						var oModel = this._getSizeLimit(response.value);
 						this.getView().setModel(oModel, "oRoleData");
-						this._getBusyIndicator().hide();
+						this.getView().setBusy(false);
 					}.bind(this),
 					error: function (response) {
-						this._getBusyIndicator().hide();
 						this.handleErrorDialog(response);
+						this.getView().setBusy(false);
 					}.bind(this)
 				});
 			}
@@ -148,108 +138,47 @@ sap.ui.define([
 			oData.PERSONAL_AREA.push({
 				"Personal_Area": "ALL",
 				"Personal_Desc": "ALL"
+			}, {
+				"Personal_Area": "N/A",
+				"Personal_Desc": "N/A"
 			});
 			oData.PERSONAL_SUB_AREA.push({
 				"Personal_Sub_Area": "ALL",
 				"Personal_Sub_Desc": "ALL",
+				"Company": "MOHH"
+			}, {
+				"Personal_Sub_Area": "N/A",
+				"Personal_Sub_Desc": "N/A",
 				"Company": "MOHH"
 			});
 			oData.SPECIALISATION.push({
 				"Special_Code": "ALL",
 				"Special_Desc": "ALL",
 				"Company": "MOHH"
+			}, {
+				"Special_Code": "N/A",
+				"Special_Desc": "N/A",
+				"Company": "MOHH"
 			});
 			this.getView().getModel("ComboDetails").refresh(true);
 		},
 
-		onSearchAdmin: function (oEvent, id, prop) {
-			var table = this.getView().byId(id),
-				oBinding = table.getBinding("items"),
-				oFilter = "",
-				sValue = oEvent.getSource().getValue();
-			if (sValue) {
-				var oFilter1 = new Filter("Claim_Code", FilterOperator.EQ, sValue),
-					oFilter2 = new Filter("Entitlement_Type", FilterOperator.EQ, sValue),
-					oFilter3 = new Filter("Pay_Grade", FilterOperator.EQ, sValue),
-					oFilter4 = new Filter("Description", FilterOperator.Contains, sValue),
-					oFilter5 = new Filter("Clinic_Desc", FilterOperator.Contains, sValue),
-					oFilter6 = new Filter("Claim_Category", FilterOperator.Contains, sValue),
-					oFilter7 = new Filter("Claim_Type", FilterOperator.Contains, sValue),
-					oFilter8 = new Filter("Period_Number", FilterOperator.EQ, sValue),
-					oFilter9 = new Filter("Period_Units", FilterOperator.EQ, sValue),
-					oFilter10 = new Filter("Clinic", FilterOperator.Contains, sValue);
-				oFilter = new Filter([oFilter1, oFilter2, oFilter3, oFilter4, oFilter5, oFilter6, oFilter7, oFilter8, oFilter9, oFilter10], false);
-			} else {
-				oFilter = [];
-			}
-			oBinding.filter(oFilter);
-			this.oViewData.setProperty("/" + prop, oBinding.iLength);
-		},
-
-		onSearchElig: function (oEvent, id, prop) {
-			var table = this.getView().byId(id),
-				oBinding = table.getBinding("items"),
-				oFilter = "",
-				sValue = oEvent.getSource().getValue();
-			if (sValue) {
-				var oFilter1 = new Filter("Employee_Class", FilterOperator.EQ, sValue),
-					oFilter2 = new Filter("Personal_Area", FilterOperator.EQ, sValue),
-					oFilter3 = new Filter("Pay_Grade", FilterOperator.EQ, sValue),
-					oFilter4 = new Filter("Description", FilterOperator.Contains, sValue),
-					oFilter5 = new Filter("Personal_Sub_Area", FilterOperator.EQ, sValue),
-					oFilter6 = new Filter("Document_Type", FilterOperator.EQ, sValue),
-					oFilter7 = new Filter("Specialisation", FilterOperator.EQ, sValue),
-					oFilter8 = new Filter("Entitlement", FilterOperator.EQ, sValue);
-				oFilter = new Filter([oFilter1, oFilter2, oFilter3, oFilter4, oFilter5, oFilter6, oFilter7, oFilter8], false);
-			} else {
-				oFilter = [];
-			}
-			oBinding.filter(oFilter, true);
-			this.oViewData.setProperty("/" + prop, oBinding.iLength);
-		},
-
-		onSearchAppr: function (oEvent, id, prop) {
+		onSearchAdmin: function (oEvent, id) {
 			var table = this.getView().byId(id),
 				oBinding = table.getBinding("items"),
 				oFilter = "",
 				sValue = oEvent.getSource().getValue();
 			if (sValue !== "") {
-				var oFilter2 = new Filter("Personal_Area", FilterOperator.EQ, sValue),
-					oFilter3 = new Filter("Pay_Grade", FilterOperator.EQ, sValue),
-					oFilter4 = new Filter("Description", FilterOperator.Contains, sValue),
-					oFilter5 = new Filter("Personal_Sub_Area", FilterOperator.EQ, sValue),
-					oFilter6 = new Filter("First_Level_Approver", FilterOperator.Contains, sValue),
-					oFilter7 = new Filter("Second_Level_Approver", FilterOperator.Contains, sValue),
-					oFilter8 = new Filter("Third_Level_Approver", FilterOperator.Contains, sValue),
-					oFilter9 = new Filter("Fourth_Level_Approver", FilterOperator.Contains, sValue);
-				oFilter = new Filter([oFilter2, oFilter3, oFilter4, oFilter5, oFilter6, oFilter7, oFilter8, oFilter9], false);
+				var oFilter1 = new Filter("Claim_Code", FilterOperator.Contains, sValue);
+				var oFilter2 = new Filter("Entitlement_Type", FilterOperator.Contains, sValue);
+				var oFilter3 = new Filter("Pay_Grade", FilterOperator.Contains, sValue);
+				var oFilter4 = new Filter("Description", FilterOperator.Contains, sValue);
+				var oFilter5 = new Filter("Clinic_Desc", FilterOperator.Contains, sValue);
+				oFilter = new Filter([oFilter1, oFilter2, oFilter3, oFilter4, oFilter5], false);
 			} else {
 				oFilter = [];
 			}
 			oBinding.filter(oFilter);
-			this.oViewData.setProperty("/" + prop, oBinding.iLength);
-		},
-
-		onSearchCoord: function (oEvent, id, prop) {
-			var table = this.getView().byId(id),
-				oBinding = table.getBinding("items"),
-				oFilter = "",
-				sValue = oEvent.getSource().getValue();
-			if (sValue !== "") {
-				var oFilter1 = new Filter("EMPLOYEE_ID", FilterOperator.Contains, sValue),
-					oFilter2 = new Filter("EMP_FNAME", FilterOperator.Contains, sValue),
-					oFilter3 = new Filter("COORDINATOR", FilterOperator.Contains, sValue),
-					oFilter4 = new Filter("COORD_FNAME", FilterOperator.Contains, sValue),
-					oFilter5 = new Filter("PERSONAL_SUBAREA", FilterOperator.Contains, sValue),
-					oFilter6 = new Filter("PAY_GRADE", FilterOperator.Contains, sValue),
-					oFilter7 = new Filter("EMPLOYEE_DEPARTMENT", FilterOperator.Contains, sValue),
-					oFilter8 = new Filter("EMPLOYEE_DIVISION", FilterOperator.Contains, sValue);
-				oFilter = new Filter([oFilter1, oFilter2, oFilter3, oFilter4, oFilter5, oFilter6, oFilter7, oFilter8], false);
-			} else {
-				oFilter = [];
-			}
-			oBinding.filter(oFilter);
-			this.oViewData.setProperty("/" + prop, oBinding.iLength);
 		},
 
 		onChangeCompany: function (oEvent) {
@@ -258,10 +187,10 @@ sap.ui.define([
 				oPayCompData = [],
 				oKey = "",
 				oJson = this.getView().getModel("ComboDetails").getData();
-			if (oEvent) {
-				oKey = oEvent.getSource().getSelectedKey();
-			} else {
+			if (oEvent === undefined) {
 				oKey = this.oViewData.getProperty("/eCompany");
+			} else {
+				oKey = oEvent.getSource().getSelectedKey();
 			}
 			// filter claim code
 			$.each(oJson.CLAIM_CODE, function (idx, obj) {
@@ -576,12 +505,6 @@ sap.ui.define([
 				this._fnShowErrorMessage("End date should be greater than start date");
 				return;
 			}
-			oData.EMPLOYEE_ID = oData.EMPLOYEE_ID ? oData.EMPLOYEE_ID : "N/A";
-			oData.EMPLOYEE_DEPARTMENT = oData.EMPLOYEE_DEPARTMENT ? oData.EMPLOYEE_DEPARTMENT : "ALL";
-			oData.EMPLOYEE_DIVISION = oData.EMPLOYEE_DIVISION ? oData.EMPLOYEE_DIVISION : "ALL";
-			oData.PAY_GRADE = oData.PAY_GRADE ? oData.PAY_GRADE : "ALL";
-			oData.SPECIALISATION = oData.SPECIALISATION ? oData.SPECIALISATION : "ALL";
-			oData.SPONSOR_INSTITUTION = oData.SPONSOR_INSTITUTION ? oData.SPONSOR_INSTITUTION : "ALL";
 			if (oMode === "Submit") {
 				this.getView().setBusy(true);
 				$.ajax({
@@ -605,7 +528,9 @@ sap.ui.define([
 					}.bind(this)
 				});
 			} else {
-				var oURL = "/BenefietCAP/claim/CLAIM_COORDINATOR(ID=" + oData.ID + ")";
+				// (Start_Date=" + oData.STARTDATE + ",End_Date=" + oData.ENDDATE	 +
+				// 	",Company='" + oData.Company + "',Claim_Code='" + oData.Claim_Code + "',Claim_Category='" + oData.Claim_Category + "')
+				var oURL = "/BenefietCAP/claim/CLAIM_COORDINATOR";
 				this.getView().setBusy(true);
 				$.ajax({
 					url: oURL,
@@ -674,7 +599,7 @@ sap.ui.define([
 		},
 
 		onDeleteCoord: function (oEvent) {
-			var oTable = this.getView().byId("oTableCoord"),
+			var oTable = this._getFragmentTextPos("idCoord", "oTableCoord"),
 				selectedItems = oTable.getSelectedItems(),
 				payLoad = [];
 			if (selectedItems.length === 0) {
@@ -1230,11 +1155,10 @@ sap.ui.define([
 			Validator.resetValidStates(this, "dlgApprover", this._oApproverDialog);
 			var oData = this._oApproverDialog.getModel("oApprovalData").getData(),
 				oMode = this.oViewData.getProperty("/TMode"),
-				oTile = this.oViewData.getProperty("/oTile");
-			oData.Second_Level_Approver = oData.Second_Level_Approver ? oData.Second_Level_Approver : "N/A";
-			oData.Third_Level_Approver = oData.Third_Level_Approver ? oData.Third_Level_Approver : "N/A";
-			oData.Fourth_Level_Approver = oData.Fourth_Level_Approver ? oData.Fourth_Level_Approver : "N/A";
-			oData.Sequence_of_check = parseInt(oData.Sequence_of_check);
+				oTile = this.oViewData.getProperty("/oTile"),
+				oURL = oTile === "HRMC" ? "_hr" : "";
+			oData.Second_Level_Approver = oData.Second_Level_Approver === undefined ? "N/A" : oData.Second_Level_Approver;
+			oData.Third_Level_Approver = oData.Third_Level_Approver === undefined ? "N/A" : oData.Third_Level_Approver;
 			if (oMode === "Submit") {
 				if (oTile === "HRMC") {
 					oData.Pay_Grade = "ALL";
@@ -1244,7 +1168,7 @@ sap.ui.define([
 				}
 				this.getView().setBusy(true);
 				$.ajax({
-					url: "/BenefietCAP/claim/approval_structure_hr",
+					url: "/BenefietCAP/claim/approval_structure" + oURL,
 					data: JSON.stringify(oData),
 					method: "POST",
 					crossDomain: true,
@@ -1265,7 +1189,7 @@ sap.ui.define([
 					}.bind(this)
 				});
 			} else {
-				var oURLe = "/BenefietCAP/claim/approval_structure_hr(Claim_code='" + oData.Claim_code + "',Sequence_of_check=" + oData.Sequence_of_check +
+				var oURLe = "/BenefietCAP/claim/approval_structure" + oURL + "(Claim_code='" + oData.Claim_code + "',Sequence_of_check=" + oData.Sequence_of_check +
 					")";
 				this.getView().setBusy(true);
 				$.ajax({
@@ -1379,7 +1303,7 @@ sap.ui.define([
 				}
 				var oValue = {
 					"deleteItems": JSON.stringify(payLoad),
-					"table_Name": "approval_structure_hr"
+					"table_Name": "approval_structure"
 				};
 				this.getView().setBusy(true);
 				$.ajax({
@@ -1622,13 +1546,8 @@ sap.ui.define([
 
 		},
 
-		onDownload: function (model, id) {
-			// var data = this.getView().getModel(model).getData();
-			var data = [],
-				oData = this.getView().byId(id).getBinding("items").getCurrentContexts();
-			for (var i = 0; i < oData.length; i++) {
-				data.push(oData[i].getObject());
-			}
+		onDownload: function (model) {
+			var data = this.getView().getModel(model).getData();
 			this.JSONToCSVConvertor(data, model, true);
 		},
 

@@ -43,8 +43,6 @@ sap.ui.define([
 			this.oViewData.setProperty("/Claim_Owner", "");
 			this.oViewData.setProperty("/EmpID_App", "");
 			this.oViewData.setProperty("/EmpID_App_Rep", "");
-			this.oViewData.setProperty("/oNameTile", "");
-			this.oViewData.setProperty("/oFinanc", true);
 			this.eDialog = undefined;
 			this._fnAttachValidation();
 			this._fnTimePicker();
@@ -55,7 +53,6 @@ sap.ui.define([
 			this.loadDatePicker(this.oViewData, "create", "oRecp", "ViewData", "ReceiptDate");
 			this.loadDatePicker(this.oViewData, "create", "IntSdate", "ViewData", "datePicker1");
 			this.loadDatePicker(this.oViewData, "create", "IntEdate", "ViewData", "datePicker2");
-			this.loadDatePicker(this.oViewData, "create", "oReceiptdate", "ViewData", "receiptdate");
 			if (this.getView().getModel("ApprovalModel") !== undefined) {
 				this.getView().getModel("ApprovalModel").setData([]);
 			}
@@ -70,9 +67,6 @@ sap.ui.define([
 				this.oViewData.setProperty("/Status", "");
 				this.oViewData.setProperty("/Sdate", null);
 				this.oViewData.setProperty("/Edate", null);
-				this.oViewData.setProperty("/oRecp", null);
-				$(".HisdatePicker1").val(null);
-				$(".HisdatePicker2").val(null);
 				this.oViewData.setProperty("/ClaimDesc", "Claim Records");
 				var oURL, oFilter = this.getView().byId("fbFilter"),
 					osDate = new Date().getFullYear() + "-01-01",
@@ -80,27 +74,27 @@ sap.ui.define([
 				oFilter._oSearchButton.setProperty("text", "SEARCH");
 				oFilter._oClearButtonOnFB.setProperty("text", "CLEAR");
 				if (oNameTile === "PaymentUpload") {
-					oURL = "/BenefietCAP/claim/app_histwithCancel?$top=100000&$filter=CATEGORY_CODE eq 'PAY_UP'";
+					oURL = "/BenefietCAP/claim/app_histwithCancel?$top=100000&$filter=CATEGORY_CODE eq 'PAY_UP' and CLAIM_DATE ge " + osDate +
+						" and CLAIM_DATE le " + oeDate + "";
 				} else {
 					// oURL = "/BenefietCAP/claim/app_histwithCancel?$top=100000&$filter=(CLAIM_OWNER_ID eq '" + oEmpId + "' or lineitem_emp eq '" +
 					// 	oEmpId + "') and CLAIM_DATE ge " + osDate + " and CLAIM_DATE le " + oeDate + "";
 					oURL = "/BenefietCAP/claim/app_histwithlineItem(EMP_LINEITEM='" + oEmpId +
-						"')/Set?$top=100000&$filter=Rep_Status ne 'Error'";
+						"')/Set?$top=100000&$filter=CLAIM_DATE ge " +
+						osDate + " and CLAIM_DATE le " + oeDate + " and Rep_Status ne 'Error'";
 				}
 				this._fnApprovalModel(oURL);
 			} else if (oNameTile === "HistoryCoord" || oNameTile === "HistoryCoordSch") {
 				this.oViewData.setProperty("/ClaimDesc", "Claim Records");
-				var oFkeyss, oMkey, oFilters = this.getView().byId("fbFilter");
-				oFilters._oSearchButton.setProperty("text", "SEARCH");
-				oFilters._oClearButtonOnFB.setProperty("text", "CLEAR");
+				var oFkeyss, oMkey;
 				if (oNameTile === "HistoryCoord" || oNameTile === "Coordinat") {
-					oMkey = "/BenefietCAP/claim/Approval_Claim_Coordinator(claim_Cordinator='" + oEmpId + "')/Set?$top=100000";
+					oMkey = "/BenefietCAP/claim/Approval_Claim_Coordinator(claim_Cordinator='" + oEmpId + "')/Set";
 					oFkeyss =
-						"&$filter=Rep_Status ne 'Error' and CATEGORY_CODE ne 'OC' and CATEGORY_CODE ne 'CPR' and CATEGORY_CODE ne 'CPC' and CATEGORY_CODE ne 'SDFR' and CATEGORY_CODE ne 'SDFC' and CATEGORY_CODE ne 'PAY_UP'";
+						"?$filter=CATEGORY_CODE ne 'OC' and CATEGORY_CODE ne 'CPR' and CATEGORY_CODE ne 'CPC' and CATEGORY_CODE ne 'SDFR' and CATEGORY_CODE ne 'SDFC' and CATEGORY_CODE ne 'PAY_UP'";
 				} else {
-					oMkey = "/BenefietCAP/claim/Approval_Claim_Coordinator_Line(claim_Cordinator='" + oEmpId + "')/Set?$top=100000";
+					oMkey = "/BenefietCAP/claim/Approval_Claim_Coordinator_Line(claim_Cordinator='" + oEmpId + "')/Set";
 					oFkeyss =
-						"&$filter=Rep_Status ne 'Error' and CATEGORY_CODE eq 'OC' or CATEGORY_CODE eq 'CPR' or CATEGORY_CODE eq 'CPC' or CATEGORY_CODE eq 'SDFR' or CATEGORY_CODE eq 'SDFC' or CATEGORY_CODE eq 'PAY_UP'";
+						"?$filter=CATEGORY_CODE eq 'OC' or CATEGORY_CODE eq 'CPR' or CATEGORY_CODE eq 'CPC' or CATEGORY_CODE eq 'SDFR' or CATEGORY_CODE eq 'SDFC' or CATEGORY_CODE eq 'PAY_UP'";
 				}
 				var sURL = oMkey + oFkeyss;
 				this._fnApprovalModel(sURL);
@@ -119,7 +113,6 @@ sap.ui.define([
 				oFilterAC._oSearchButton.setProperty("text", "SEARCH");
 				oFilterAC._oClearButtonOnFB.setProperty("text", "CLEAR");
 				this.oViewData.setProperty("/ClaimDesc", "Claim Approvals");
-				this.oViewData.setProperty("/oTabValue", "Pending");
 				if (this.oViewData.getProperty("/Del_EmpID") === "" || this.oViewData.getProperty("/Del_EmpID") === undefined) {
 					this.onSelfPress();
 				}
@@ -154,6 +147,20 @@ sap.ui.define([
 
 				this._fnDelegateData(oEmpId);
 
+				/*$.ajax({
+					method: "GET",
+					url: "/BenefietCAP/claim/app_histwithCancel?$top=100000&$filter=CLAIM_STATUS ne 'Approved' and CLAIM_STATUS ne 'Cancellation Approved' and CLAIM_STATUS ne 'Rejected' and CLAIM_STATUS ne 'Cancelled' and (Reroute1 eq '" +
+						oEmpId + "' or Reroute2 eq '" + oEmpId + "' or Reroute3 eq '" + oEmpId + "')",
+					dataType: "json",
+					success: function (data) {
+						var oModel = this._getSizeLimit(data.value);
+						this.getView().setModel(oModel, "RouteApprovalModel");
+					}.bind(this),
+					error: function (response) {
+						this.handleErrorDialog(response);
+					}.bind(this)
+				});*/
+
 			} else if (oNameTile === "HisRep") {
 				this.onClearRep();
 				var oFilterInt = this.getView().byId("fbFilterInt");
@@ -165,7 +172,6 @@ sap.ui.define([
 			} else if (oNameTile === "Coordinat" || oNameTile === "CoordinatSch") {
 				this._fnUserInfo(oEmpId);
 				this.oViewData.setProperty("/oTile", "Admin");
-				this.oViewData.setProperty("/oNameTile", oNameTile);
 				this.oViewData.setProperty("/ClaimDesc", "Claim Coordinator");
 			} else {
 				this._fnUserInfo(oEmpId);
@@ -188,18 +194,204 @@ sap.ui.define([
 			});
 		},
 
+		fnPostEntity: function () {
+			var oClaim = this.oViewData.getProperty("/ClaimType"),
+				oEntity = "";
+			switch (oClaim) {
+			case "MC":
+				oEntity = "/BenefietCAP/claim/Medical_Claim";
+				this.oViewData.setProperty("/oModelName", "Hospitialisation");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_MEDICAL_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "");
+				this.oViewData.setProperty("/oTableid", "oTableHospital");
+				this.oViewData.setProperty("/oTableDelName", "Medical_Claim");
+				break;
+			case "WRC":
+				oEntity = "/BenefietCAP/claim/WRC_MASTER_CLAIM?$expand=LINE_ITEM";
+				this.oViewData.setProperty("/oModelName", "WorkRelated");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_WRC_MASTER_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "BENEFIT_WRC_LINEITEM_CLAIM");
+				this.oViewData.setProperty("/oTableid", "oTableWorkRelated");
+				this.oViewData.setProperty("/oTableDelName", "WRC_MASTER_CLAIM");
+				break;
+			case "WRC_HR":
+				oEntity = "/BenefietCAP/claim/WRC_HR_MASTER_CLAIM?$expand=LINE_ITEM";
+				this.oViewData.setProperty("/oModelName", "WorkRelatedHR");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_WRC_HR_MASTER_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "BENEFIT_WRC_HR_LINEITEM_CLAIM");
+				this.oViewData.setProperty("/oTableid", "oTableWorkRelatedHR");
+				this.oViewData.setProperty("/oTableDelName", "WRC_HR_MASTER_CLAIM");
+				break;
+			case "COV":
+				oEntity = "/BenefietCAP/claim/COV_MASTER_CLAIM?$expand=LINE_ITEM";
+				this.oViewData.setProperty("/oModelName", "Covid");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_COV_MASTER_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "BENEFIT_COV_LINEITEM_CLAIM");
+				this.oViewData.setProperty("/oTableid", "oTableCovid");
+				this.oViewData.setProperty("/oTableDelName", "COV_MASTER_CLAIM");
+				break;
+			case "TC":
+				oEntity = "/BenefietCAP/claim/TC_MASTER_CLAIM?$expand=LINE_ITEM";
+				this.oViewData.setProperty("/oModelName", "Transportation");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_TC_MASTER_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "BENEFIT_TC_LINEITEM_CLAIM");
+				this.oViewData.setProperty("/oTableid", "oTableTransp");
+				this.oViewData.setProperty("/oTableDelName", "TC_MASTER_CLAIM");
+				break;
+			case "TIM":
+				oEntity = "/BenefietCAP/claim/overtime_claim";
+				this.oViewData.setProperty("/oModelName", "Timesheet");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_OVERTIME_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "");
+				this.oViewData.setProperty("/oTableid", "oTableTime");
+				this.oViewData.setProperty("/oTableDelName", "overtime_claim");
+				break;
+			case "AHP":
+				oEntity = "/BenefietCAP/claim/AHP_LIC_MS_WIC_CLAIM";
+				this.oViewData.setProperty("/oModelName", "Ahpreim");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_AHP_LIC_MS_WIC_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "");
+				this.oViewData.setProperty("/oTableid", "oTableAHP");
+				this.oViewData.setProperty("/oTableDelName", "AHP_LIC_MS_WIC_CLAIM");
+				break;
+			case "LIC":
+				oEntity = "/BenefietCAP/claim/AHP_LIC_MS_WIC_CLAIM";
+				this.oViewData.setProperty("/oModelName", "Licence");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_AHP_LIC_MS_WIC_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "");
+				this.oViewData.setProperty("/oTableid", "oTableLic");
+				this.oViewData.setProperty("/oTableDelName", "AHP_LIC_MS_WIC_CLAIM");
+				break;
+			case "WIC":
+				oEntity = "/BenefietCAP/claim/AHP_LIC_MS_WIC_CLAIM";
+				this.oViewData.setProperty("/oModelName", "WorkInjury");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_AHP_LIC_MS_WIC_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "");
+				this.oViewData.setProperty("/oTableid", "oTableInjury");
+				this.oViewData.setProperty("/oTableDelName", "AHP_LIC_MS_WIC_CLAIM");
+				break;
+			case "MSR":
+				oEntity = "/BenefietCAP/claim/AHP_LIC_MS_WIC_CLAIM";
+				this.oViewData.setProperty("/oModelName", "Reimbursement");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_AHP_LIC_MS_WIC_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "");
+				this.oViewData.setProperty("/oTableid", "oTableTReimb");
+				this.oViewData.setProperty("/oTableDelName", "AHP_LIC_MS_WIC_CLAIM");
+				break;
+			case "PTF":
+				oEntity = "/BenefietCAP/claim/PTF_ACL_BCL_CLAIM";
+				this.oViewData.setProperty("/oModelName", "TrainingFund");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_PTF_ACL_BCL_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "");
+				this.oViewData.setProperty("/oTableid", "oTablePtf");
+				this.oViewData.setProperty("/oTableDelName", "PTF_ACL_BCL_CLAIM");
+				break;
+			case "CLS":
+				oEntity = "/BenefietCAP/claim/PTF_ACL_BCL_CLAIM";
+				this.oViewData.setProperty("/oModelName", "ABcls");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_PTF_ACL_BCL_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "");
+				this.oViewData.setProperty("/oTableid", "oTableAcls");
+				this.oViewData.setProperty("/oTableDelName", "PTF_ACL_BCL_CLAIM");
+				break;
+			case "PC":
+				oEntity = "/BenefietCAP/claim/PC_CLAIM";
+				this.oViewData.setProperty("/oModelName", "PettyCash");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_PC_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "");
+				this.oViewData.setProperty("/oTableid", "oTablePettyCash");
+				this.oViewData.setProperty("/oTableDelName", "PC_CLAIM");
+				break;
+			case "SP":
+				oEntity = "/BenefietCAP/claim/SP_MASTER_CLAIM?$expand=LINE_ITEM";
+				this.oViewData.setProperty("/oModelName", "Sponsorship");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_SP_MASTER_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "BENEFIT_SP1_LINEITEM_CLAIM");
+				this.oViewData.setProperty("/oTableid", "oTableTSpons");
+				this.oViewData.setProperty("/oTableDelName", "SP_MASTER_CLAIM");
+				break;
+			case "SP1":
+				oEntity = "/BenefietCAP/claim/SP1_MASTER_CLAIM?$expand=LINE_ITEM";
+				this.oViewData.setProperty("/oModelName", "Sponsorship");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_SP1_MASTER_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "BENEFIT_SP1_LINEITEM_CLAIM");
+				this.oViewData.setProperty("/oTableid", "oTableTSpons");
+				this.oViewData.setProperty("/oTableDelName", "SP1_MASTER_CLAIM");
+				break;
+			case "SP2":
+				oEntity = "/BenefietCAP/claim/SP2_MASTER_CLAIM?$expand=LINE_ITEM";
+				this.oViewData.setProperty("/oModelName", "Sponsorship");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_SP2_MASTER_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "BENEFIT_SP2_LINEITEM_CLAIM");
+				this.oViewData.setProperty("/oTableid", "oTableTSpons");
+				this.oViewData.setProperty("/oTableDelName", "SP2_MASTER_CLAIM");
+				break;
+			case "SP3":
+				oEntity = "/BenefietCAP/claim/SP3_MASTER_CLAIM?$expand=LINE_ITEM";
+				this.oViewData.setProperty("/oModelName", "Sponsorship");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_SP3_MASTER_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "BENEFIT_SP3_LINEITEM_CLAIM");
+				this.oViewData.setProperty("/oTableid", "oTableTSpons");
+				this.oViewData.setProperty("/oTableDelName", "SP3_MASTER_CLAIM");
+				break;
+			case "CPR":
+				oEntity = "/BenefietCAP/claim/CPR_CLAIM";
+				this.oViewData.setProperty("/oModelName", "PRequest");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_CPR_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "");
+				this.oViewData.setProperty("/oTableid", "oTablePettyCash");
+				this.oViewData.setProperty("/oTableDelName", "CPR_CLAIM");
+				break;
+			case "SDFR":
+				oEntity = "/BenefietCAP/claim/SDFR_MASTER_CLAIM?$expand=LINE_ITEM";
+				this.oViewData.setProperty("/oModelName", "SDFRClaim");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_SDFR_MASTER_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "BENEFIT_SDFR_LINEITEM_CLAIM");
+				this.oViewData.setProperty("/oTableid", "oTableSDFRClaim");
+				this.oViewData.setProperty("/oTableDelName", "SDFR_MASTER_CLAIM");
+				break;
+			case "SDFC":
+				oEntity = "/BenefietCAP/claim/SDFC_MASTER_CLAIM?$expand=LINE_ITEM";
+				this.oViewData.setProperty("/oModelName", "SDFClaim");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_SDFC_MASTER_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "BENEFIT_SDFC_LINEITEM_CLAIM");
+				this.oViewData.setProperty("/oTableid", "oTableSDFClaim");
+				this.oViewData.setProperty("/oTableDelName", "SDFC_MASTER_CLAIM");
+				break;
+			case "CPC":
+				oEntity = "/BenefietCAP/claim/CPC_MASTER_CLAIM?$expand=LINE_ITEM";
+				this.oViewData.setProperty("/oModelName", "CPClaim");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_CPC_MASTER_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "BENEFIT_CPC_LINEITEM_CLAIM");
+				this.oViewData.setProperty("/oTableid", "oTableCPClaim");
+				this.oViewData.setProperty("/oTableDelName", "CPC_MASTER_CLAIM");
+				break;
+			case "OC":
+				oEntity = "/BenefietCAP/claim/OC_MASTER_CLAIM?$expand=LINE_ITEM";
+				this.oViewData.setProperty("/oModelName", "OClaim");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_OC_MASTER_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "BENEFIT_OC_LINEITEM_CLAIM");
+				this.oViewData.setProperty("/oTableid", "oTableOClaim");
+				this.oViewData.setProperty("/oTableDelName", "OC_MASTER_CLAIM");
+				break;
+			case "PAY_UP":
+				oEntity = "/BenefietCAP/claim/PAY_UP_MASTER_CLAIM?$expand=LINE_ITEM";
+				this.oViewData.setProperty("/oModelName", "PUpload");
+				this.oViewData.setProperty("/oTableAppName", "BENEFIT_PAY_UP_MASTER_CLAIM");
+				this.oViewData.setProperty("/oTableAppLineName", "BENEFIT_PAY_UP_LINEITEM_CLAIM");
+				this.oViewData.setProperty("/oTableid", "oTablePUpload");
+				this.oViewData.setProperty("/oTableDelName", "PAY_UP_MASTER_CLAIM");
+				break;
+			}
+			return oEntity;
+		},
+
 		onNavBackForm: function () {
-			$(".HisdatePicker1").removeAttr('id');
-			$(".HisdatePicker2").removeAttr('id');
-			var oTile = this.oViewData.getProperty("/oTile"),
-				oTileUpd = this.oViewData.getProperty("/oNameTile");
+			var oTile = this.oViewData.getProperty("/oTile");
 			if (this.oViewData.getProperty("/ClaimType") === "PAY_UP") {
 				this._oRouter.navTo("home");
 			} else if (oTile === "Form" || oTile === "Admin" || oTile === "Coordinat" || oTile === "CoordinatSch") {
 				this._oRouter.navTo("ClaimsRouteName");
-				if (oTileUpd) {
-					this.oViewData.setProperty("/oTile", oTileUpd);
-				}
 			} else {
 				this._oRouter.navTo("home");
 			}
@@ -226,7 +418,7 @@ sap.ui.define([
 					if ((response.value).length > 0) {
 						this.getView().setModel(new JSONModel(response.value), modelname);
 					} else {
-						this.getView().setModel(new JSONModel([]), modelname);
+						this.getView().setModel(new JSONModel({}), modelname);
 					}
 				}.bind(this),
 				error: function (response) {
@@ -279,7 +471,6 @@ sap.ui.define([
 			this._fnDlgBtnTxtAdd(name + " Expense");
 			this.oViewData.setProperty("/TMode", "Add");
 			this.oViewData.setProperty("/DMode", true);
-			this.oViewData.setProperty("/ALength", 0);
 			this.oViewData.getData().AmountWRC = [];
 			if (!this.eDialogM) {
 				this.eDialogM = Fragment.load({
@@ -505,21 +696,6 @@ sap.ui.define([
 					this._fnShowErrorMessage("Receipt date should not be future");
 					return;
 				}
-				var oCont = this.getView().getModel("oLocationData").getData();
-				var oLocFrom = $.grep(oCont, function (obj, index) {
-					return obj.LOCATION === oModel.TRANSPORT_FROM;
-				});
-				var oLocTo = $.grep(oCont, function (obj, index) {
-					return obj.LOCATION === oModel.TRANSPORT_TO;
-				});
-				if (oLocFrom.length === 0) {
-					this._fnShowErrorMessage("Transport From location is inactive");
-					return;
-				}
-				if (oLocTo.length === 0) {
-					this._fnShowErrorMessage("Transport To location is inactive");
-					return;
-				}
 			}
 
 			if (valid && oLen === 0) {
@@ -533,7 +709,7 @@ sap.ui.define([
 			}
 
 			if (parseFloat(oModel.CLAIM_AMOUNT) === 0 || parseFloat(oModel.CLAIM_AMOUNT) === 0.00) {
-				this._fnShowErrorMessage("Claim amount = $0 is not allowed.");
+				this._fnShowErrorMessage("Please verify your claim amount before submitting");
 				return;
 			}
 
@@ -548,13 +724,6 @@ sap.ui.define([
 				if (this._fnIsDuplicateRecordTC(oModel, oMasterData)) {
 					return;
 				}
-			}
-
-			if (model === "PUpload" && this.oViewData.getProperty("/PAYMENT") === "Vendor") {
-				oModel.PAY_TO_BANK = "";
-				oModel.ACC_NAME = "";
-				oModel.ACC_NO = "";
-				oModel.BANK_CURRENCY = "";
 			}
 
 			/*if (Dmodel === "SDFRClaim_Master" || Dmodel === "SDFClaim_Master" || Dmodel === "CPClaim_Master") {
@@ -623,11 +792,11 @@ sap.ui.define([
 						"claimReference": oModel.CLAIM_REFERENCE,
 						"claimDate": oModel.CLAIM_DATE,
 						"receiptDate": oModel.RECEIPT_DATE === undefined ? null : oModel.RECEIPT_DATE,
-						"receiptNumber": oModel.RECEIPT_NUMBER ? oModel.RECEIPT_NUMBER : "",
+						"receiptNumber": oModel.RECEIPT_NUMBER === undefined ? "" : oModel.RECEIPT_NUMBER,
 						"invoiceDate": oModel.INVOICE_DATE === undefined ? null : oModel.INVOICE_DATE,
-						"invoiceNumber": oModel.INVOICE_NUMBER ? oModel.INVOICE_NUMBER : "",
-						"isHr": (oNameTile === "Admin" || oNameTile === "AdminSch" || oMasterData.BEHALF_FLAG === "Y" || oNameTile ===
-							"SMSApprovals") ? "X" : "",
+						"invoiceNumber": oModel.INVOICE_NUMBER === undefined ? "" : oModel.INVOICE_NUMBER,
+						"isHr": (oNameTile === "Admin" || oNameTile === "AdminSch" || oNameTile === "Approvals" || oNameTile === "SMSApprovals") ?
+							"X" : "",
 						"employeeId": oMasterData.CATEGORY_CODE === "PAY_UP" ? oModel.SCHOLAR_ID : oModel.EMPLOYEE_ID,
 						"isMode": "X"
 					}),
@@ -664,11 +833,11 @@ sap.ui.define([
 						"claimReference": oModel.CLAIM_REFERENCE,
 						"claimDate": oModel.CLAIM_DATE,
 						"receiptDate": oModel.RECEIPT_DATE === undefined ? null : oModel.RECEIPT_DATE,
-						"receiptNumber": oModel.RECEIPT_NUMBER ? oModel.RECEIPT_NUMBER : "",
+						"receiptNumber": oModel.RECEIPT_NUMBER === undefined ? "" : oModel.RECEIPT_NUMBER,
 						"invoiceDate": oModel.INVOICE_DATE === undefined ? null : oModel.INVOICE_DATE,
-						"invoiceNumber": oModel.INVOICE_NUMBER ? oModel.INVOICE_NUMBER : "",
-						"isHr": (oNameTile === "Admin" || oNameTile === "AdminSch" || oMasterData.BEHALF_FLAG === "Y" || oNameTile ===
-							"SMSApprovals") ? "X" : "",
+						"invoiceNumber": oModel.INVOICE_NUMBER === undefined ? "" : oModel.INVOICE_NUMBER,
+						"isHr": (oNameTile === "Admin" || oNameTile === "AdminSch" || oNameTile === "Approvals" || oNameTile === "SMSApprovals") ?
+							"X" : "",
 						"employeeId": oMasterData.CATEGORY_CODE === "PAY_UP" ? oModel.SCHOLAR_ID : oModel.EMPLOYEE_ID,
 						"isMode": "X"
 					}),
@@ -681,6 +850,12 @@ sap.ui.define([
 					success: function (data) {
 						if (model === "WorkRelated" || model === "WorkRelatedHR") {
 							this._fnAddlineWRC(oModel, oMasterData, Dmodel, oIndex, oMode);
+							// this.validatePublicHol(oMasterData, Dmodel, oModel, oIndex, oMode);
+							/*if (oModel.CLAIM_CODE === "WRCWKONPH" || oModel.CLAIM_CODE === "WRCPHNONWD") {
+								this.validatePublicHol(oMasterData, Dmodel, oModel, oIndex, oMode);
+							} else {
+								this._fnAddlineWRC(oModel, oMasterData, Dmodel, oIndex, oMode);
+							}*/
 						} else {
 							if (oIndex === undefined || oIndex === "") {
 								oMasterData.LINE_ITEM.push(oModel);
@@ -802,14 +977,11 @@ sap.ui.define([
 				data = oEvent.getSource().getModel(model).getData(),
 				oModel = oEvent.getSource().getModel(model);
 
-			if (model === "PUpload_Master") {
-				if (this.oViewData.getProperty("/oTile") === "History") {
-					var oFilter = [],
-						oEmp = this.oViewData.getProperty("/EmpID");
-					oFilter.push(new Filter("SCHOLAR_ID", FilterOperator.EQ, oEmp));
-					oEvent.getSource().getBinding("items").filter(oFilter, true);
-				}
-				this.oViewData.setProperty("/PayUpLength", oEvent.getSource().getBinding("items").iLength);
+			if (model === "PUpload_Master" && this.oViewData.getProperty("/oTile") === "History") {
+				var oFilter = [],
+					oEmp = this.oViewData.getProperty("/EmpID");
+				oFilter.push(new Filter("SCHOLAR_ID", FilterOperator.EQ, oEmp));
+				oEvent.getSource().getBinding("items").filter(oFilter, true);
 			}
 
 			if ((model === "WorkRelated_Master" || model === "WorkRelatedHR_Master")) {
@@ -900,7 +1072,7 @@ sap.ui.define([
 			if (name === "PUpload") {
 				this.oViewData.setProperty("/PAYMENT", this.eDialogM.getModel(name + "_Master").getProperty("/PAYMENT"));
 			}
-
+			// if (!this.eDialog) {
 			this.eDialog = Fragment.load({
 				id: this.createId(name),
 				name: "BenefitClaim.ZBenefitClaim.fragments." + name,
@@ -928,24 +1100,14 @@ sap.ui.define([
 				this._fnCurrencyRate(oData.CURRENCY);
 				this.eDialog.open();
 			}.bind(this));
-		},
-
-		_fnAppValidationLine: function (data) {
-			var oCont = this.oViewData.getData().AttachValidation,
-				oValCont = [];
-			$.each(oCont[0], function (idx, obj) {
-				if (data.parent_CLAIM_CATEGORY === "TC" || data.parent_CLAIM_CATEGORY.includes("SP") || data.parent_CLAIM_CATEGORY === "COV" ||
-					data.parent_CLAIM_CATEGORY === "WRC" || data.parent_CLAIM_CATEGORY === "WRC_HR") {
-					if (obj.Claim_Code === data.CLAIM_CODE && obj.Company === "MOHH") {
-						oValCont.push(obj);
-					}
-				}
-			});
-			oValCont.sort(function (a, b) {
-				return new Date(a.Start_Date) - new Date(b.Start_Date); // descending
-			});
-			return oValCont[0];
-
+			// } else {
+			// 	this.eDialog.setModel(new JSONModel(oData), name);
+			// 	this.eDialog.open();
+			// 	this.eDialog.getModel(name).attachPropertyChange(function (oEvt) {
+			// 		this.mDataModelChange(oEvt, oData);
+			// 	}, this);
+			// 	this.onDisplayFiles(oData.CLAIM_REFERENCE);
+			// }
 		},
 
 		_fnIsDuplicateRecord: function (key) {
@@ -1272,8 +1434,7 @@ sap.ui.define([
 				success: function (oData, oResp) {
 					this.oViewData.refresh(true);
 					this.getView().setModel(new JSONModel(oData), "oEligCalData");
-					if ((this.oViewData.getProperty("/oTile") === "Approvals" && !status.includes("Cancellation Pending")) || status ===
-						"Pending for Submission") {
+					if (this.oViewData.getProperty("/oTile") === "Approvals" && !status.includes("Cancellation Pending")) {
 						this.onCalculateAmount("Q", "Hospitialisation");
 					}
 				}.bind(this),
@@ -1508,7 +1669,7 @@ sap.ui.define([
 				Validator.resetValidStates(this, modelname, this.eDialogM);
 
 				if (parseFloat(oDlgData.CLAIM_AMOUNT) === 0 || parseFloat(oDlgData.CLAIM_AMOUNT) === 0.00) {
-					this._fnShowErrorMessage("Claim amount = $0 is not allowed.");
+					this._fnShowErrorMessage("Please verify your claim amount before submitting");
 					return;
 				}
 
@@ -1543,8 +1704,22 @@ sap.ui.define([
 
 				}
 
+				/*if (oClaimName.includes("SP")) {
+					if (oClaimName === "SP1" || oClaimName === "SP2") {
+						var oVal = this.oViewData.getData().oEntit[0].Entitlement;
+						if (oVal < oDlgData.CLAIM_AMOUNT) {
+							this._fnShowErrorMessage("Total claim amount above limit!");
+							return;
+						}
+					}
+				}*/
+
 				if (oClaimName === "WRC" || oClaimName === "WRC_HR") {
-					//
+					/*var isDuplicate = this.ValidateLineItemClaim(oDlgData, false);
+					if (isDuplicate) {
+						return;
+					}
+*/
 				} else {
 					if (oClaimName !== "WRC_HR") {
 						delete oDlgData.CLAIM_UNIT;
@@ -1564,13 +1739,10 @@ sap.ui.define([
 						"invoiceDate": oDlgData.LINE_ITEM[j].INVOICE_DATE === undefined ? null : oDlgData.LINE_ITEM[j].INVOICE_DATE,
 						"invoiceNumber": oDlgData.LINE_ITEM[j].INVOICE_NUMBER === undefined ? "" : oDlgData.LINE_ITEM[j].INVOICE_NUMBER,
 						"isMode": "X",
-						"isHr": (oNameTile === "Admin" || oNameTile === "AdminSch") ? "X" : "",
-						"isApprover": oNameTile === "Approvals" ? "X" : "",
-						"masterClaimReference": oNameTile === "Approvals" ? oDlgData.CLAIM_REFERENCE : ""
+						"isHr": (oNameTile === "Admin" || oNameTile === "AdminSch") ? "X" : ""
 					};
 					oPayload.push(data);
 				}
-				this._getBusyIndicator().show();
 				$.ajax({
 					url: pURL,
 					data: JSON.stringify({
@@ -1590,7 +1762,6 @@ sap.ui.define([
 						}
 					}.bind(this),
 					error: function (response) {
-						this._getBusyIndicator().hide();
 						this.handleErrorDialog(response);
 					}.bind(this)
 				});
@@ -1621,8 +1792,10 @@ sap.ui.define([
 					this._fnShowErrorMessage("Please ensure receipt amount should be equal or more than consultation fee.");
 					return;
 				}
-				if (parseFloat(oDlgData.CLAIM_AMOUNT) === 0 || parseFloat(oDlgData.CLAIM_AMOUNT) === 0.00) {
-					this._fnShowErrorMessage("Claim amount = $0 is not allowed.");
+				if ((parseFloat(oDlgData.CLAIM_AMOUNT) === 0 || parseFloat(oDlgData.CLAIM_AMOUNT) === 0.00) && (oClaimName === "PTF" ||
+						oClaimName ===
+						"MC")) {
+					this._fnShowErrorMessage("Computed claim amount =$0. Please check your claim info.");
 					return;
 				}
 				if (oClaimName === "CPR") {
@@ -1680,61 +1853,21 @@ sap.ui.define([
 					"Content-Type": "application/json"
 				},
 				success: function (odaata) {
-					this._fngetMultipleAmount(oNameTile, oDlgData, oMode, key, oClaimName, oClaimCode, eURL, name);
-					// this._fnAddDataSubmission();
+					this._fnAddDataSubmission(oNameTile, oDlgData, oMode, key, oClaimName, oClaimCode, eURL, name);
 				}.bind(this),
 				error: function (response) {
-					this._getBusyIndicator().hide();
 					this.handleErrorDialog(response);
 				}.bind(this)
 			});
-		},
 
-		_fngetMultipleAmount: function (oNameTile, oDlgData, oMode, key, oClaimName, oClaimCode, eURL, name) {
-			var data, oPayload = [],
-				pURL = "/BenefietCAP/claim/getMultipleWrcClaimAmount";
-			for (var i = 0; i < oDlgData.LINE_ITEM.length; i++) {
-				data = {
-					"employeeId": oDlgData.LINE_ITEM[i].EMPLOYEE_ID,
-					"claimCode": oDlgData.LINE_ITEM[i].CLAIM_CODE,
-					"claimDate": oDlgData.LINE_ITEM[i].CLAIM_DATE,
-					"claimUnit": oDlgData.LINE_ITEM[i].CLAIM_UNIT
-				};
-				oPayload.push(data);
-			}
-			$.ajax({
-				url: pURL,
-				data: JSON.stringify({
-					"lineItems": oPayload
-				}),
-				method: "POST",
-				crossDomain: true,
-				headers: {
-					"Accept": "application/json",
-					"Content-Type": "application/json"
-				},
-				success: function (odaata) {
-					if (odaata.error) {
-						this._getBusyIndicator().hide();
-						this._fnShowErrorMessage(odaata.error);
-						return;
-					} else {
-						this._fnAddDataSubmission(oNameTile, oDlgData, oMode, key, oClaimName, oClaimCode, eURL, name);
-					}
-				}.bind(this),
-				error: function (response) {
-					this._getBusyIndicator().hide();
-					this.handleErrorDialog(response);
-				}.bind(this)
-			});
 		},
 
 		_fnAddDataSubmission: function (oNameTile, oDlgData, oMode, key, oClaimName, oClaimCode, eURL, name) {
-			if ((oNameTile === "Admin" || oNameTile === "AdminSch") && oDlgData.CATEGORY_CODE !== "PAY_UP") {
+			if ((oNameTile === "Admin" || oNameTile === "AdminSch") && name !== "PUpload") {
 				oDlgData.SUBMITTED_BY = this.oViewData.getProperty("/LoginID");
 				oDlgData.BEHALF_FLAG = "Y";
 			} else {
-				oDlgData.SUBMITTED_BY = oDlgData.EMPLOYEE_ID ? oDlgData.EMPLOYEE_ID : this.oViewData.getProperty("/EmpID");
+				oDlgData.SUBMITTED_BY = oDlgData.EMPLOYEE_ID === undefined ? this.oViewData.getProperty("/EmpID") : oDlgData.EMPLOYEE_ID;
 			}
 
 			if (oClaimName === "WRC_HR" || oClaimName === "WRC" || oClaimName === "TC" ||
@@ -1770,12 +1903,10 @@ sap.ui.define([
 							for (var p = 0; p < data.value.length; p++) {
 								oMsg += data.value[p].CLAIM_CODE + " - Please add attachment \n";
 							}
-							this._getBusyIndicator().hide();
 							this._fnShowErrorMessage(oMsg);
 						}
 					}.bind(this),
 					error: function (response) {
-						this._getBusyIndicator().hide();
 						this.handleErrorDialog(response);
 					}.bind(this)
 				});
@@ -1784,7 +1915,7 @@ sap.ui.define([
 				// if (oMode === "Add") {
 				// oDlgData.CLAIM_STATUS = "Pending for Submission";
 
-				oDlgData.EMPLOYEE_ID = oDlgData.EMPLOYEE_ID ? oDlgData.EMPLOYEE_ID : this.oViewData.getProperty("/EmpID");
+				oDlgData.EMPLOYEE_ID = oDlgData.EMPLOYEE_ID === undefined ? this.oViewData.getProperty("/EmpID") : oDlgData.EMPLOYEE_ID;
 				$.ajax({
 					url: "/BenefietCAP/claim/validateClaimSubmission",
 					data: JSON.stringify({
@@ -1792,7 +1923,7 @@ sap.ui.define([
 						"claimReference": oDlgData.CLAIM_REFERENCE,
 						"claimDate": oDlgData.CLAIM_DATE,
 						"receiptDate": oDlgData.RECEIPT_DATE === undefined ? null : oDlgData.RECEIPT_DATE,
-						"receiptNumber": oDlgData.RECEIPT_NUMBER ? oDlgData.RECEIPT_NUMBER : "",
+						"receiptNumber": oDlgData.RECEIPT_NUMBER === undefined ? "" : oDlgData.RECEIPT_NUMBER,
 						"isHr": (oNameTile === "Admin" || oNameTile === "AdminSch") ? "X" : "",
 						"employeeId": oDlgData.EMPLOYEE_ID,
 						"isMode": "X"
@@ -1823,8 +1954,7 @@ sap.ui.define([
 		_fnAddData: function (oMode, key, oDlgData, eURL, name, oClaimName) {
 			var oLine = this.oViewData.getProperty("/TModeLine"),
 				oTile = this.oViewData.getProperty("/oTile");
-			if (!oDlgData.FIRST_LEVEL_APPROVER && (oTile === "History" || oTile === "Form" || (oTile === "Admin" && oDlgData.CATEGORY_CODE ===
-					"PAY_UP"))) {
+			if (!oDlgData.FIRST_LEVEL_APPROVER && (oTile === "History" || oTile === "Form")) {
 				this._fnShowErrorMessage("Please select approver");
 				return;
 			}
@@ -1850,7 +1980,6 @@ sap.ui.define([
 							this._fnSubmitApproval(oPayload, msg, key);
 						} else {
 							this._fnTableData();
-							this._getBusyIndicator().hide();
 							this.handleSuccessDialog("Claim/Request has been saved as draft");
 						}
 						this.getView().setBusy(false);
@@ -1867,7 +1996,6 @@ sap.ui.define([
 					}.bind(this),
 					error: function (xhr, ajaxOptions, throwError) {
 						this.getView().setBusy(false);
-						this._getBusyIndicator().hide();
 						this.handleErrorDialog(xhr);
 					}.bind(this)
 				});
@@ -1892,7 +2020,6 @@ sap.ui.define([
 							this._fnSubmitApproval(oPayload, msg, key);
 						} else {
 							this._fnTableData();
-							this._getBusyIndicator().hide();
 							this.handleSuccessDialog("Claim/Request has been saved as draft");
 						}
 						this.getView().setBusy(false);
@@ -1910,7 +2037,6 @@ sap.ui.define([
 					}.bind(this),
 					error: function (xhr, ajaxOptions, throwError) {
 						this.getView().setBusy(false);
-						this._getBusyIndicator().hide();
 						this.handleErrorDialog(xhr);
 					}.bind(this)
 				});
@@ -2274,6 +2400,12 @@ sap.ui.define([
 			oPrvinsur = oPrvinsur === "" ? 0 : oPrvinsur;
 			var oAmount = parseFloat(oCash, 10) + parseFloat(oMedsave, 10) + parseFloat(oMedishield, 10) + parseFloat(
 				oPrvinsur, 10);
+			// if (oAmount > oConsult) {
+			// othercost = parseFloat(oAmount, 10) - parseFloat(oConsult, 10);
+			// oModel.setProperty("/OTHER_COST", parseFloat(othercost, 10).toFixed(2));
+			// } else {
+			// 	oModel.setProperty("/OTHER_COST", parseFloat(oAmount, 10).toFixed(2));
+			// }
 			oModel.setProperty("/RECEIPT_AMOUNT", parseFloat(oAmount, 10).toFixed(2));
 		},
 
@@ -2285,7 +2417,7 @@ sap.ui.define([
 			Validator.resetValidStates(this, model, this.eDialog);
 			var oData = this.eDialog.getModel(model).getData();
 			oData.LINE_ITEM_REFERENCE_NUMBER = oData.LINE_ITEM_REFERENCE_NUMBER === undefined ? new Date().getTime().toString() : oData.LINE_ITEM_REFERENCE_NUMBER;
-			oData.EMPLOYEE_ID = oData.EMPLOYEE_ID ? oData.EMPLOYEE_ID : this.oViewData.getProperty("/EmpID");
+			oData.EMPLOYEE_ID = oData.EMPLOYEE_ID === undefined ? this.oViewData.getProperty("/EmpID") : oData.EMPLOYEE_ID;
 			$.ajax({
 				url: "/BenefietCAP/claim/calulationTransportClaim",
 				data: JSON.stringify({
@@ -2298,10 +2430,10 @@ sap.ui.define([
 					"Content-Type": "application/json"
 				},
 				success: function (data) {
-					if (data.CLAIM_AMOUNT) {
-						oData.CLAIM_AMOUNT = data.CLAIM_AMOUNT;
-					} else {
+					if (data.CLAIM_AMOUNT === "" || data.CLAIM_AMOUNT === undefined) {
 						oData.CLAIM_AMOUNT = 0.00;
+					} else {
+						oData.CLAIM_AMOUNT = data.CLAIM_AMOUNT;
 					}
 					this.eDialog.getModel(model).refresh(true);
 				}.bind(this),
@@ -2402,15 +2534,11 @@ sap.ui.define([
 			if (odata.Claim_Owner) {
 				oFilter.push(new Filter("CLAIM_OWNER_ID", FilterOperator.Contains, odata.Claim_Owner));
 			}
-			/*if (odata.Sdate) {
-				oFilter.push(new Filter("RECEIPT_DATE", FilterOperator.BT, odata.Sdate, odata.Edate));
-			}*/
+			if (odata.oRecp) {
+				oFilter.push(new Filter("RECEIPT_DATE", FilterOperator.EQ, odata.oRecp));
+			}
 			var oTable = this.getView().byId(oTableid).getBinding("items");
 			oTable.filter(oFilter, true);
-			this.oViewData.setProperty("/" + oTableid, oTable.iLength);
-		},
-		onTableCount: function (oEvent, key) {
-			this.oViewData.setProperty("/" + key, oEvent.getSource().getBinding("items").iLength);
 		},
 
 		onClear: function (key) {
@@ -2439,19 +2567,16 @@ sap.ui.define([
 				this.oViewData.setProperty("/DMode", true);
 				this.oViewData.setProperty("/App", true);
 				this.oViewData.setProperty("/oHis", true);
-				this.oViewData.setProperty("/oTabValue", "History");
 				this.oViewData.setProperty("/oCan", false);
 			} else if (oData.CLAIM_STATUS === "Approved" || oData.CLAIM_STATUS.includes("Pending")) {
 				this.oViewData.setProperty("/oCan", true);
 				this.oViewData.setProperty("/App", false);
 				this.oViewData.setProperty("/DMode", false);
-				this.oViewData.setProperty("/oTabValue", "History");
 				this.oViewData.setProperty("/oHis", false);
 			} else {
 				this.oViewData.setProperty("/oCan", false);
 				this.oViewData.setProperty("/App", false);
 				this.oViewData.setProperty("/DMode", false);
-				this.oViewData.setProperty("/oTabValue", "History");
 				this.oViewData.setProperty("/oHis", false);
 			}
 			this._fnEmail(oData, "H");
@@ -2510,48 +2635,34 @@ sap.ui.define([
 					var oData = datas.value[0];
 					if (oData) {
 						var oVal = {
-							"SUBMITTED_BY": oData.Submitted_By,
-							"SUBMITTEDBY_FullName": oData.SUBMITTEDBY_FullName,
-							"SUBMITTED_ON": oData.Submit_Date,
-							"EMPLOYEE_ID": oData.Employee_Id,
-							"Employee_FullName": oData.Employee_FullName,
-							"CLAIM_STATUS": oData.Status,
-							"REMARKS_REJECTION": oData.REMARKS_REJECTION,
+							"SUBMITTED_BY": data.SUBMITTED_BY,
+							"SUBMITTED_ON": data.SUBMITTED_ON,
+							"EMPLOYEE_ID": data.EMPLOYEE_ID,
+							"CLAIM_STATUS": data.CLAIM_STATUS,
+							"REMARKS_REJECTION": data.REMARKS_REJECTION,
 							LINE_ITEM: [{
 								"APPROVER": oData.Approver1,
-								"APP_FNAME": oData.APPROVER1_FullName,
 								"DELEGATION": oData.Delegation1,
-								"DELEG_FNAME": oData.DELEGATOR1_FullName,
 								"APPROVED_ON": oData.FIRST_LEVEL_APPROVED_ON,
 								"APP_REMARKS": oData.REMARKS_APPROVER1
 							}, {
 								"APPROVER": oData.Approver2,
-								"APP_FNAME": oData.APPROVER2_FullName,
 								"DELEGATION": oData.Delegation2,
-								"DELEG_FNAME": oData.DELEGATOR2_FullName,
 								"APPROVED_ON": oData.SECOND_LEVEL_APPROVED_ON,
 								"APP_REMARKS": oData.REMARKS_APPROVER2
 							}, {
 								"APPROVER": oData.Approver3,
-								"APP_FNAME": oData.APPROVER3_FullName,
 								"DELEGATION": oData.Delegation3,
-								"DELEG_FNAME": oData.DELEGATOR3_FullName,
 								"APPROVED_ON": oData.THIRD_LEVEL_APPROVED_ON,
 								"APP_REMARKS": oData.REMARKS_APPROVER3
 							}, {
 								"APPROVER": oData.Approver4,
-								"APP_FNAME": oData.APPROVER4_FullName,
 								"DELEGATION": oData.Delegation4,
-								"DELEG_FNAME": oData.DELEGATOR4_FullName,
 								"APPROVED_ON": oData.FOURTH_LEVEL_APPROVED_ON,
 								"APP_REMARKS": oData.REMARKS_APPROVER4
 							}]
 						};
 					}
-					oVal.LINE_ITEM = $.grep(oVal.LINE_ITEM, function (obj, index) {
-						return obj.APPROVER !== "N/A";
-					});
-					console.log(oVal);
 					this.getView().setModel(new JSONModel(oVal), "oAppRemarks");
 				}.bind(this),
 				error: function (xhr, ajaxOptions, throwError) {
@@ -2625,9 +2736,8 @@ sap.ui.define([
 
 		},
 
-		onSelectItemCancel: function (oEvent, model) { 
+		onSelectItemCancel: function (oEvent, model) {
 			oEvent.getSource().setEnabled(false);
-			this.oSource = oEvent.getSource();
 			var oData = model.includes("_Master") ? this.eDialogM.getModel(model).getData() : this.eDialog.getModel(model).getData();
 			this.oViewData.setProperty("/oCancelModel", model);
 			var payload = {
@@ -2672,7 +2782,7 @@ sap.ui.define([
 					oDataModel = "";
 				oDataModel = oTable.getModel("ApprovalModel").getData();
 				oMsg = key === "Warning" ? "Claim/Request has been approved successfully" : "Claim/Request has been rejected successfully";
-				for (var j = selectedItems.length - 1; j >= 0; j--) {
+			  	for (var j = selectedItems.length - 1; j >= 0; j--) {
 					var jdx = oTable.indexOfItem(selectedItems[j]);
 					var payload = {
 						"AMOUNT": oDataModel[jdx].AMOUNT,
@@ -2701,7 +2811,7 @@ sap.ui.define([
 				this._fnCancellationAppRej(oMsg, oValue, oMainDt);
 			} else if (oMainDt.Key === "D") {
 				oMsg = key === "Warning" ? "Claim/Request has been approved successfully" : "Claim/Request has been rejected successfully";
-				oPayLoad.push(oMainDt.model);
+			  	oPayLoad.push(oMainDt.model);
 				if (oTabKey !== "Delegate") {
 					oValue = {
 						"listofClaims": JSON.stringify(oPayLoad),
@@ -3026,7 +3136,6 @@ sap.ui.define([
 		},
 
 		_fnAdminValidation: function (data) {
-			this.oViewData.getData().Approvers = [];
 			var oCont = this.oViewData.getData().AttachValidation,
 				oValCont = [];
 			$.each(oCont[0], function (idx, obj) {
@@ -3041,12 +3150,11 @@ sap.ui.define([
 					}
 				}
 			});
-			this.oViewData.getData().Approvers.push(oValCont);
+
 			oValCont.sort(function (a, b) {
 				return new Date(a.Start_Date) - new Date(b.Start_Date); // descending
 			});
 			return oValCont[0];
-
 		},
 
 		onSelectItemApproval: function (oEvent, model, mode) {
@@ -3134,9 +3242,8 @@ sap.ui.define([
 		},
 		onSubmitD: function (oEvent, code, model, key) {
 			oEvent.getSource().setEnabled(false);
-			this.oSource = oEvent.getSource();
 			this.oViewData.setProperty("/btnEvent", oEvent);
-			var payLoad, oNameTile = this.oViewData.getProperty("/oTile");
+			var payLoad;
 			this.oViewData.setProperty("/oAppRejKey", key);
 			if (code === "WRC_HR" || code === "WRC" || code === "COV" || code.includes("SP") || code === "TC" || code.includes("SDF") || code ===
 				"OC" || code === "CPC" || code === "PAY_UP") {
@@ -3145,17 +3252,30 @@ sap.ui.define([
 			} else {
 				if (this.hasChange && code !== "TIM" && key === "A") {
 					this._fnShowErrorMessage("Please press the Compute button again to verify the claim amount before submitting");
-					this.oSource.setEnabled(true);
 					return;
 				}
 				payLoad = this.eDialog.getModel(model).getData();
 				this.oViewData.setProperty("/oML", false);
 			}
+
+			// var oDlg = this.oViewData.getProperty("/oML") === true ? this.eDialogM : this.eDialog;
+			// if (Validator.ValidateForm(this, model, oDlg)) {
+			// 	return;
+			// }
+			// Validator.resetValidStates(this, model, oDlg);
+
 			if (key === "A" && (parseFloat(payLoad.CLAIM_AMOUNT) <= 0 || parseFloat(payLoad.CLAIM_AMOUNT) <= 0.00) && code !== "PAY_UP") {
-				this._fnShowErrorMessage("Claim amount = $0 is not allowed.");
-				this.oSource.setEnabled(true);
+				this._fnShowErrorMessage("Computed claim amount =$0. Please check your claim info.");
 				return;
 			}
+
+			/*if (code === "SP1" || code === "SP2") {
+				var oVal = this.oViewData.getData().oEntit[0].Entitlement;
+				if (oVal < payLoad.CLAIM_AMOUNT) {
+					this._fnShowErrorMessage("Total claim amount above limit!");
+					return;
+				}
+			}*/
 			if (code === "SDFR") {
 				payLoad.COURSE_END_DATE = payLoad.COURSE_END_DATE === null ? null : payLoad.COURSE_END_DATE.substring(0, 10);
 				payLoad.CUMULATIVE_CAP = payLoad.CUMULATIVE_CAP.toString();
@@ -3194,9 +3314,8 @@ sap.ui.define([
 						"claimReference": (key === "R") ? "" : payLoad.CLAIM_REFERENCE,
 						"claimDate": payLoad.CLAIM_DATE,
 						"receiptDate": payLoad.RECEIPT_DATE === undefined ? null : payLoad.RECEIPT_DATE,
-						"receiptNumber": payLoad.RECEIPT_NUMBER ? payLoad.RECEIPT_NUMBER : "",
-						"isHr": (oNameTile === "Admin" || oNameTile === "AdminSch" || payLoad.BEHALF_FLAG === "Y" || oNameTile ===
-							"SMSApprovals") ? "X" : "",
+						"receiptNumber": payLoad.RECEIPT_NUMBER === undefined ? "" : payLoad.RECEIPT_NUMBER,
+						"isHr": "X",
 						"employeeId": payLoad.EMPLOYEE_ID,
 						"isMode": "X"
 					}),
@@ -3218,7 +3337,6 @@ sap.ui.define([
 						if (oMessage.includes(payLoad.CLAIM_REFERENCE)) {
 							this._fnClaimSubmitApp(payLoad, sURL, oModel);
 						} else {
-							this.oSource.setEnabled(true);
 							this.handleErrorDialog(response);
 						}
 					}.bind(this)
@@ -3253,12 +3371,10 @@ sap.ui.define([
 					if (data.value.length === 0) {
 						this._fnClaimSubmitApp(payLoad, sURL, oModel);
 					} else {
-						this.oSource.setEnabled(true);
 						this._fnShowErrorMessage("Line Item attachment missing");
 					}
 				}.bind(this),
 				error: function (response) {
-					this.oSource.setEnabled(true);
 					this.handleErrorDialog(response);
 				}.bind(this)
 			});
@@ -3280,7 +3396,6 @@ sap.ui.define([
 				}.bind(this),
 				error: function (xhr, ajaxOptions, throwError) {
 					this.getView().setBusy(false);
-					this.oSource.setEnabled(true);
 					this.handleErrorDialog(xhr);
 				}.bind(this)
 			});
@@ -3309,7 +3424,6 @@ sap.ui.define([
 						}.bind(this),
 						error: function (xhr, ajaxOptions, throwError) {
 							this.getView().setBusy(false);
-							this.oSource.setEnabled(true);
 							this.handleErrorDialog(xhr);
 						}.bind(this)
 					});
@@ -3366,23 +3480,20 @@ sap.ui.define([
 		/////////// Admin History Report //////////////
 
 		onHistoryClaim: function (key) {
-			if (this.oViewData.getProperty("/IntSdate") && this.oViewData.getProperty(
+			if (this.oViewData.getProperty("/EmpID_App_Rep") && this.oViewData.getProperty("/IntSdate") && this.oViewData.getProperty(
 					"/IntEdate")) {
-				this._getBusyIndicator().show();
 				var oPernr = this.getView().byId("inpEmpIDHis").getTokens(),
 					oKey = [],
 					oURL,
-					oFilt = "",
 					oAdmin = this.oViewData.getProperty("/LoginID"),
 					oPA = this.oCompany,
 					oPSA = this.oViewData.getProperty("/IntPSA"),
 					oSdate = this.oViewData.getProperty("/IntSdate"),
 					oEdate = this.oViewData.getProperty("/IntEdate"),
-					oCateg = this.oViewData.getProperty("/ClaimCateg") ? this.oViewData.getProperty("/ClaimCateg") : "",
-					oClaimT = this.oViewData.getProperty("/ClaimCate") ? this.oViewData.getProperty("/ClaimCate") : "",
-					oStatus = this.oViewData.getProperty("/Status") ? this.oViewData.getProperty("/Status") : "",
-					oEmp = this.oViewData.getProperty("/EmpID_App_Rep"),
-					oRecp = this.oViewData.getProperty("/oReceiptdate");
+					oCateg = this.oViewData.getProperty("/ClaimCateg") === undefined ? "" : this.oViewData.getProperty("/ClaimCateg"),
+					oClaimT = this.oViewData.getProperty("/ClaimCate") === undefined ? "" : this.oViewData.getProperty("/ClaimCate"),
+					oStatus = this.oViewData.getProperty("/Status") === undefined ? "" : this.oViewData.getProperty("/Status"),
+					oEmp = this.oViewData.getProperty("/EmpID_App_Rep");
 
 				if (oPernr.length > 0) {
 					for (var i = 0; i < oPernr.length; i++) {
@@ -3394,9 +3505,6 @@ sap.ui.define([
 				if (oEmp) {
 					oKey.push(oEmp);
 					oKey = JSON.stringify(oKey);
-				}
-				if (oRecp) {
-					oFilt = "?$filter=RECEIPT_DATE eq " + oRecp + "";
 				}
 
 				if (key === "D") {
@@ -3411,14 +3519,13 @@ sap.ui.define([
 					oURL = "/BenefietCAP/claim/ApprovalHistory(USERID='" + oKey + "',fromDate=" + oSdate + ",toDate=" + oEdate +
 						",CORDIN='',Personnel_Area='" + oPA + "',Personal_Subarea='" + oPSA + "',Pay_Grade='',Division='',HR_ADMIN='" + oAdmin +
 						"',CLAIM_STATUS='" + oStatus + "',CLAIM_TYPE='" + oClaimT + "',CATEGORY_CODE='" + oCateg +
-						"')" + oFilt;
+						"')";
 				}
 				$.ajax({
 					method: "GET",
 					url: oURL,
 					dataType: "json",
 					success: function (data) {
-						this._getBusyIndicator().hide();
 						if (key === "D") {
 							var href = "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64," + data.value,
 								element = document.createElement('a');
@@ -3430,13 +3537,14 @@ sap.ui.define([
 							document.body.removeChild(element);
 						} else {
 							this._fnHistoryData(data);
+
 						}
 					}.bind(this),
 					error: function (response) {
-						this._getBusyIndicator().hide();
 						this.handleErrorDialog(response);
 					}.bind(this)
 				});
+
 			} else {
 				this._fnShowErrorMessage("No data");
 			}
@@ -3448,7 +3556,7 @@ sap.ui.define([
 				this.getView().setModel(oModel, "ApprovalModel");
 			} else {
 				this.getView().setModel(new JSONModel([]), "ApprovalModel");
-				this._fnShowErrorMessage("No data");
+				this._fnShowErrorMessage("Please change the filter category");
 			}
 		},
 
@@ -3467,7 +3575,6 @@ sap.ui.define([
 			this.oViewData.setProperty("/IntEdate", null);
 			$(".datePicker1").val(null);
 			$(".datePicker2").val(null);
-			$(".receiptdate").val(null);
 		},
 
 		onSearchReroute: function () {
@@ -3483,7 +3590,7 @@ sap.ui.define([
 							var oModel = this._getSizeLimit(data.value);
 							this.getView().setModel(oModel, "AdminApprovalModel");
 						} else {
-							this.getView().setModel(new JSONModel([]), "AdminApprovalModel");
+							this.getView().setModel([], "AdminApprovalModel");
 						}
 					}.bind(this),
 					error: function (response) {

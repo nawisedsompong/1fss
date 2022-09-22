@@ -15,7 +15,7 @@
 									</ComboBox>
 								</fb:control>
 							</fb:FilterGroupItem>
-							<fb:FilterGroupItem id="fgiEmployeeA" groupName="Basic" name="B" label="Claim Code" partOfCurrentVariant="true" visibleInFilterBar="true">
+							<fb:FilterGroupItem id="fgiEmployeeA" groupName="Basic" name="B" label="Claim Type" partOfCurrentVariant="true" visibleInFilterBar="true">
 								<fb:control>
 									<Input width="100%" value="{ViewData>/ClaimCate}" valueHelpRequest="onClaimTypeOpen" showValueHelp="true" showSuggestion="true"
 										valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"
@@ -25,21 +25,16 @@
 							<fb:FilterGroupItem id="fgiStatusA" groupName="Basic" name="C" label="Status" partOfCurrentVariant="true" visibleInFilterBar="true">
 								<fb:control>
 									<ComboBox id="cbCsidA" selectedKey="{ViewData>/Status}" change="onValidData">
-										<core:Item key="Cancellation Pending for approval, Level 1" text="Cancellation Pending for approval, Level 1"/>
-										<core:Item key="Cancellation Pending for approval, Level 2" text="Cancellation Pending for approval, Level 2"/>
-										<core:Item key="Cancellation Pending for approval, Level 3" text="Cancellation Pending for approval, Level 3"/>
-										<core:Item key="Cancellation Pending for approval, Level 4" text="Cancellation Pending for approval, Level 4"/>
 										<core:Item key="Pending for approval, Level 1" text="Pending for approval, Level 1"/>
 										<core:Item key="Pending for approval, Level 2" text="Pending for approval, Level 2"/>
-										<core:Item key="Pending for approval, Level 3" text="Pending for approval, Level 3"/>
-										<core:Item key="Pending for approval, Level 4" text="Pending for approval, Level 4"/>
+										<core:Item key="Cancellation Pending for approval, Level 1" text="Cancellation Pending for approval, Level 1"/>
+										<core:Item key="Cancellation Pending for approval, Level 2" text="Cancellation Pending for approval, Level 2"/>
 									</ComboBox>
 								</fb:control>
 							</fb:FilterGroupItem>
-							<fb:FilterGroupItem id="fgiStatusApp" groupName="Basic" name="D" label="{=${ViewData>/oTile}==='Approvals' ? 'Employee ID' : 'Scholar ID'}"
-								partOfCurrentVariant="true" visibleInFilterBar="true">
+							<fb:FilterGroupItem id="fgiStatusApp" groupName="Basic" name="D" label="Employee ID" partOfCurrentVariant="true" visibleInFilterBar="true">
 								<fb:control>
-									<Input id="inpEmpIDApp" width="100%" value="{ViewData>/EmpID_App}" valueHelpRequest="onEmpSearchOpen('ViewData', 'Inactive','App')"
+									<Input id="inpEmpIDApp" width="100%" value="{ViewData>/EmpID_App}" valueHelpRequest="onEmpSearchOpen('ViewData', 'App')"
 										showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1"
 										showTableSuggestionValueHelp="false"/>
 								</fb:control>
@@ -62,7 +57,7 @@
 								</fb:control>
 							</fb:FilterGroupItem>
 							<fb:FilterGroupItem id="fgiReceiptDateApp" groupName="Basic" name="G" label="Receipt Date" partOfCurrentVariant="true"
-								visibleInFilterBar="false">
+								visibleInFilterBar="true">
 								<fb:control>
 									<core:HTML content='&lt;input class="ReceiptDate"/&gt;'></core:HTML>
 								</fb:control>
@@ -70,8 +65,8 @@
 						</fb:filterGroupItems>
 					</fb:FilterBar>
 					<Table id="tbApprovalDetails" items="{path:'ApprovalModel>/' , sorter: { path: 'CATEGORY_CODE', descending: false}}" inset="false"
-						updateFinished="onDisableCheck($event,'ApprovalModel')" sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true" growing="true"
-						growingThreshold="1000">
+						updateFinished="onTotalAmount($event,'ApprovalModel')" sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true" growing="true"
+						growingThreshold="100">
 						<headerToolbar>
 							<OverflowToolbar>
 								<content>
@@ -88,10 +83,10 @@
 								<Label text="Claim Category" design="Bold" wrapping="true"/>
 							</Column>
 							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '21%'}">
-								<Label text="Claim Code" design="Bold" wrapping="true"/>
+								<Label text="Claim Type" design="Bold" wrapping="true"/>
 							</Column>
 							<Column width="{=${device>/isPhone}=== true ? 'auto' : '19%'}">
-								<Label wrapping="true" text="{=${ViewData>/oTile}==='Approvals' ? 'Employee' : 'Scholar'}" design="Bold"/>
+								<Label wrapping="true" text="Employee" design="Bold"/>
 							</Column>
 							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '18%'}">
 								<Label text="Claim Reference No" design="Bold" wrapping="true"/>
@@ -114,8 +109,7 @@
 							<ColumnListItem type="Navigation" press="onSelectItemApproval($event,'ApprovalModel', true)">
 								<cells>
 									<Text text="{path: 'ApprovalModel>CATEGORY_CODE', formatter: '.formatter.oClaimDesc'}"/>
-									<Text
-										text="{parts:[{path:'ApprovalModel>CLAIM_CATEGORY'},{path:'ApprovalModel>LINE_CLAIM_CODE'},{path:'ApprovalModel>LINE_CLAIM_CATEGORY'}], formatter: '.formatter.oClaimCategDesc'}"/>
+									<Text text="{path: 'ApprovalModel>CLAIM_CATEGORY', formatter: '.formatter.oClaimCategDesc'}"/>
 									<!--Sahas FirstName Last Name Change-->
 									<Text text="{ApprovalModel>CLAIM_OWNER_ID} / {ApprovalModel>Claim_Owner_FullName}"/>
 									<!--<Text text="{ApprovalModel>CLAIM_OWNER_ID} / {ApprovalModel>CLAIM_OWNER_FIRSTNAME}, {ApprovalModel>CLAIM_OWNER_LASTNAME}"/>-->
@@ -146,7 +140,7 @@
 									</ComboBox>
 								</fb:control>
 							</fb:FilterGroupItem>
-							<fb:FilterGroupItem id="fgiEmployeeAB" groupName="Basic" name="B" label="Claim Code" partOfCurrentVariant="true" visibleInFilterBar="true">
+							<fb:FilterGroupItem id="fgiEmployeeAB" groupName="Basic" name="B" label="Claim Type" partOfCurrentVariant="true" visibleInFilterBar="true">
 								<fb:control>
 									<Input width="100%" value="{ViewData>/ClaimCate}" valueHelpRequest="onClaimTypeOpen" showValueHelp="true" showSuggestion="true"
 										valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"
@@ -156,24 +150,16 @@
 							<fb:FilterGroupItem id="fgiStatusAB" groupName="Basic" name="C" label="Status" partOfCurrentVariant="true" visibleInFilterBar="true">
 								<fb:control>
 									<ComboBox id="cbCsidAB" selectedKey="{ViewData>/Status}" change="onValidData">
-										<core:Item key="Approved" text="Approved"/>
-										<core:Item key="Cancelled" text="Cancelled"/>
-										<core:Item key="Cancellation Pending for approval, Level 1" text="Cancellation Pending for approval, Level 1"/>
-										<core:Item key="Cancellation Pending for approval, Level 2" text="Cancellation Pending for approval, Level 2"/>
-										<core:Item key="Cancellation Pending for approval, Level 3" text="Cancellation Pending for approval, Level 3"/>
-										<core:Item key="Cancellation Pending for approval, Level 4" text="Cancellation Pending for approval, Level 4"/>
 										<core:Item key="Pending for approval, Level 1" text="Pending for approval, Level 1"/>
 										<core:Item key="Pending for approval, Level 2" text="Pending for approval, Level 2"/>
-										<core:Item key="Pending for approval, Level 3" text="Pending for approval, Level 3"/>
-										<core:Item key="Pending for approval, Level 4" text="Pending for approval, Level 4"/>
-										<core:Item key="Rejected" text="Rejected"/>
+										<core:Item key="Cancellation Pending for approval, Level 1" text="Cancellation Pending for approval, Level 1"/>
+										<core:Item key="Cancellation Pending for approval, Level 2" text="Cancellation Pending for approval, Level 2"/>
 									</ComboBox>
 								</fb:control>
 							</fb:FilterGroupItem>
-							<fb:FilterGroupItem id="fgiStatusAppB" groupName="Basic" name="D" label="{=${ViewData>/oTile}==='Approvals' ? 'Employee ID' : 'Scholar ID'}"
-								partOfCurrentVariant="true" visibleInFilterBar="true">
+							<fb:FilterGroupItem id="fgiStatusAppB" groupName="Basic" name="D" label="Employee ID" partOfCurrentVariant="true" visibleInFilterBar="true">
 								<fb:control>
-									<Input id="inpEmpIDAppB" width="100%" value="{ViewData>/EmpID_App}" valueHelpRequest="onEmpSearchOpen('ViewData', 'Inactive','App')"
+									<Input id="inpEmpIDAppB" width="100%" value="{ViewData>/EmpID_App}" valueHelpRequest="onEmpSearchOpen('ViewData', 'App')"
 										showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1"
 										showTableSuggestionValueHelp="false"/>
 								</fb:control>
@@ -212,7 +198,7 @@
 									<DateRangeSelection visible="false" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" dateValue="{ViewData>/oHisSdate}"
 										width="{=${device>/isPhone}=== true ? 'auto' : '16%'}" secondDateValue="{ViewData>/oHisEdate}"></DateRangeSelection>
 									<Button visible="false" text="SEARCH" type="Emphasized" press="onSearchHistoryClaim"/>
-									<Button visible="false" icon="sap-icon://download" tooltip="EXPORT DATA" press="onDownload('ApprovalHistoryModel')"/>
+									<Button icon="sap-icon://download" tooltip="EXPORT DATA" press="onDownload('ApprovalHistoryModel')"/>
 								</content>
 							</OverflowToolbar>
 						</headerToolbar>
@@ -221,10 +207,10 @@
 								<Label text="Claim Category" design="Bold" wrapping="true"/>
 							</Column>
 							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '21%'}">
-								<Label text="Claim Code" design="Bold" wrapping="true"/>
+								<Label text="Claim Type" design="Bold" wrapping="true"/>
 							</Column>
 							<Column width="{=${device>/isPhone}=== true ? 'auto' : '19%'}">
-								<Label wrapping="true" text="{=${ViewData>/oTile}==='Approvals' ? 'Employee' : 'Scholar'}" design="Bold"/>
+								<Label wrapping="true" text="Employee" design="Bold"/>
 							</Column>
 							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '18%'}">
 								<Label text="Claim Reference No" design="Bold" wrapping="true"/>
@@ -244,11 +230,10 @@
 							</Column>
 						</columns>
 						<items>
-							<ColumnListItem type="Navigation" press="onSelectItemApproval($event,'ApprovalHistoryModel', false, 'oRec')">
+							<ColumnListItem type="Navigation" press="onSelectItemApproval($event,'ApprovalHistoryModel', false)">
 								<cells>
 									<Text text="{path: 'ApprovalHistoryModel>CATEGORY_CODE', formatter: '.formatter.oClaimDesc'}"/>
-									<Text
-										text="{parts:[{path:'ApprovalHistoryModel>CLAIM_CATEGORY'},{path:'ApprovalHistoryModel>LINE_CLAIM_CODE'},{path:'ApprovalHistoryModel>LINE_CLAIM_CATEGORY'}], formatter: '.formatter.oClaimCategDesc'}"/>
+									<Text text="{path: 'ApprovalHistoryModel>CLAIM_CATEGORY', formatter: '.formatter.oClaimCategDesc'}"/>
 									<Text text="{ApprovalHistoryModel>CLAIM_OWNER_ID} / {ApprovalHistoryModel>Claim_Owner_FullName}"/>
 									<Text text="{ApprovalHistoryModel>CLAIM_REFERENCE}"/>
 									<Text
@@ -267,7 +252,7 @@
 					</Table>
 				</content>
 			</IconTabFilter>
-			<IconTabFilter text="Delegatee" key="Delegate" visible="true">
+			<IconTabFilter text="Delegate" key="Delegate" visible="true">
 				<content>
 					<fb:FilterBar id="fbFilterAC" reset="onReset" search="onSearchs('AC')" showRestoreButton="false" clear="onClear('AC')"
 						showFilterConfiguration="false" showClearOnFB="true" useToolbar="false">
@@ -280,7 +265,7 @@
 									</ComboBox>
 								</fb:control>
 							</fb:FilterGroupItem>
-							<fb:FilterGroupItem id="fgiEmployeeAC" groupName="Basic" name="B" label="Claim Code" partOfCurrentVariant="true" visibleInFilterBar="true">
+							<fb:FilterGroupItem id="fgiEmployeeAC" groupName="Basic" name="B" label="Claim Type" partOfCurrentVariant="true" visibleInFilterBar="true">
 								<fb:control>
 									<Input width="100%" value="{ViewData>/ClaimCate}" valueHelpRequest="onClaimTypeOpen" showValueHelp="true" showSuggestion="true"
 										valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"
@@ -290,21 +275,16 @@
 							<fb:FilterGroupItem id="fgiStatusAC" groupName="Basic" name="C" label="Status" partOfCurrentVariant="true" visibleInFilterBar="true">
 								<fb:control>
 									<ComboBox id="cbCsidAC" selectedKey="{ViewData>/Status}" change="onValidData">
-										<core:Item key="Cancellation Pending for approval, Level 1" text="Cancellation Pending for approval, Level 1"/>
-										<core:Item key="Cancellation Pending for approval, Level 2" text="Cancellation Pending for approval, Level 2"/>
-										<core:Item key="Cancellation Pending for approval, Level 3" text="Cancellation Pending for approval, Level 3"/>
-										<core:Item key="Cancellation Pending for approval, Level 4" text="Cancellation Pending for approval, Level 4"/>
 										<core:Item key="Pending for approval, Level 1" text="Pending for approval, Level 1"/>
 										<core:Item key="Pending for approval, Level 2" text="Pending for approval, Level 2"/>
-										<core:Item key="Pending for approval, Level 3" text="Pending for approval, Level 3"/>
-										<core:Item key="Pending for approval, Level 4" text="Pending for approval, Level 4"/>
+										<core:Item key="Cancellation Pending for approval, Level 1" text="Cancellation Pending for approval, Level 1"/>
+										<core:Item key="Cancellation Pending for approval, Level 2" text="Cancellation Pending for approval, Level 2"/>
 									</ComboBox>
 								</fb:control>
 							</fb:FilterGroupItem>
-							<fb:FilterGroupItem id="fgiStatusAppC" groupName="Basic" name="D" label="{=${ViewData>/oTile}==='Approvals' ? 'Employee ID' : 'Scholar ID'}"
-								partOfCurrentVariant="true" visibleInFilterBar="true">
+							<fb:FilterGroupItem id="fgiStatusAppC" groupName="Basic" name="D" label="Employee ID" partOfCurrentVariant="true" visibleInFilterBar="true">
 								<fb:control>
-									<Input id="inpEmpIDAppC" width="100%" value="{ViewData>/EmpID_App}" valueHelpRequest="onEmpSearchOpen('ViewData','Inactive', 'App')"
+									<Input id="inpEmpIDAppC" width="100%" value="{ViewData>/EmpID_App}" valueHelpRequest="onEmpSearchOpen('ViewData', 'App')"
 										showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1"
 										showTableSuggestionValueHelp="false"/>
 								</fb:control>
@@ -347,10 +327,10 @@
 								<Label text="Claim Category" design="Bold" wrapping="true"/>
 							</Column>
 							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '21%'}">
-								<Label text="Claim Code" design="Bold" wrapping="true"/>
+								<Label text="Claim Type" design="Bold" wrapping="true"/>
 							</Column>
 							<Column width="{=${device>/isPhone}=== true ? 'auto' : '19%'}">
-								<Label wrapping="true" text="{=${ViewData>/oTile}==='Approvals' ? 'Employee' : 'Scholar'}" design="Bold"/>
+								<Label wrapping="true" text="Employee" design="Bold"/>
 							</Column>
 							<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '18%'}">
 								<Label text="Claim Reference No" design="Bold" wrapping="true"/>
@@ -432,8 +412,7 @@
 							<ColumnListItem type="Navigation" press="onSelectItemApproval($event,'RouteApprovalModel')">
 								<cells>
 									<Text text="{path: 'RouteApprovalModel>CATEGORY_CODE', formatter: '.formatter.oClaimDesc'}"/>
-									<Text
-										text="{parts:[{path:'RouteApprovalModel>CLAIM_CATEGORY'},{path:'RouteApprovalModel>LINE_CLAIM_CODE'},{path:'ApprovalHistoryModel>LINE_CLAIM_CATEGORY'}], formatter: '.formatter.oClaimCategDesc'}"/>
+									<Text text="{path: 'RouteApprovalModel>CLAIM_CATEGORY', formatter: '.formatter.oClaimCategDesc'}"/>
 									<Text text="{RouteApprovalModel>CLAIM_OWNER_ID} / {RouteApprovalModel>Claim_Owner_FullName}"/>
 									<Text text="{RouteApprovalModel>CLAIM_REFERENCE}"/>
 									<Text

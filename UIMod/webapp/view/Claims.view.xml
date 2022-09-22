@@ -16,7 +16,7 @@
 					<Title text="Claim Report" visible="{=${ViewData>/oTile} === 'HisRep'}"/>
 					<Title text="Claim Upload" visible="{=${ViewData>/oTile} === 'Upload'}"/>
 					<Title text="Claim Coordinator" visible="{=${ViewData>/oTile} === 'Coordinat' || ${ViewData>/oTile} === 'CoordinatSch'}"/>
-					<Title text="Import Posting" visible="{=${ViewData>/oTile} === 'Finance'}"/>
+					<Title text="Finance Upload" visible="{=${ViewData>/oTile} === 'Finance'}"/>
 				</contentMiddle>
 				<contentRight>
 					<Image src="images/mohh.jpg" width="{ViewData>/width}" height="{ViewData>/height}"></Image>
@@ -42,9 +42,8 @@
 						<l:content>
 							<VBox visible="{=${ViewData>/oTile} === 'Admin'}">
 								<Label text="Employee"/>
-								<Input id="inpEmpID" width="100%" value="{ViewData>/EmpID}" valueHelpRequest="onEmpSearchOpen('ViewData', 'Inactive', 'A')"
-									showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1"
-									showTableSuggestionValueHelp="false"/>
+								<Input id="inpEmpID" width="100%" value="{ViewData>/EmpID}" valueHelpRequest="onEmpSearchOpen('ViewData', 'A')" showValueHelp="true"
+									showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
 							</VBox>
 						</l:content>
 					</l:Grid>
@@ -52,9 +51,8 @@
 						<l:content>
 							<VBox visible="{=${ViewData>/oTile} === 'AdminSch'}">
 								<Label text="Employee"/>
-								<Input id="inpEmpIDsch" width="100%" value="{ViewData>/EmpID}" valueHelpRequest="onEmpSearchOpen('ViewData', 'Inactive','SCH')"
-									showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1"
-									showTableSuggestionValueHelp="false"/>
+								<Input id="inpEmpIDsch" width="100%" value="{ViewData>/EmpID}" valueHelpRequest="onEmpSearchOpen('ViewData', 'SCH')" showValueHelp="true"
+									showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
 							</VBox>
 						</l:content>
 					</l:Grid>
@@ -137,7 +135,7 @@
 			</Panel>
 			<Panel width="auto" class="sapUiTinyMargin" accessibleRole="Region" visible="{=${ViewData>/oTile} === 'Finance'}">
 				<content>
-					<Title class="sapUiSmallMargin" text="Upload Section" titleStyle="H3"/>
+					<Title class="sapUiSmallMargin" text="Finance Upload Section" titleStyle="H3"/>
 					<l:Grid class="sapUiTinyMargin" hSpacing="1" vSpacing="0" defaultSpan="XL4 L4 M4 S12" defaultIndent="L0 M0 S0">
 						<l:content>
 							<VBox >
@@ -158,65 +156,42 @@
 										<core:HTML content='&lt;input class="Posting"/&gt;'></core:HTML>
 									</fb:control>
 								</fb:FilterGroupItem>
-								<fb:FilterGroupItem id="fgiEDateSMS" groupName="Basic" name="CI" label="Import Date" partOfCurrentVariant="true" visibleInFilterBar="true">
+								<fb:FilterGroupItem id="fgiEDateSMS" groupName="Basic" name="CI" label="Replicate Date" partOfCurrentVariant="true"
+									visibleInFilterBar="true">
 									<fb:control>
 										<core:HTML content='&lt;input class="Replicate"/&gt;'></core:HTML>
 									</fb:control>
 								</fb:FilterGroupItem>
-								<fb:FilterGroupItem id="fgiScholarSMS" groupName="Basic" name="D" label="Uploader ID" partOfCurrentVariant="true" visibleInFilterBar="true">
+								<fb:FilterGroupItem id="fgiScholarSMS" groupName="Basic" name="D" label="Scholar ID" partOfCurrentVariant="true" visibleInFilterBar="true">
 									<fb:control>
-										<Input width="100%" value="{ViewData>/Emp_SMS_finance}" valueHelpRequest="onEmpSearchOpen('ViewData', 'Active','FIN')" showValueHelp="true"
+										<Input width="100%" value="{ViewData>/Emp_SMS_finance}" valueHelpRequest="onEmpSearchOpen('ViewData', 'FIN')" showValueHelp="true"
 											showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
-									</fb:control>
-								</fb:FilterGroupItem>
-								<fb:FilterGroupItem id="fgiScholarExp" groupName="Basic" name="E" label="Export Reference" partOfCurrentVariant="true"
-									visibleInFilterBar="true">
-									<fb:control>
-										<Input width="100%" value="{ViewData>/SMS_EXP_REF}"/>
-									</fb:control>
-								</fb:FilterGroupItem>
-								<fb:FilterGroupItem id="fgiScholarLinref" groupName="Basic" name="G" label="Line Item Reference" partOfCurrentVariant="true"
-									visibleInFilterBar="true">
-									<fb:control>
-										<Input width="100%" value="{ViewData>/SMS_LINE_REF}"/>
-									</fb:control>
-								</fb:FilterGroupItem>
-								<fb:FilterGroupItem id="fgiScholarStatusf" groupName="Basic" name="F" label="Status" partOfCurrentVariant="true" visibleInFilterBar="true">
-									<fb:control>
-										<ComboBox id="cbCsidA" selectedKey="{ViewData>/SMS_Stats}" change="onValidData">
-											<core:Item key="Success" text="Success"/>
-											<core:Item key="Error" text="Error"/>
-										</ComboBox>
 									</fb:control>
 								</fb:FilterGroupItem>
 							</fb:filterGroupItems>
 						</fb:FilterBar>
-						<Table id="oTableFinance" inset="false" sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true"
-							items="{path:'oFinanceData>/' , sorter: { path: 'Timestamp', descending: true}}">
+						<Table id="oTableFinance" inset="false" sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true" items="{ path: 'oFinanceData>/'}">
 							<headerToolbar>
 								<OverflowToolbar>
 									<content>
-										<Title text="Finance Details ({ViewData>/oTableFinanceLength})"/>
+										<Title text="Finance Details ({= ${oFinanceData>/}.length})"/>
 										<ToolbarSpacer/>
-										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownloadDel('oTableFinance', 'Finance')"/>
+										<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownloadDel('oFinanceData', 'Finance')"/>
 									</content>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column>
-									<Text text="Uploader ID"/>
+									<Text text="Employee"/>
 								</Column>
 								<Column >
 									<Text text="Export Reference"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Text text="Line Item Reference"/>
-								</Column>
-								<Column minScreenWidth="Desktop" demandPopin="true">
 									<Text text="Posting Date"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
-									<Text text="Import Date/time"/>
+									<Text text="Replicate Date/time"/>
 								</Column>
 								<Column minScreenWidth="Desktop" demandPopin="true">
 									<Text text="Invoice Number"/>
@@ -232,11 +207,10 @@
 								</Column>
 							</columns>
 							<items>
-								<ColumnListItem type="Navigation" press="onFinanceSelect">
+								<ColumnListItem type="Active">
 									<cells>
 										<Text text="{oFinanceData>Employee_ID}"/>
-										<Text text="{oFinanceData>Export_Reference}"/>
-										<Text text="{oFinanceData>Internal_Claim_Reference}"/>
+										<ObjectIdentifier title="{oFinanceData>Export_Reference}"/>
 										<Text text="{ path: 'oFinanceData>Posting_Date', formatter: '.formatter.oClaimDate'}"/>
 										<Text text="{ path: 'oFinanceData>Timestamp', formatter: '.formatter.DateStamp'}"/>
 										<Text text="{oFinanceData>Invoice_Number}"/>
@@ -256,11 +230,11 @@
 					<headerToolbar>
 						<OverflowToolbar>
 							<content>
-								<Title text="Delegatee Details ({ViewData>/delegLength})"/>
+								<Title text="Delegatee Details ({= ${oDelegate>/}.length})"/>
 								<ToolbarSpacer/>
-								<SearchField id="search_delegate" width="25%" placeholder="Search" liveChange="onSearchDeleg($event, 'oTableDelegate')"
+								<SearchField width="25%" placeholder="Search" liveChange="onSearchDeleg($event, 'oTableDelegate')"
 									visible="{=${ViewData>/oTile}==='ADDelegate'}"/>
-								<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownloadDel('oTableDelegate', 'Delegatee')"
+								<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownloadDel('oDelegate', 'Delegatee')"
 									visible="{=${ViewData>/oTile}==='ADDelegate'}"/>
 								<Button text="ADD" icon="sap-icon://add" iconFirst="true" type="Emphasized" press="onDelegateOpen"/>
 								<Button text="{i18n>BTN_DELETE}" visible="false" icon="sap-icon://delete" iconFirst="true" type="Reject"
@@ -318,8 +292,8 @@
 					icon="sap-icon://work-history"/>
 				<Button text="NEXT"
 					enabled="{=${ViewData>/ClaimType}==='' ? false : ${ViewData>/EmpID}==='' ? false : ${ViewData>/oTile}==='Upload' ? false : true}"
-					visible="{=${ViewData>/ClaimType}==='' ? false : ${ViewData>/oTile} === 'Upload' ? false : ${ViewData>/oTile}==='Finance' ? false: true}"
-					press="onNextForm('F')" type="Emphasized" icon="sap-icon://open-command-field"/>
+					visible="{=${ViewData>/ClaimType}==='' ? false : ${ViewData>/oTile} === 'Upload' ? false : true}" press="onNextForm('F')" type="Emphasized"
+					icon="sap-icon://open-command-field"/>
 			</OverflowToolbar>
 		</footer>
 	</Page>
