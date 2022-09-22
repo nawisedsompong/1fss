@@ -109,7 +109,7 @@
 							<Text visible="{= !${ViewData>/DMode}}" text="{oClaimData>/Entitlement_Type}"/>
 						</VBox>
 						<VBox class="sapUiMediumMarginEnd">
-							<Label text="{i18n>LBL_PROR_TYPE}" wrapping="true" required="true"/>
+							<Label text="Probation Type" wrapping="true" required="true"/>
 							<ComboBox id="cbProtType" width="100%" fieldGroupIds="fgInput" required="true" selectedKey="{oClaimData>/Probation_Type}"
 								value="{oClaimData>/Probation_Type}" visible="{ViewData>/DMode}">
 								<core:Item key="N/A" text="N/A"/>

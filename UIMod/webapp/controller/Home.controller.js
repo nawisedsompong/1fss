@@ -1,10 +1,11 @@
 sap.ui.define([
 	"BenefitClaim/ZBenefitClaim/controller/BaseController",
-	"sap/ui/core/mvc/Controller"
-], function (BaseController, Controller) {
+	"sap/ui/core/mvc/Controller",
+	"../model/formatter"
+], function (BaseController, Controller, formatter) {
 	"use strict";
 	return BaseController.extend("BenefitClaim.ZBenefitClaim.controller.Home", {
-
+		formatter: formatter,
 		navToDetailPage: function (oEvent, sTargetPage, tilename) {
 			var sTarget = sTargetPage + "RouteName";
 			this.getView().getModel("ViewData").setProperty("/oTile", tilename);

@@ -98,7 +98,7 @@
 							visible="{=${CPClaim_Master>/CLAIM_STATUS}==='Pending for Submission' ? true : ${CPClaim_Master>/CLAIM_STATUS}===undefined ? true : false}">
 							<Label text="Select Approver" required="true"/>
 							<ComboBox id="cb_sdfrapprover" items="{oApprovers>/}" selectedKey="{CPClaim_Master>/FIRST_LEVEL_APPROVER}" width="100%" required="true"
-								fieldGroupIds="fgInput" editable="{ViewData>/DMode}" change="onValidData">
+								fieldGroupIds="fgInput" editable="{ViewData>/DMode}" change="onChangeApprover">
 								<core:Item key="{oApprovers>EMPLOYEE_ID}" text="{oApprovers>EMPLOYEE_ID} - {oApprovers>FULLNAME}"/>
 							</ComboBox>
 							<!--<Text visible="{= !${ViewData>/DMode}}" text="{CPClaim_Master>/FIRST_LEVEL_APPROVER}"/>-->

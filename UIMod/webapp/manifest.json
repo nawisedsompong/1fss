@@ -35,6 +35,13 @@
 				"settings": {
 					"odataVersion": "4.0"
 				}
+			},
+			"CalClaim": {
+				"uri": "/BenefietCAP/calclaim/",
+				"type": "OData",
+				"settings": {
+					"odataVersion": "4.0"
+				}
 			}
 		}
 	},
@@ -107,6 +114,15 @@
 			},
 			"SfService": {
 				"dataSource": "SfService",
+				"settings": {
+					"autoExpandSelect": true,
+					"operationMode": "Server",
+					"groupId": "$direct",
+					"synchronizationMode": "None"
+				}
+			},
+			"CalClaim": {
+				"dataSource": "CalClaim",
 				"settings": {
 					"autoExpandSelect": true,
 					"operationMode": "Server",

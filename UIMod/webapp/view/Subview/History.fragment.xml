@@ -12,7 +12,7 @@
 					</ComboBox>
 				</fb:control>
 			</fb:FilterGroupItem>
-			<fb:FilterGroupItem id="fgiEmployee" groupName="Basic" name="B" label="Claim Type" partOfCurrentVariant="true"
+			<fb:FilterGroupItem id="fgiEmployee" groupName="Basic" name="B" label="Claim Code" partOfCurrentVariant="true"
 				visibleInFilterBar="{=(${ViewData>/oTile}==='PaymentUpload'|| ${ViewData>/oTile}==='CoordinatSch' || ${ViewData>/oTile}==='HistoryCoordSch') ? false: true}">
 				<fb:control>
 					<Input width="100%" value="{ViewData>/ClaimCate}" valueHelpRequest="onClaimTypeOpen" showValueHelp="true" showSuggestion="true"
@@ -20,7 +20,7 @@
 						enabled="{=(${ViewData>/ClaimCateg}==='WRC'||${ViewData>/ClaimCateg}==='WRC_HR'||${ViewData>/ClaimCateg}==='COV'||${ViewData>/ClaimCateg}==='TC'||${ViewData>/ClaimCateg}==='SP'||${ViewData>/ClaimCateg}==='SP1'||${ViewData>/ClaimCateg}==='SP2'||${ViewData>/ClaimCateg}==='SP3')? false : true}"/>
 				</fb:control>
 			</fb:FilterGroupItem>
-			<fb:FilterGroupItem id="fgiStatus" groupName="Basic" name="C" label="Status" partOfCurrentVariant="true" visibleInFilterBar="true">
+			<fb:FilterGroupItem id="fgiStatus" groupName="Basic" name="C" label="Claim Status" partOfCurrentVariant="true" visibleInFilterBar="true">
 				<fb:control>
 					<ComboBox id="cbCsid" selectedKey="{ViewData>/Status}" change="onValidData">
 						<core:Item key="Approved" text="Approved"/>
@@ -34,17 +34,19 @@
 					</ComboBox>
 				</fb:control>
 			</fb:FilterGroupItem>
-			<fb:FilterGroupItem id="fgiCreatedDate" groupName="Basic" name="F" label="Start Date" partOfCurrentVariant="true" visibleInFilterBar="true">
+			<fb:FilterGroupItem id="fgiCreatedDate" groupName="Basic" name="F" label="Claim Start Date" partOfCurrentVariant="true"
+				visibleInFilterBar="true">
 				<fb:control>
 					<core:HTML content='&lt;input class="HisdatePicker1"/&gt;'></core:HTML>
 				</fb:control>
 			</fb:FilterGroupItem>
-			<fb:FilterGroupItem id="fgiCreatedDate1" groupName="Basic" name="FI" label="End Date" partOfCurrentVariant="true" visibleInFilterBar="true">
+			<fb:FilterGroupItem id="fgiCreatedDate1" groupName="Basic" name="FI" label="Claim End Date" partOfCurrentVariant="true"
+				visibleInFilterBar="true">
 				<fb:control>
 					<core:HTML content='&lt;input class="HisdatePicker2"/&gt;'></core:HTML>
 				</fb:control>
 			</fb:FilterGroupItem>
-			<fb:FilterGroupItem id="fgiClaim_ref" groupName="Basic" name="E" label="Claim Reference" partOfCurrentVariant="true"
+			<fb:FilterGroupItem id="fgiClaim_ref" groupName="Basic" name="E" label="Claim Reference No" partOfCurrentVariant="true"
 				visibleInFilterBar="true">
 				<fb:control>
 					<Input width="100%" value="{ViewData>/ClaimNo}"/>
@@ -53,7 +55,7 @@
 			<fb:FilterGroupItem id="fgiClaim_owner" groupName="Basic" name="G" label="Scholar ID" partOfCurrentVariant="true"
 				visibleInFilterBar="{=${ViewData>/oTile}==='HistoryCoordSch' }">
 				<fb:control>
-					<Input id="inpClaimOwner" width="100%" value="{ViewData>/Claim_Owner}" valueHelpRequest="onEmpSearchOpen('ViewData', 'ClmOwn')"
+					<Input id="inpClaimOwner" width="100%" value="{ViewData>/Claim_Owner}" valueHelpRequest="onEmpSearchOpen('ViewData','Inactive','ClmOwn')"
 						showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1"
 						showTableSuggestionValueHelp="false"/>
 				</fb:control>
@@ -61,23 +63,23 @@
 		</fb:filterGroupItems>
 	</fb:FilterBar>
 	<MessageStrip text="* Estimated payment date may be subject to change and will be finalised by the second week of the following month."
-		type="Information" showIcon="true"></MessageStrip>
+		type="Information" showIcon="true"
+		visible="{=(${oEmpData>/COMPANY}==='MOHHSCH' || ${ViewData>/oTile}==='HistoryCoordSch' || ${ViewData>/oTile}==='PaymentUpload') ? false : true}"></MessageStrip>
+	<MessageStrip text="* Receipt date refers to claim submission date for multiple line item claims" type="Information" showIcon="true"
+		visible="{=(${oEmpData>/COMPANY}==='MOHHSCH' || ${ViewData>/oTile}==='HistoryCoordSch' || ${ViewData>/oTile}==='PaymentUpload') ? false : true}"></MessageStrip>
 	<Table id="tbClaimHistory"
 		items="{path:'ApprovalModel>/' , sorter: [{ path: 'CATEGORY_CODE', descending: false},{ path: 'CLAIM_DATE', descending: false}]}"
-		inset="false" sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true">
+		inset="false" sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true" updateFinished="onTableCount($event,'tbClaimHistory')"
+		growing="true" growingThreshold="1000">
 		<headerToolbar>
 			<OverflowToolbar>
 				<content>
-					<Title text="Claim Records ({= ${ApprovalModel>/}.length})" level="H2" class="sapUiLargeMarginEnd"/>
+					<Title text="Claim Records ({ViewData>/tbClaimHistory})" level="H2" class="sapUiLargeMarginEnd"/>
 					<ToolbarSpacer/>
 					<SearchField placeholder="Search" width="20%" class="sapUiLargeMarginBegin" visible="false" search="onSearchkey"></SearchField>
 					<Button icon="sap-icon://search" tooltip="EXPORT DATA" type="Accept" press="onSearchkey" visible="false"/>
-					<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownloadExcel"/>
-					<!--<Label text="Start/End Date"></Label>
-								<DateRangeSelection width="20%" displayFormat="dd-MM-yyyy"/>
-								<Button icon="sap-icon://reset"/>
-								<Button icon="sap-icon://download"/>
-								<Button icon="sap-icon://sort"/>-->
+					<Button tooltip="Sort" icon="sap-icon://sort" press="onSortPress" visible="false"/>
+					<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" text="EXPORT" press="onDownloadExcel"/>
 				</content>
 			</OverflowToolbar>
 		</headerToolbar>
@@ -86,7 +88,7 @@
 				<Label text="Claim Category" design="Bold" wrapping="true"/>
 			</Column>
 			<Column width="{=${device>/isPhone}=== true ? 'auto' : '17%'}">
-				<Label text="Claim Type" design="Bold" wrapping="true"/>
+				<Label text="Claim Description" design="Bold" wrapping="true"/>
 			</Column>
 			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '8%'}"
 				visible="{=${ViewData>/oTile}==='HistoryCoord' ||${ViewData>/oTile}==='HistoryCoordSch' }">
@@ -99,15 +101,15 @@
 				visible="{=(${oEmpData>/COMPANY}==='MOHHSCH' || ${ViewData>/oTile}==='HistoryCoordSch' || ${ViewData>/oTile}==='PaymentUpload') ? false : true}">
 				<Label text="Payroll Rep. No" design="Bold" wrapping="true"/>
 			</Column>
-			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '8%'}">
-				<Label text="Claim / Receipt Date" design="Bold" wrapping="true"/>
+			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '7%'}">
+				<Label text="Claim Date" design="Bold" wrapping="true"/>
+			</Column>
+			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '7%'}">
+				<Label text="Receipt Date" design="Bold" wrapping="true" required="true"/>
 			</Column>
 			<Column minScreenWidth="Tablet" demandPopin="true">
 				<Label text="Claim Amount/Unit" design="Bold" wrapping="true"/>
 			</Column>
-			<!--	<Column minScreenWidth="Tablet" demandPopin="true">
-							<Label text="Pay Component" design="Bold" wrapping="true"/>
-						</Column>-->
 			<Column minScreenWidth="Tablet" demandPopin="true"
 				visible="{=(${oEmpData>/COMPANY}==='MOHHSCH' || ${ViewData>/oTile}==='HistoryCoordSch' || ${ViewData>/oTile}==='PaymentUpload') ? false : true}">
 				<Label text="Estimated Payment Date" design="Bold" wrapping="true" required="true"/>
@@ -126,16 +128,16 @@
 					<Text text="{path: 'ApprovalModel>CATEGORY_CODE', formatter: '.formatter.oClaimDesc'}"/>
 					<Text
 						text="{parts:[{path:'ApprovalModel>CLAIM_CATEGORY'},{path:'ApprovalModel>LINE_CLAIM_CODE'},{path:'ApprovalModel>LINE_CLAIM_CATEGORY'}], formatter: '.formatter.oClaimCategDesc'}"/>
-					<Text text="{ApprovalModel>CLAIM_OWNER_ID}" visible="{=${ViewData>/oTile}==='HistoryCoord' || ${ViewData>/oTile}==='HistoryCoordSch'}"/>
-					<!--	<ObjectIdentifier title="{=${ViewData>/oTile}==='HistoryCoord'}" text="{path: 'ApprovalModel>CLAIM_CATEGORY', formatter: '.formatter.oClaimCategDesc'}"/>
-				-->
-					<ObjectIdentifier title="{ApprovalModel>CLAIM_REFERENCE}" text="{path: 'ApprovalModel>cancelreference', formatter: '.formatter.oClaimRef'}"/>
+					<ObjectIdentifier text="{ApprovalModel>Claim_Owner_FullName}" title="{ApprovalModel>CLAIM_OWNER_ID}"
+						visible="{=${ViewData>/oTile}==='HistoryCoord' || ${ViewData>/oTile}==='HistoryCoordSch'}"/>
+					<ObjectIdentifier title="{ApprovalModel>CLAIM_REFERENCE}"
+						text="{parts:[{path: 'ApprovalModel>cancelreference'},{path:'ApprovalModel>CANCEL_PARENT_CLAIM'}], formatter: '.formatter.oClaimRef'}"/>
 					<Text text="{ApprovalModel>Claim_Ref_Number}"
 						visible="{=(${ApprovalModel>Rep_Status}==='Error' || ${oEmpData>/COMPANY}==='MOHHSCH') ? false : true}"/>
-					<Text
-						text="{ path: 'ApprovalModel>CLAIM_DATE', formatter: '.formatter.oClaimDate' } / { path: 'ApprovalModel>RECEIPT_DATE', formatter: '.formatter.oClaimDate' }"/>
+					<Text text="{ path: 'ApprovalModel>CLAIM_DATE', formatter: '.formatter.oClaimDate' }"/>
+					<Text text="{ path: 'ApprovalModel>RECEIPT_DATE', formatter: '.formatter.oClaimDate' }"
+						visible="{path: 'ApprovalModel>CATEGORY_CODE', formatter: '.formatter.oReceiptDatevisible'}"/>
 					<Text text="{ path:'ApprovalModel>AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
-					<!--	<Text text="{oHistoryDetails>PayComp}"/>-->
 					<Text text="{ path: 'ApprovalModel>ESTIMATEPAYMENTDATE',formatter: '.formatter.oClaimDate' }"
 						visible="{=(${ViewData>/oTile}==='HistoryCoordSch' || ${ViewData>/oTile}==='PaymentUpload' || ${oEmpData>/COMPANY}==='MOHHSCH') ? false : true}"/>
 					<ObjectStatus
@@ -149,7 +151,6 @@
 							visible="{parts:[{path:'ApprovalModel>CLAIM_STATUS'},{path:'ApprovalModel>CANCELAFTERAPPROVE'},{path:'ApprovalModel>Claim_Ref_Number'},{path:'ApprovalModel>CATEGORY_CODE'},{path:'ViewData>/oTile'}], formatter: '.formatter.oClaimStatus'}"
 							tooltip="Withdraw" type="Reject" press="onSelectItem($event, true, 'ApprovalModel', 'C')"/>
 					</HBox>
-					<!--<core:Icon src="sap-icon://print" press="onPressFinance"/> CANCELAFTERAPPROVE-->
 				</cells>
 			</ColumnListItem>
 		</items>

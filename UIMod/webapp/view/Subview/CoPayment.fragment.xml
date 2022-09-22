@@ -4,10 +4,10 @@
 		<headerToolbar>
 			<OverflowToolbar>
 				<content>
-					<Title text="{i18n>TIT_COPAY_DATA} ({= ${oCopayData>/}.length})" class="sapUiSmallMargin"/>
+					<Title text="{i18n>TIT_COPAY_DATA} ({ViewData>/copayLength})" class="sapUiSmallMargin"/>
 					<ToolbarSpacer/>
-					<SearchField width="25%" placeholder="Search Description" liveChange="onSearchAdmin($event,'oTableCoPay')"/>
-					<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownloadE('oCopayData')"/>
+					<SearchField id="search_copay" width="25%" placeholder="Search" liveChange="onSearchAdmin($event,'oTableCoPay','copayLength')"/>
+					<Button icon="sap-icon://download" tooltip="EXPORT DATA" type="Accept" press="onDownload('oCopayData', 'oTableCoPay')"/>
 					<Button text="{i18n>BTN_NEW_COPAY}" icon="sap-icon://add" iconFirst="true" type="Emphasized" press="onAddCopayOpen"/>
 					<Button text="{i18n>BTN_DELETE}" icon="sap-icon://delete" iconFirst="true" type="Reject" press="onDeleteCoPay"/>
 				</content>
@@ -15,10 +15,10 @@
 		</headerToolbar>
 		<columns>
 			<Column width="{=${device>/isPhone}=== true ? 'auto' : '23%'}">
-				<Text text="{i18n>LBL_CLAIM}"/>
+				<Text text="{i18n>LBL_BEN_DESC}"/>
 			</Column>
 			<Column minScreenWidth="Desktop" demandPopin="true">
-				<Text text="{i18n>LBL_CLINIC}"/>
+				<Text text="{i18n>LBL_CLINIC_DESC}"/>
 			</Column>
 			<Column minScreenWidth="Desktop" demandPopin="true">
 				<Text text="Medical Leave"/>
@@ -54,8 +54,8 @@
 					<Text
 						text="{ path:'oCopayData>Claim_Amount', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
 					<HBox justifyContent="End">
-						<Button icon="sap-icon://copy" tooltip="{i18n>TLP_COPY_ELIG}" type="Transparent" press="onCopyCoPay"/>
-						<Button icon="sap-icon://edit" tooltip="{i18n>TLP_EDIT_COPAY}" type="Transparent" press="onEditCoPay"/>
+						<Button icon="sap-icon://copy" type="Transparent" press="onCopyCoPay"/>
+						<Button icon="sap-icon://edit" type="Transparent" press="onEditCoPay"/>
 					</HBox>
 				</cells>
 			</ColumnListItem>

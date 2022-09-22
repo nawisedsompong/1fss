@@ -48,9 +48,8 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="{i18n>LBL_AMOUNT}" required="true"/>
-							<Input id="inp_SDFCamnt" required="true" fieldGroupIds="fgInput"
-								value="{CPClaim>/CLAIM_AMOUNT}"
-								visible="{ViewData>/DMode}" liveChange="onValidateDecimalValue"/>
+							<Input id="inp_SDFCamnt" required="true" fieldGroupIds="fgInput" value="{CPClaim>/CLAIM_AMOUNT}" visible="{ViewData>/DMode}"
+								liveChange="onValidateDecimalValue"/>
 							<Text visible="{= !${ViewData>/DMode}}"
 								text="{ path:'CPClaim>/CLAIM_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
 						</VBox>
@@ -98,13 +97,12 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="{i18n>LBL_POST_CURR}"/>
-							<!--	<Input id="inp_CPCcurr" required="true" fieldGroupIds="fgInput" value="{CPClaim>/POST_CURRENCY}" visible="{ViewData>/DMode}"/>-->
 							<Text text="{CPClaim>/POST_CURRENCY}"/>
 						</VBox>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="{i18n>LBL_POST_CLAIM_AMNT}"/>
-							<!--<Input id="inp_CPC_amnt" required="true" fieldGroupIds="fgInput" value="{CPClaim>/POST_CLAIM_AMOUNT}" visible="{ViewData>/DMode}"/>-->
-							<Text text="{CPClaim>/POST_CLAIM_AMOUNT}"/>
+							<Text
+								text="{ path:'CPClaim>/POST_CLAIM_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
 						</VBox>
 					</l:content>
 				</l:Grid>
@@ -112,9 +110,6 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="{i18n>LBL_POST_DATE}"/>
-							<!--<DatePicker id="dp_CPCdate" required="true" fieldGroupIds="fgInput"
-								value="{CPClaim>/POST_DATE}"
-								visible="{ViewData>/DMode}" displayFormat="dd.MM.yyyy" valueFormat="yyyy-MM-dd"/>-->
 							<Text text="{ path: 'CPClaim>/POST_DATE', formatter: '.formatter.oClaimDate' }"/>
 						</VBox>
 					</l:content>
@@ -133,7 +128,7 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<UploadCollection id="CPCUploadCollection" maximumFilenameLength="50" filenameLengthExceed="onFileNameExceed" maximumFileSize="10"
-								multiple="false" uploadButtonInvisible="{parts:[{path:'ViewData>/DMode'},{path:'ViewData>/oTile'}],formatter:'.formatter.oPlusVisible'}"
+								multiple="false" uploadButtonInvisible="{parts:[{path:'ViewData>/DMode'},{path:'ViewData>/oTabValue'}],formatter:'.formatter.oPlusVisible'}"
 								fileType="jpg,jpeg,png,pdf" change="onChange($event, ${CPClaim>/CLAIM_REFERENCE})" fileSizeExceed="onFileSizeExceed"
 								selectionChange="onSelectionChange" typeMissmatch="onTypeMissmatch" uploadComplete="onUploadComplete(${CPClaim>/CLAIM_REFERENCE})"
 								fileDeleted="onFileDeleted" beforeUploadStarts="onBeforeUploadStarts" items="{ path: 'oAttachItems>/', templateShareable: false }">
@@ -147,7 +142,7 @@
 								</toolbar>
 								<items>
 									<UploadCollectionItem documentId="{oAttachItems>ID}" fileName="{oAttachItems>fileName}" visibleEdit="false"
-										visibleDelete="{=${oAttachItems>delete} || ${ViewData>/oTile}==='SMSApprovals'}" press="onDownloadFile">
+										visibleDelete="{=${oAttachItems>delete} || ${ViewData>/oTabValue}!=='History'}" press="onDownloadFile">
 										<attributes>
 											<ObjectAttribute title="{i18n>TIT_UPLOADEDON}" text="{ path: 'oAttachItems>date', formatter: '.formatter.oClaimDate'}" active="false"/>
 											<ObjectAttribute title="{i18n>TIT_UPLOADEDBY}" text="{oAttachItems>name}" active="false"/>
@@ -163,7 +158,8 @@
 		<buttons>
 			<!--<Button text="SAVE AS DRAFT" type="Emphasized" icon="sap-icon://save" press="onAddData($event, 'CPClaim')" visible="{ViewData>/DMode}"/>-->
 			<Button text="{ViewData>/BtnTxt}" press="onAddLineData($event, 'CPClaim','CPClaim_Master')" type="Emphasized" visible="{ViewData>/DMode}"/>
-			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseLineDialog('CPClaim_Master')" type="Reject"/>
+			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseLineDialog('CPClaim_Master')" type="Reject" visible="{ViewData>/oFinanc}"/>
+			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseFinance" type="Reject" visible="{=!${ViewData>/oFinanc}}"/>
 		</buttons>
 	</Dialog>
 </core:FragmentDefinition>

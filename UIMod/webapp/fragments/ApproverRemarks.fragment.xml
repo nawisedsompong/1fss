@@ -5,7 +5,7 @@
 		<l:content>
 			<VBox class="sapUiMediumMarginEnd">
 				<Label text="Claim Owner" wrapping="true"/>
-				<Text text="{oAppRemarks>/EMPLOYEE_ID}"/>
+				<Text text="{oAppRemarks>/EMPLOYEE_ID} - {oAppRemarks>/Employee_FullName}"/>
 			</VBox>
 			<VBox class="sapUiMediumMarginEnd">
 				<Label text="Claim Status" wrapping="true"/>
@@ -19,8 +19,7 @@
 		<l:content>
 			<VBox class="sapUiMediumMarginEnd">
 				<Label text="Submitted By" wrapping="true"/>
-				<Text
-					text="{=${oAppRemarks>/SUBMITTED_BY}==='' ? ${oAppRemarks>/EMPLOYEE_ID} : ${oAppRemarks>/SUBMITTED_BY}===null ? ${oAppRemarks>/EMPLOYEE_ID} : ${oAppRemarks>/SUBMITTED_BY} }"/>
+				<Text text="{oAppRemarks>/SUBMITTED_BY} - {oAppRemarks>/SUBMITTEDBY_FullName}"/>
 			</VBox>
 			<VBox class="sapUiMediumMarginEnd">
 				<Label text="{i18n>LBL_SUBM_DATE}"/>
@@ -31,7 +30,7 @@
 	<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0" visible="{=${oAppRemarks>/REMARKS_REJECTION}!==''}">
 		<l:content>
 			<VBox class="sapUiMediumMarginEnd">
-				<Label text="Cancellation Remarks" wrapping="true"/>
+				<Label text="Cancellation/Rejection Remarks" wrapping="true"/>
 				<Text text="{oAppRemarks>/REMARKS_REJECTION}" maxLines="3"/>
 			</VBox>
 		</l:content>
@@ -41,7 +40,7 @@
 			<VBox class="sapUiMediumMarginEnd">
 				<Table inset="false" items="{oAppRemarks>/LINE_ITEM}">
 					<columns>
-						<Column>
+						<Column width="55%">
 							<Text text="Approver"/>
 						</Column>
 						<Column minScreenWidth="Desktop" demandPopin="true">
@@ -54,7 +53,8 @@
 					<items>
 						<ColumnListItem type="Active">
 							<cells>
-								<ObjectIdentifier title="{parts:[{path:'oAppRemarks>APPROVER'},{path:'oAppRemarks>DELEGATION'}],formatter:'.formatter.oApproverVis'}"/>
+								<ObjectIdentifier title="{parts:[{path:'oAppRemarks>APPROVER'},{path:'oAppRemarks>DELEGATION'}],formatter:'.formatter.oApproverVis'}"
+									text="{parts:[{path:'oAppRemarks>APP_FNAME'},{path:'oAppRemarks>DELEG_FNAME'}],formatter:'.formatter.oApproverVis'}"/>
 								<Text text="{ path: 'oAppRemarks>APPROVED_ON', formatter: '.formatter.oClaimDate' }"/>
 								<ExpandableText maxCharacters="50" class="sapUiTinyMarginBottom sapUiTinyMarginTop" text="{oAppRemarks>APP_REMARKS}" overflowMode="Popover"/>
 							</cells>

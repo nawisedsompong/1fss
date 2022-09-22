@@ -10,8 +10,8 @@
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="{i18n>LBL_SCH_ID}" required="true"/>
 							<Input id="inp_paySchlrid" width="100%" required="true" fieldGroupIds="fgInput" editable="{ViewData>/DMode}" value="{PUpload>/SCHOLAR_ID}"
-								valueHelpRequest="onEmpSearchOpen('PUpload', 'PU')" showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true"
-								startSuggestion="1" showTableSuggestionValueHelp="false" visible="{ViewData>/DMode}"/>
+								valueHelpRequest="onEmpSearchOpen('PUpload','Active', 'PU')" showValueHelp="true" showSuggestion="true" valueHelpOnly="true"
+								filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false" visible="{ViewData>/DMode}"/>
 							<Text visible="{= !${ViewData>/DMode}}" text="{PUpload>/SCHOLAR_ID}"/>
 						</VBox>
 						<VBox class="sapUiMediumMarginEnd">
@@ -55,8 +55,9 @@
 				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0">
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
-							<Label text="{i18n>LBL_ITEM_DESC}"/>
-							<TextArea maxLength="50" width="100%" rows="2" value="{PUpload>/ITEM_DESC}" visible="{ViewData>/DMode}" liveChange="onChangeDataSpl"/>
+							<Label text="{i18n>LBL_ITEM_DESC}" required="true"/>
+							<TextArea id="taPayItemDesc" maxLength="50" width="100%" required="true" fieldGroupIds="fgInput" rows="2" value="{PUpload>/ITEM_DESC}"
+								visible="{ViewData>/DMode}" liveChange="onChangeDataSpl"/>
 							<Text visible="{= !${ViewData>/DMode}}" text="{PUpload>/ITEM_DESC}"/>
 						</VBox>
 					</l:content>
@@ -141,6 +142,27 @@
 						</VBox>
 					</l:content>
 				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_POST_CURR}"/>
+							<Text text="{PUpload>/POST_CURRENCY}"/>
+						</VBox>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_POST_CLAIM_AMNT}"/>
+							<Text
+								text="{ path:'PUpload>/POST_CLAIM_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
+				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+					<l:content>
+						<VBox class="sapUiMediumMarginEnd">
+							<Label text="{i18n>LBL_POST_DATE}"/>
+							<Text text="{ path: 'PUpload>/POST_DATE', formatter: '.formatter.oClaimDate' }"/>
+						</VBox>
+					</l:content>
+				</l:Grid>
 				<!--<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
@@ -175,9 +197,9 @@
 				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0">
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
-							<Label text="{i18n>LBL_REMARK}"/>
-							<TextArea maxLength="500" width="100%" rows="3" value="{PUpload>/ITEM_LINE_REMARKS_EMPLOYEE}" visible="{ViewData>/DMode}"
-								liveChange="onChangeDataSpl"/>
+							<Label text="{i18n>LBL_REMARK}" required="true"/>
+							<TextArea id="ta_payupremarks" required="true" fieldGroupIds="fgInput" maxLength="500" width="100%" rows="3"
+								value="{PUpload>/ITEM_LINE_REMARKS_EMPLOYEE}" visible="{ViewData>/DMode}" liveChange="onChangeDataSpl"/>
 							<Text visible="{= !${ViewData>/DMode}}" text="{PUpload>/ITEM_LINE_REMARKS_EMPLOYEE}"/>
 						</VBox>
 					</l:content>
@@ -187,7 +209,8 @@
 		<buttons>
 			<!--<Button text="SAVE AS DRAFT" type="Emphasized" icon="sap-icon://save" press="onAddData($event, 'PUpload')" visible="{ViewData>/DMode}"/>-->
 			<Button text="{ViewData>/BtnTxt}" press="onAddLineData($event, 'PUpload','PUpload_Master')" type="Emphasized" visible="{ViewData>/DMode}"/>
-			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseLineDialog('PUpload_Master')" type="Reject"/>
+			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseLineDialog('PUpload_Master')" type="Reject" visible="{ViewData>/oFinanc}"/>
+			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseFinance" type="Reject" visible="{=!${ViewData>/oFinanc}}"/>
 		</buttons>
 	</Dialog>
 </core:FragmentDefinition>

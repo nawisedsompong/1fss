@@ -20,14 +20,14 @@
 				<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
-							<Label text="{i18n>LBL_CURR}" required="true"/>
+							<Label text="{i18n>LBL_CURR}" />
 							<!--<Input id="inp_CPRCurrency" visible="{ViewData>/DMode}" fieldGroupIds="fgInput" width="100%" required="true" value="{PRequest>/CURRENCY}"
 								valueHelpRequest="onCurrencyOpen('PRequest')" showValueHelp="true" showSuggestion="true" valueHelpOnly="true" filterSuggests="true"
 								startSuggestion="1" showTableSuggestionValueHelp="false"/>-->
 							<Text text="{PRequest>/CURRENCY}"/>
 						</VBox>
 						<VBox class="sapUiMediumMarginEnd">
-							<Label text="{i18n>LBL_CLAIM_AMNT}"></Label>
+							<Label text="{i18n>LBL_CLAIM_AMNT}" required="true"></Label>
 							<Input id="inp_ABclaimamnt" editable="true" required="true" fieldGroupIds="fgInput" value="{PRequest>/CLAIM_AMOUNT}"
 								visible="{ViewData>/DMode}" liveChange="onValidateNumericValue"/>
 							<!--<layoutData>
@@ -75,7 +75,7 @@
 							<Label text="Select Approver" required="true"/>
 							<ComboBox id="cbCPR_Approver" width="100%" selectedKey="{PRequest>/FIRST_LEVEL_APPROVER}" editable="{ViewData>/DMode}"
 								required="{=${ViewData>/oTile}==='Approvals' ? true : ${ViewData>/DMode}}" fieldGroupIds="fgInput" items="{oApprovers>/}"
-								change="onValidData">
+								change="onChangeApprover">
 								<core:Item key="{oApprovers>EMPLOYEE_ID}" text="{oApprovers>EMPLOYEE_ID} - {oApprovers>FULLNAME}"/>
 							</ComboBox>
 							<!--<Text visible="{= !${ViewData>/DMode}}" text="{PRequest>/FIRST_LEVEL_APPROVER}"/>-->
@@ -115,7 +115,7 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<UploadCollection id="CPRUploadCollection" maximumFilenameLength="50" filenameLengthExceed="onFileNameExceed" maximumFileSize="10"
-								multiple="false" uploadButtonInvisible="{parts:[{path:'ViewData>/DMode'},{path:'ViewData>/oTile'}],formatter:'.formatter.oPlusVisible'}"
+								multiple="false" uploadButtonInvisible="{parts:[{path:'ViewData>/DMode'},{path:'ViewData>/oTabValue'}],formatter:'.formatter.oPlusVisible'}"
 								fileType="jpg,jpeg,png,pdf" change="onChange($event, ${PRequest>/CLAIM_REFERENCE})" fileSizeExceed="onFileSizeExceed"
 								selectionChange="onSelectionChange" typeMissmatch="onTypeMissmatch" uploadComplete="onUploadComplete(${PRequest>/CLAIM_REFERENCE})"
 								fileDeleted="onFileDeleted" beforeUploadStarts="onBeforeUploadStarts" items="{ path: 'oAttachItems>/', templateShareable: false }">
@@ -129,7 +129,7 @@
 								</toolbar>
 								<items>
 									<UploadCollectionItem documentId="{oAttachItems>ID}" fileName="{oAttachItems>fileName}" visibleEdit="false"
-										visibleDelete="{=${oAttachItems>delete} || ${ViewData>/oTile}==='SMSApprovals'}" press="onDownloadFile">
+										visibleDelete="{=${oAttachItems>delete} || ${ViewData>/oTabValue}!=='History'}" press="onDownloadFile">
 										<attributes>
 											<ObjectAttribute title="{i18n>TIT_UPLOADEDON}" text="{ path: 'oAttachItems>date', formatter: '.formatter.oClaimDate'}" active="false"/>
 											<ObjectAttribute title="{i18n>TIT_UPLOADEDBY}" text="{oAttachItems>name}" active="false"/>
@@ -161,7 +161,8 @@
 				visible="{=${ViewData>/oHis} === true ? false : ${ViewData>/App}}"/>
 			<Button text="REJECT" type="Reject" icon="sap-icon://decline" iconFirst="true" press="onSubmitD($event, 'CPR','PRequest','R')"
 				visible="{=${ViewData>/oHis} === true ? false : ${ViewData>/App}}"/>
-			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseDialog('PRequest')" type="Reject"/>
+			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseDialog('PRequest')" type="Reject" visible="{ViewData>/oFinanc}"/>
+			<Button text="{i18n>BTN_TXT_CANCEL}" press="onCloseFinance" type="Reject" visible="{=!${ViewData>/oFinanc}}"/>
 		</buttons>
 	</Dialog>
 </core:FragmentDefinition>
