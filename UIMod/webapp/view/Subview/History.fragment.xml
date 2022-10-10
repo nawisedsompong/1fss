@@ -27,9 +27,11 @@
 						<core:Item key="Rejected" text="Rejected"/>
 						<core:Item key="Pending for approval, Level 1" text="Pending for approval, Level 1"/>
 						<core:Item key="Pending for approval, Level 2" text="Pending for approval, Level 2"/>
+						<core:Item key="Pending for approval, Level 3" text="Pending for approval, Level 3"/>
 						<core:Item key="Cancelled" text="Cancelled"/>
 						<core:Item key="Cancellation Pending for approval, Level 1" text="Cancellation Pending for approval, Level 1"/>
 						<core:Item key="Cancellation Pending for approval, Level 2" text="Cancellation Pending for approval, Level 2"/>
+						<core:Item key="Cancellation Pending for approval, Level 3" text="Cancellation Pending for approval, Level 3"/>
 						<core:Item key="Cancellation Approved" text="Cancellation Approved"/>
 					</ComboBox>
 				</fb:control>
@@ -52,7 +54,7 @@
 					<Input width="100%" value="{ViewData>/ClaimNo}"/>
 				</fb:control>
 			</fb:FilterGroupItem>
-			<fb:FilterGroupItem id="fgiClaim_owner" groupName="Basic" name="G" label="Scholar ID" partOfCurrentVariant="true"
+			<fb:FilterGroupItem id="fgiClaim_owner" groupName="Basic" name="G" label="Scholar" partOfCurrentVariant="true"
 				visibleInFilterBar="{=${ViewData>/oTile}==='HistoryCoordSch' }">
 				<fb:control>
 					<Input id="inpClaimOwner" width="100%" value="{ViewData>/Claim_Owner}" valueHelpRequest="onEmpSearchOpen('ViewData','Inactive','ClmOwn')"
@@ -64,8 +66,6 @@
 	</fb:FilterBar>
 	<MessageStrip text="* Estimated payment date may be subject to change and will be finalised by the second week of the following month."
 		type="Information" showIcon="true"
-		visible="{=(${oEmpData>/COMPANY}==='MOHHSCH' || ${ViewData>/oTile}==='HistoryCoordSch' || ${ViewData>/oTile}==='PaymentUpload') ? false : true}"></MessageStrip>
-	<MessageStrip text="* Receipt date refers to claim submission date for multiple line item claims" type="Information" showIcon="true"
 		visible="{=(${oEmpData>/COMPANY}==='MOHHSCH' || ${ViewData>/oTile}==='HistoryCoordSch' || ${ViewData>/oTile}==='PaymentUpload') ? false : true}"></MessageStrip>
 	<Table id="tbClaimHistory"
 		items="{path:'ApprovalModel>/' , sorter: [{ path: 'CATEGORY_CODE', descending: false},{ path: 'CLAIM_DATE', descending: false}]}"
@@ -105,7 +105,7 @@
 				<Label text="Claim Date" design="Bold" wrapping="true"/>
 			</Column>
 			<Column minScreenWidth="Tablet" demandPopin="true" width="{=${device>/isPhone}=== true ? 'auto' : '7%'}">
-				<Label text="Receipt Date" design="Bold" wrapping="true" required="true"/>
+				<Label text="Receipt Date" design="Bold" wrapping="true"/>
 			</Column>
 			<Column minScreenWidth="Tablet" demandPopin="true">
 				<Label text="Claim Amount/Unit" design="Bold" wrapping="true"/>

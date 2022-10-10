@@ -7,7 +7,7 @@
 					<Button icon="sap-icon://nav-back" press="onNavBack"/>
 				</contentLeft>
 				<contentMiddle>
-					<Title text="Benefit Table Maintenance"/>
+					<Title text="Table Maintenance"/>
 				</contentMiddle>
 				<contentRight>
 					<Image src="images/mohh.jpg" width="{ViewData>/width}" height="{ViewData>/height}"></Image>

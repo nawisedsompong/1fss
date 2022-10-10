@@ -1,13 +1,15 @@
 <mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="BenefitClaim.ZBenefitClaim.controller.Admin"
 	xmlns:html="http://www.w3.org/1999/xhtml">
-	<Page title="Benefit Administration" class="sapUiSizeCompact Dashboard_bg" showFooter="true" navButtonPress="onNavBack" showNavButton="true">
+	<Page title="Benefits Plan Administration" class="sapUiSizeCompact Dashboard_bg" showFooter="true" navButtonPress="onNavBack"
+		showNavButton="true">
 		<customHeader>
 			<Bar>
 				<contentLeft>
 					<Button icon="sap-icon://nav-back" press="onNavBack"/>
 				</contentLeft>
 				<contentMiddle>
-					<Title text="Benefit Administration"/>
+					<Title
+						text="{=${ViewData>/oTile}==='Info' ? 'Benefits Plan Administration' : ${ViewData>/oTile}==='Elig' ? 'Eligibility Rule' : ${ViewData>/oTile}==='Copay' ? 'Co-Payment' : ${ViewData>/oTile}==='Approval' ? 'Approval Structure' : ${ViewData>/oTile}==='HRMC' ? 'HR Maker/Checker' : ${ViewData>/oTile}==='Coord' ? 'Claim Coordinator' : 'Admin Role' }"/>
 				</contentMiddle>
 				<contentRight>
 					<Image src="images/mohh.jpg" width="{ViewData>/width}" height="{ViewData>/height}"></Image>

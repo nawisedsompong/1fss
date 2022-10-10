@@ -12,9 +12,9 @@
 				<contentMiddle>
 					<Title text="{i18n>TIT_CLAIM_REQ}"
 						visible="{=${ViewData>/oTile} === 'Admin' ? true : ${ViewData>/oTile} === 'AdminSch' ? true : ${ViewData>/oTile} === 'Form' ? true : false}"/>
-					<Title text="Delegatee Action" visible="{=${ViewData>/oTile} === 'Delegate' || ${ViewData>/oTile} === 'ADDelegate'}"/>
+					<Title text="Admin Delegatee Action" visible="{=${ViewData>/oTile} === 'Delegate' || ${ViewData>/oTile} === 'ADDelegate'}"/>
 					<Title text="Claim Report" visible="{=${ViewData>/oTile} === 'HisRep'}"/>
-					<Title text="Claim Upload" visible="{=${ViewData>/oTile} === 'Upload'}"/>
+					<Title text="Claim(s) Upload" visible="{=${ViewData>/oTile} === 'Upload'}"/>
 					<Title text="Claim Coordinator" visible="{=${ViewData>/oTile} === 'Coordinat' || ${ViewData>/oTile} === 'CoordinatSch'}"/>
 					<Title text="Import Posting" visible="{=${ViewData>/oTile} === 'Finance'}"/>
 				</contentMiddle>

@@ -1,7 +1,7 @@
 <mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m"
 	controllerName="BenefitClaim.ZBenefitClaim.controller.ClaimForm" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:l="sap.ui.layout">
 	<Page title="{ViewData>/ClaimDesc}" class="sapUiSizeCompact Dashboard_bg" navButtonPress="onNavBackForm"
-		showFooter="{=${ViewData>/oTile} === 'MassR'}" showNavButton="true">
+		showFooter="{=${ViewData>/oTile} === 'MassR' || ${ViewData>/oTile}==='HisRep'}" showNavButton="true">
 		<customHeader>
 			<Bar>
 				<contentLeft>
@@ -44,8 +44,12 @@
 					visible="{=(${ViewData>/oTile} === 'Approvals' &amp;&amp; ${ViewData>/oTabValue}==='Pending')}"/>
 				<Button text="REJECT" type="Reject" icon="sap-icon://decline" iconFirst="true" press="onSubmit($event,'R')"
 					visible="{=(${ViewData>/oTile} === 'Approvals' &amp;&amp; ${ViewData>/oTabValue}==='Pending')}"/>
-				<Button text="EXPORT" type="Accept" icon="sap-icon://download" press="onSubmitApproval" enabled="true"/>
-				<Button text="GENERATE REPORT" type="Emphasized" icon="sap-icon://complete" press="onSubmitApproval" enabled="false"/>
+				<Button text="CLEAR" type="Reject" icon="sap-icon://decline" press="onClearRep" 
+					visible="{=${ViewData>/oTile}==='HisRep'}"/>
+				<Button text="EXPORT" type="Accept" icon="sap-icon://download" press="_fnReportStatus('D')" enabled="{ViewData>/oReportStatus}"
+					visible="{=${ViewData>/oTile}==='HisRep'}"/>
+				<Button text="GENERATE REPORT" type="Emphasized" icon="sap-icon://complete" press="onHistoryClaim('D')"
+					enabled="{=${ViewData>/oReportStatus} || !${ViewData>/oStmsg}}" visible="{=${ViewData>/oTile}==='HisRep'}"/>
 			</OverflowToolbar>
 		</footer>
 	</Page>

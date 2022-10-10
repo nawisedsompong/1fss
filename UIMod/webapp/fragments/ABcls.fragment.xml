@@ -1,5 +1,5 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form"
-	xmlns:core="sap.ui.core">
+	xmlns:core="sap.ui.core" xmlns:upload="sap.m.upload">
 	<Dialog contentWidth="{=${device>/isPhone}=== true ? 'auto' : '45%'}" class="sapUiSizeCompact" resizable="true"
 		title="{ABcls>/CLAIM_CATEGORY}" horizontalScrolling="false" draggable="true" busy="{appView>/busy}">
 		<content>
@@ -99,28 +99,6 @@
 						</VBox>
 					</l:content>
 				</l:Grid>
-				<!--	<l:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" defaultIndent="L0 M0 S0">
-					<l:content>
-						<VBox class="sapUiMediumMarginEnd">
-							<Label
-								text="{=${ABcls>/PTF_TYPE} === 'Course' ? ${i18n>LBL_EVENT_SDATE} : ${ABcls>/PTF_TYPE} === 'Examination' ? ${i18n>LBL_EVENT_SDATE} : ${i18n>LBL_COURSE_SDATE} }"/>
-							<DatePicker width="100%"
-								value="{ path: 'ABcls>/START_DATE', formatter: '.formatter.oClaimDate' }"
-								visible="{ViewData>/DMode}" displayFormat="dd.MM.yyyy" valueFormat="yyyy-MM-dd"/>
-							<Text visible="{= !${ViewData>/DMode}}"
-								text="{ path: 'ABcls>/START_DATE', formatter: '.formatter.oClaimDate' }"/>
-						</VBox>
-						<VBox class="sapUiMediumMarginEnd">
-							<Label
-								text="{=${ABcls>/PTF_TYPE} === 'Course' ? ${i18n>LBL_EVENT_EDATE} : ${ABcls>/PTF_TYPE} === 'Examination' ? ${i18n>LBL_EVENT_EDATE} : ${i18n>LBL_COURSE_EDATE} }"/>
-							<DatePicker width="100%"
-								value="{ path: 'ABcls>/END_DATE', formatter: '.formatter.oClaimDate' }"
-								visible="{ViewData>/DMode}" displayFormat="dd.MM.yyyy" valueFormat="yyyy-MM-dd"/>
-							<Text visible="{= !${ViewData>/DMode}}"
-								text="{ path: 'ABcls>/END_DATE', formatter: '.formatter.oClaimDate' }"/>
-						</VBox>
-					</l:content>
-				</l:Grid>-->
 				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0">
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
@@ -143,7 +121,6 @@
 								fieldGroupIds="fgInput" items="{oApprovers>/}" change="onChangeApprover">
 								<core:Item key="{oApprovers>EMPLOYEE_ID}" text="{oApprovers>EMPLOYEE_ID} - {oApprovers>FULLNAME}"/>
 							</ComboBox>
-							<!--<Text visible="{= !${ViewData>/DMode}}" text="{ABcls>/FIRST_LEVEL_APPROVER}"/>-->
 						</VBox>
 					</l:content>
 				</l:Grid>
@@ -179,29 +156,29 @@
 				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0">
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
-							<UploadCollection id="CLSUploadCollection" maximumFilenameLength="50" filenameLengthExceed="onFileNameExceed" maximumFileSize="10"
-								multiple="false" uploadButtonInvisible="{= !${ViewData>/DMode}}" fileType="jpg,jpeg,png,pdf"
-								change="onChange($event, ${ABcls>/CLAIM_REFERENCE})" fileSizeExceed="onFileSizeExceed" selectionChange="onSelectionChange"
-								typeMissmatch="onTypeMissmatch" uploadComplete="onUploadComplete(${ABcls>/CLAIM_REFERENCE})" fileDeleted="onFileDeleted"
-								beforeUploadStarts="onBeforeUploadStarts" items="{ path: 'oAttachItems>/', templateShareable: false }">
-								<toolbar>
+							<upload:UploadSet id="CLSUploadCollection" maxFileNameLength="50" fileNameLengthExceeded="onFileNameExceed" maxFileSize="10"
+								multiple="false" uploadEnabled="{= ${ViewData>/DMode} &amp;&amp; ${ViewData>/oTile}!=='Approvals'}" fileTypes="jpg,jpeg,png,pdf"
+								instantUpload="false" beforeItemAdded="onChangeSet($event, ${ABcls>/CLAIM_REFERENCE})" fileSizeExceeded="onFileSizeExceed"
+								fileTypeMismatch="onTypeMissmatch" afterItemRemoved="onFileDeletedSet" items="{ path: 'oAttachItems>/', templateShareable: false }"
+								mode="None">
+								<upload:toolbar>
 									<OverflowToolbar>
 										<Title id="attachmentTitleCLS" text="Attachments ({ViewData>/ALength})"/>
 										<Link text="{i18n>LBL_INFO_TXT}" wrapping="false" press="handleUploadPopover"></Link>
 										<ToolbarSpacer/>
-										<UploadCollectionToolbarPlaceholder/>
+										<upload:UploadSetToolbarPlaceholder/>
 									</OverflowToolbar>
-								</toolbar>
-								<items>
-									<UploadCollectionItem documentId="{oAttachItems>ID}" fileName="{oAttachItems>fileName}" visibleEdit="false"
-										visibleDelete="{oAttachItems>delete}" press="onDownloadFile">
-										<attributes>
+								</upload:toolbar>
+								<upload:items>
+									<upload:UploadSetItem url=" " fileName="{oAttachItems>fileName}" visibleEdit="false"
+										visibleRemove="{=${oAttachItems>delete} &amp;&amp; ${ViewData>/oTile}!=='Approvals'}" openPressed="onDownloadFileSet">
+										<upload:attributes>
 											<ObjectAttribute title="{i18n>TIT_UPLOADEDON}" text="{ path: 'oAttachItems>date', formatter: '.formatter.oClaimDate'}" active="false"/>
 											<ObjectAttribute title="{i18n>TIT_UPLOADEDBY}" text="{oAttachItems>name}" active="false"/>
-										</attributes>
-									</UploadCollectionItem>
-								</items>
-							</UploadCollection>
+										</upload:attributes>
+									</upload:UploadSetItem>
+								</upload:items>
+							</upload:UploadSet>
 						</VBox>
 					</l:content>
 				</l:Grid>

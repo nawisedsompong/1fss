@@ -177,8 +177,8 @@ sap.ui.define([
 
 		onValidateSpecialChar: function (oEvent) {
 			var oKey = oEvent.getSource().getValue();
-			if (oKey.includes('—') || oKey.includes('*')) {
-				oEvent.getSource().setValueStateText(this.getResourceBundle().getText("* — not allowed"));
+			if (oKey.includes('—') || oKey.includes('*') || oKey.includes(',')) {
+				oEvent.getSource().setValueStateText(this.getResourceBundle().getText("* — , not allowed"));
 				oEvent.getSource().setValueState(sap.ui.core.ValueState.Error);
 				oEvent.getSource().setValue(oKey.slice(0, -1));
 				return false;
@@ -623,7 +623,10 @@ sap.ui.define([
 							});
 							this.getView().setModel(new JSONModel(filtered), "oApprovers");
 						} else {
-							this.getView().setModel(oModel, "oApprovers");
+							var filtered = oModel.getData().filter(function (value, index, arr) {
+								return value.EMPLOYEE_ID !== oEmpId;
+							});
+							this.getView().setModel(new JSONModel(filtered), "oApprovers");
 						}
 						if (data.value.length === 1) {
 							oData.FIRST_LEVEL_APPROVER = data.value[0].EMPLOYEE_ID;
@@ -633,10 +636,7 @@ sap.ui.define([
 						if (active === "E") {
 							this._fnValidActiveEmp(oData.FIRST_LEVEL_APPROVER);
 						}
-					}
-					/*else {
-						this.getView().setModel([], "oApprovers");
-					}*/
+					} 
 				}.bind(this),
 				error: function (response) {
 					this.handleErrorDialog(response);
@@ -652,22 +652,26 @@ sap.ui.define([
 		},
 
 		_fnHRCheckerDisp: function (url, oData, oDlg) {
+			var oEmpId = this.oViewData.getProperty("/EmpID");
 			$.ajax({
 				url: url,
 				method: "GET",
 				dataType: "json",
 				success: function (data) {
 					if (data.value.length > 0) {
-						var oModel = this._getSizeLimit(data.value);
-						this.getView().setModel(oModel, "oApprovers");
-						oData.FIRST_LEVEL_APPROVER = data.value[0].EMPLOYEE_ID;
-						this._fnValidActiveEmp(data.value[0].EMPLOYEE_ID);
-						this.oViewData.setProperty("/oHRCheckerID", data.value[0].EMPLOYEE_ID);
-						this.oViewData.setProperty("/HRcheckfname", data.value[0].FIRSTNAME);
-						this.oViewData.setProperty("/HRchecklname", data.value[0].LASTNAME);
-						this.oViewData.refresh(true);
-						oDlg.refresh(true);
+						if (oEmpId !== data.value[0].EMPLOYEE_ID) {
+							var oModel = this._getSizeLimit(data.value);
+							this.getView().setModel(oModel, "oApprovers");
+							oData.FIRST_LEVEL_APPROVER = data.value[0].EMPLOYEE_ID;
+							this._fnValidActiveEmp(data.value[0].EMPLOYEE_ID);
+							this.oViewData.setProperty("/oHRCheckerID", data.value[0].EMPLOYEE_ID);
+							this.oViewData.setProperty("/HRcheckfname", data.value[0].FIRSTNAME);
+							this.oViewData.setProperty("/HRchecklname", data.value[0].LASTNAME);
+							this.oViewData.refresh(true);
+							oDlg.refresh(true);
+						}
 					} else {
+						this.getView().setModel(new JSONModel({}), "oApprovers");
 						this.oViewData.setProperty("/oHRCheckerID", "");
 						this.oViewData.setProperty("/HRcheckfname", "");
 						this.oViewData.setProperty("/HRchecklname", "");
@@ -1345,8 +1349,9 @@ sap.ui.define([
 				} else if (key === "PU") {
 					this.eDialog.getModel(oModel).setProperty("/SCHOLAR_ID", oSelectedItem.userId);
 					this.eDialog.getModel(oModel).setProperty("/SCHOLAR_NAME", oSelectedItem.fullName);
-					var iURL = "/BenefietCAP/claim/BANK_ACC?$filter=externalCode eq '" + oSelectedItem.userId + "'",
-						sURL = "/BenefietCAP/claim/SCHOLAR_SCHEME?$filter=externalCode eq '" + oSelectedItem.userId + "'",
+					var iURL = "/BenefietCAP/claim/BANK_ACC?$filter=externalCode eq '" + oSelectedItem.userId + "'&$orderby=effectiveStartDate desc",
+						sURL = "/BenefietCAP/claim/SCHOLAR_SCHEME?$filter=externalCode eq '" + oSelectedItem.userId +
+						"'&$orderby=effectiveStartDate desc",
 						oURL = "/BenefietCAP/claim/INFT_SCHOLAR_SCHEME?$filter=externalCode eq '" + oSelectedItem.userId +
 						"'&$orderby=effectiveStartDate desc";
 					this._fnAccountDetaila(iURL, "PUpload", "Form");
@@ -1491,6 +1496,7 @@ sap.ui.define([
 					this.getView().setBusy(false);
 					this.onSearchReroute();
 					this.oViewData.setProperty("/TR_EmpID", "");
+					this.oViewData.setProperty("/TR_EmpID_Fname", "");
 					this.handleSuccessDialog("Claim(s) has been Re-Routed successfully");
 				}.bind(this),
 				error: function (xhr, ajaxOptions, throwError) {
@@ -1813,7 +1819,10 @@ sap.ui.define([
 					if (data.value.length > 0) {
 						this.oViewData.setProperty("/oEnableRO", true);
 						var oModel = this._getSizeLimit(data.value);
-						this.getView().setModel(oModel, "oLocationRO");
+						var filtered = oModel.getData().filter(function (value, index, arr) {
+							return value.EMPLOYEE_ID !== oEmpId;
+						});
+						this.getView().setModel(new JSONModel(filtered), "oLocationRO");
 						if (oLocRo.length === 0 && data.value.length === 1) {
 							oLoad.getData().FIRST_LEVEL_APPROVER = data.value[0].LOCATION_RO_EMPLOYEEID;
 							oLoad.refresh(true);
@@ -1823,7 +1832,6 @@ sap.ui.define([
 					} else {
 						this.getView().setModel(new JSONModel([]), "oLocationRO");
 					}
-
 				}.bind(this),
 				error: function (response) {
 					this.oViewData.setProperty("/oEnableRO", false);
@@ -2418,30 +2426,75 @@ sap.ui.define([
 				contentType: "application/octet-stream",
 				success: function (oData) {
 					var link = document.createElement("a");
-					link.target = '_blank';
-					link.style.display = "none";
-					link.innerHTML = "Download PDF file";
 					link.download = oVal.fileName;
 					link.href = oData;
-					if (Device.system.tablet || Device.system.phone) {
-						var moblink = document.createElement("a");
-						moblink.href = window.URL.createObjectURL(oData);
-						window.open(moblink, "_blank");
-						return;
-					} else {
-						link.click();
-					}
-				},
+					link.click();
+				}.bind(this),
 				error: function (xhr, ajaxOptions, throwError) {
 					this.handleErrorDialog(xhr);
 				}.bind(this)
 			});
+		},
 
+		onDownloadFileSet: function (oEvent) {
+			oEvent.preventDefault();
+			var oVal = oEvent.getSource().getBindingContext("oAttachItems").getObject(),
+				ID = oVal.ID,
+				filename = oVal.fileName;
+			$.ajax({
+				url: `/BenefietCAP/v2/browseUpload/FileItems(guid'${ID}')/content`,
+				contentType: "application/octet-stream",
+				success: function (oData) {
+					this._download(oData)
+						.then((blob) => {
+							var url = window.URL.createObjectURL(blob);
+							window.open(url);
+						})
+						.catch((err) => {
+							console.log(err);
+						});
+				}.bind(this),
+				error: function (xhr, ajaxOptions, throwError) {
+					this.handleErrorDialog(xhr);
+				}.bind(this)
+			});
+		},
+
+		_download: function (item) {
+			var settings = {
+				url: item,
+				method: "GET",
+				xhrFields: {
+					responseType: "blob"
+				}
+			}
+			return new Promise((resolve, reject) => {
+				$.ajax(settings)
+					.done((result, textStatus, request) => {
+						resolve(result);
+					})
+					.fail((err) => {
+						reject(err);
+					})
+			});
+		},
+
+		createObjURL: function (blobdata) {
+			var blob = new Blob(blobdata, {
+				type: blobdata.split(';')[0].split(':')[1]
+			});
+			if (window.webkitURL) {
+				return window.webkitURL.createObjectURL(blob);
+			} else if (window.URL && window.URL.createObjectURL) {
+				return window.URL.createObjectURL(blob);
+			} else {
+				return null;
+			}
 		},
 
 		onFileDeleted: function (oEvent) {
-			var oClaim = this.oViewData.getProperty("/ofileID"),
-				ID = oEvent.getParameter("documentId");
+			var oClaim = this.oViewData.getProperty("/ofileID");
+			ID = oEvent.getParameter("documentId");
 			$.ajax({
 				url: `/BenefietCAP/v2/browseUpload/FileItems(guid'${ID}')`,
 				type: "DELETE",
@@ -2454,7 +2507,27 @@ sap.ui.define([
 					this.handleErrorDialog(xhr);
 				}.bind(this)
 			});
+		},
 
+		onFileDeletedSet: function (oEvent) {
+			var oClaim = this.oViewData.getProperty("/ofileID");
+			// ID = oEvent.getParameter("documentId");
+			var odata = oEvent.getSource()._oItemToBeDeleted.sId.split("-").pop(),
+				index = parseInt(odata, 10),
+				ID = oEvent.getSource().getModel("oAttachItems").getData()[index].ID;
+
+			$.ajax({
+				url: `/BenefietCAP/v2/browseUpload/FileItems(guid'${ID}')`,
+				type: "DELETE",
+				contentType: "application/json",
+				success: function (oData) {
+					this.onDisplayFiles(oClaim);
+					sap.m.MessageToast.show("Selected file has been deleted");
+				}.bind(this),
+				error: function (xhr, ajaxOptions, throwError) {
+					this.handleErrorDialog(xhr);
+				}.bind(this)
+			});
 		},
 
 		onDownloadSMSreport: function () {
@@ -3093,7 +3166,8 @@ sap.ui.define([
 					this._fnLocation();
 					if (this.oViewData.getProperty("/oTile") === "Coord" || this.oViewData.getProperty("/oTile") === "HistoryCoord" || this.oViewData
 						.getProperty("/oTile") === "HistoryCoordSch" || this.oViewData.getProperty("/oTile") === "Coordinat" || this.oViewData.getProperty(
-							"/oTile") === "CoordinatSch") {
+							"/oTile") === "CoordinatSch" || this.oViewData.getProperty("/oTile") === "Approval" || this.oViewData.getProperty("/oTile") ===
+						"HRMC") {
 						this._fnAddAll();
 					}
 				}.bind(this),

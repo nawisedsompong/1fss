@@ -164,7 +164,10 @@
 							<Label design="Bold" text="OPTS Ringfenced Balance" wrapping="true"/>
 						</Column>
 						<Column minScreenWidth="Tablet" demandPopin="true">
-							<Label text="Credit Amount" design="Bold" wrapping="true"/>
+							<Label text="Medisave Crediting Cap" design="Bold" wrapping="true"/>
+						</Column>
+						<Column minScreenWidth="Tablet" demandPopin="true">
+							<Label text="Medisave Credit Amount" design="Bold" wrapping="true"/>
 						</Column>
 					</columns>
 					<items>
@@ -182,6 +185,8 @@
 									text="{ path:'oRingAmntDetails>PENDING_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
 								<Text
 									text="{ path:'oRingAmntDetails>BALANCE', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } , formatter: '.formatter.oPending' }"/>
+								<Text
+									text="{path:'oRingAmntDetails>MEDISAVE_CREDIT_CAP', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
 								<Text
 									text="{path:'oRingAmntDetails>MEDISAVE_CREDIT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
 							</cells>

@@ -197,9 +197,9 @@
 				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0">
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
-							<Label text="{i18n>LBL_REMARK}" required="true"/>
-							<TextArea id="ta_payupremarks" required="true" fieldGroupIds="fgInput" maxLength="500" width="100%" rows="3"
-								value="{PUpload>/ITEM_LINE_REMARKS_EMPLOYEE}" visible="{ViewData>/DMode}" liveChange="onChangeDataSpl"/>
+							<Label text="{i18n>LBL_REMARK}"/>
+							<TextArea id="ta_payupremarks" maxLength="500" width="100%" rows="3" value="{PUpload>/ITEM_LINE_REMARKS_EMPLOYEE}"
+								visible="{ViewData>/DMode}" liveChange="onChangeDataSpl"/>
 							<Text visible="{= !${ViewData>/DMode}}" text="{PUpload>/ITEM_LINE_REMARKS_EMPLOYEE}"/>
 						</VBox>
 					</l:content>

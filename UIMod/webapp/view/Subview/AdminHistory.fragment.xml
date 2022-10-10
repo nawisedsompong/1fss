@@ -1,19 +1,15 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form"
 	xmlns:core="sap.ui.core">
-	<fb:FilterBar id="fbFilterInt" reset="onReset" search="onHistoryClaim('F')" showRestoreButton="false" clear="onClearRep"
+	<fb:FilterBar visible="false" id="fbFilterInt" reset="onReset" search="onHistoryClaim('F')" showRestoreButton="false" clear="onClearRep"
 		showFilterConfiguration="false" showClearOnFB="true" useToolbar="false">
 		<fb:filterGroupItems>
 			<fb:FilterGroupItem id="fgiCreatedDateAdminRep" groupName="Basic" name="F" label="Claim Start Date" partOfCurrentVariant="true"
 				visibleInFilterBar="true" mandatory="true">
-				<fb:control>
-					<core:HTML content='&lt;input class="datePicker1"/&gt;'></core:HTML>
-				</fb:control>
+				<fb:control></fb:control>
 			</fb:FilterGroupItem>
 			<fb:FilterGroupItem id="fgiCreatedDateAdminRep1" groupName="Basic" name="FI" label="Claim End Date" partOfCurrentVariant="true"
 				visibleInFilterBar="true" mandatory="true">
-				<fb:control>
-					<core:HTML content='&lt;input class="datePicker2"/&gt;'></core:HTML>
-				</fb:control>
+				<fb:control></fb:control>
 			</fb:FilterGroupItem>
 			<fb:FilterGroupItem id="fgiEmployeeRep" groupName="Basic" name="A" label="Personnel Area" partOfCurrentVariant="true"
 				visibleInFilterBar="false" mandatory="true">
@@ -24,12 +20,7 @@
 				</fb:control>
 			</fb:FilterGroupItem>
 			<fb:FilterGroupItem id="fgiPSA" groupName="Basic" name="B" label="Personnel Sub Area" partOfCurrentVariant="true" visibleInFilterBar="true">
-				<fb:control>
-					<ComboBox id="cbPSA" selectedKey="{ViewData>/IntPSA}"
-						items="{path:'ComboDetails>/PERSONAL_SUB_AREA' , filters : [ { path : 'Company', operator : 'EQ', value1 : 'MOHH'} ]}">
-						<core:Item key="{ComboDetails>Personal_Sub_Area}" text="{ComboDetails>Personal_Sub_Desc}"/>
-					</ComboBox>
-				</fb:control>
+				<fb:control></fb:control>
 			</fb:FilterGroupItem>
 			<!--<fb:FilterGroupItem id="fgiPayGrade" groupName="Basic" name="C" label="Pay Grade" partOfCurrentVariant="true" visibleInFilterBar="true"
 				mandatory="false">
@@ -110,9 +101,7 @@
 			</fb:FilterGroupItem>-->
 		</fb:filterGroupItems>
 	</fb:FilterBar>
-	<MessageStrip text="* Receipt date refers to claim submission date for multiple line item claims" type="Information" showIcon="true"
-		visible="{=(${oEmpData>/COMPANY}==='MOHHSCH' || ${ViewData>/oTile}==='HistoryCoordSch' || ${ViewData>/oTile}==='PaymentUpload') ? false : true}"></MessageStrip>
-	<Table id="tbClaimRecord"
+	<Table visible="false" id="tbClaimRecord"
 		items="{path:'ApprovalModel>/' ,filters : [ { path : 'CATEGORY_CODE', operator : 'NE', value1 : 'PAY_UP'} ], sorter: [{ path: 'CATEGORY_CODE', descending: false},{ path: 'CLAIM_DATE', descending: false}]}"
 		inset="false" sticky="ColumnHeaders,HeaderToolbar" enableBusyIndicator="true" growing="true" growingThreshold="1000">
 		<headerToolbar>
@@ -172,20 +161,24 @@
 			</ColumnListItem>
 		</items>
 	</Table>
-	<VBox class="sapUiSmallMargin" visible="false">
+	<VBox class="sapUiSmallMargin" visible="true">
 		<MessageStrip class="sapUiSmallMargin" text="Please wait, Generating report file for the provided input" type="Information" showIcon="true"
-			visible="false"></MessageStrip>
-		<MessageStrip class="sapUiSmallMargin" text="Report generated successfully, please download using export button" type="Success"
-			showIcon="true" visible="true"></MessageStrip>
+			visible="{= ${ViewData>/oStmsg} &amp;&amp; !${ViewData>/oReportStatus}}"></MessageStrip>
+		<MessageStrip class="sapUiSmallMargin" text="Please export the generated report before generating another new report" type="Success"
+			showIcon="true" visible="{ViewData>/oReportStatus}"></MessageStrip>
 		<l:Grid defaultSpan="XL4 L4 M4 S12" hSpacing="1" defaultIndent="L0 M0 S0">
 			<l:content>
-				<VBox class="sapUiMediumMarginEnd">
+				<VBox >
 					<Label text="Claim Start Date" required="true"/>
-					<HBox></HBox>
+					<HBox>
+						<core:HTML content='&lt;input class="datePicker1"/&gt;'></core:HTML>
+					</HBox>
 				</VBox>
 				<VBox class="sapUiMediumMarginEnd">
 					<Label text="Claim End Date" required="true"/>
-					<HBox></HBox>
+					<HBox>
+						<core:HTML content='&lt;input class="datePicker2"/&gt;'></core:HTML>
+					</HBox>
 				</VBox>
 			</l:content>
 		</l:Grid>
@@ -193,19 +186,11 @@
 			<l:content>
 				<VBox class="sapUiMediumMarginEnd">
 					<Label text="Personnel Sub Area"></Label>
-					<ComboBox width="100%" value="{ABcls>/RECEIPT_NUMBER}"/>
-				</VBox>
-				<VBox class="sapUiMediumMarginEnd">
-					<Label text="Claim Category"/>
-					<ComboBox width="100%" selectedKey="" loadItems="_fnClaimTypes"
-						items="{path:'oClaimCatg>/' , sorter: { path: 'Category_Code', descending: false}}">
-						<core:Item key="{oClaimCatg>Category_Code}" text="{oClaimCatg>Category_Desc}"/>
+					<ComboBox width="100%" id="cbPSA" selectedKey="{ViewData>/IntPSA}"
+						items="{path:'ComboDetails>/PERSONAL_SUB_AREA' , filters : [ { path : 'Company', operator : 'EQ', value1 : 'MOHH'} ]}">
+						<core:Item key="{ComboDetails>Personal_Sub_Area}" text="{ComboDetails>Personal_Sub_Desc}"/>
 					</ComboBox>
 				</VBox>
-			</l:content>
-		</l:Grid>
-		<l:Grid defaultSpan="XL4 L4 M4 S12" hSpacing="1" defaultIndent="L0 M0 S0">
-			<l:content>
 				<VBox class="sapUiMediumMarginEnd">
 					<Label text="Status"/>
 					<ComboBox width="100%" selectedKey="{ViewData>/Status}" change="onValidData">
@@ -221,19 +206,35 @@
 						<core:Item key="Rejected" text="Rejected"/>
 					</ComboBox>
 				</VBox>
+			</l:content>
+		</l:Grid>
+		<l:Grid defaultSpan="XL4 L4 M4 S12" hSpacing="1" defaultIndent="L0 M0 S0">
+			<l:content>
 				<VBox class="sapUiMediumMarginEnd">
-					<Label text="Employee"></Label>
-					<Input width="100%" value="{ViewData>/EmpID_App}" valueHelpRequest="onEmpSearchOpen('ViewData', 'Inactive','App')" showValueHelp="true"
-						showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
+					<Label text="Claim Category"/>
+					<ComboBox width="100%" selectedKey="{ViewData>/ClaimCateg}" loadItems="_fnClaimTypes"
+						items="{path:'oClaimCatg>/' , sorter: { path: 'Category_Code', descending: false}}">
+						<core:Item key="{oClaimCatg>Category_Code}" text="{oClaimCatg>Category_Desc}"/>
+					</ComboBox>
+				</VBox>
+				<VBox class="sapUiMediumMarginEnd">
+					<Label text="Claim Code"/>
+					<Input width="100%" value="{ViewData>/ClaimCate}" valueHelpRequest="onClaimTypeOpen" showValueHelp="true" showSuggestion="true"
+						valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"
+						enabled="{=(${ViewData>/ClaimCateg}==='WRC'||${ViewData>/ClaimCateg}==='WRC_HR'||${ViewData>/ClaimCateg}==='COV'||${ViewData>/ClaimCateg}==='TC'||${ViewData>/ClaimCateg}==='SP'||${ViewData>/ClaimCateg}==='SP1'||${ViewData>/ClaimCateg}==='SP2'||${ViewData>/ClaimCateg}==='SP3')? false : true}"/>
 				</VBox>
 			</l:content>
 		</l:Grid>
 		<l:Grid defaultSpan="XL4 L4 M4 S12" hSpacing="1" defaultIndent="L0 M0 S0">
 			<l:content>
 				<VBox class="sapUiMediumMarginEnd">
+					<Label text="Employee"></Label>
+					<Input width="100%" value="{ViewData>/EmpID_App}" valueHelpRequest="onEmpSearchOpen('ViewData', 'Inactive','App')" showValueHelp="true"
+						showSuggestion="true" valueHelpOnly="true" filterSuggests="true" startSuggestion="1" showTableSuggestionValueHelp="false"/>
+				</VBox>
+				<VBox class="sapUiMediumMarginEnd">
 					<Label text="Claim Reference No"/>
-					<Input
-						value="{ path:'ABcls>/RECEIPT_AMOUNT', type: 'sap.ui.model.type.Float', formatOptions: { minFractionDigits: 2, maxFractionDigits: 2 } }"/>
+					<Input width="100%" value="{ViewData>/ClaimNo}"/>
 				</VBox>
 			</l:content>
 		</l:Grid>

@@ -276,12 +276,12 @@ sap.ui.define([
 		},
 
 		onLoadYear: function () {
-			var oYear = new Date().getFullYear(),
+			var oYear = 2022,
 				oYearData = [];
 			this.oViewData.setProperty("/oRepYear", oYear);
-			for (var i = 9; i >= 0; i--) {
+			for (var i = 0; i < 5; i++) {
 				var oData = {
-					"Year": oYear - i
+					"Year": oYear + i
 				};
 				oYearData.push(oData);
 			}

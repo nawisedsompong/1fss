@@ -1044,6 +1044,8 @@ sap.ui.define([
 			}
 			Validator.resetValidStates(this, "dlgCoPay", this._oCopayDialog);
 			var oData = this._oCopayDialog.getModel("oCoPayData").getData();
+			oData.Med_Leave_Declar = oData.Med_Leave_Declar ? oData.Med_Leave_Declar : "No";
+			oData.AL_Exceeded = oData.AL_Exceeded ? oData.AL_Exceeded : "No";
 			var oMode = this.oViewData.getProperty("/TMode");
 			if (oMode === "Submit") {
 				this.getView().setBusy(true);
@@ -1060,7 +1062,6 @@ sap.ui.define([
 						this._fnGetTableData();
 						this.onCloseCoPay();
 						this.handleSuccessDialog("Data has been saved");
-						this.getView().getModel("oCoPayData").refresh(true);
 						this.getView().setBusy(false);
 					}.bind(this),
 					error: function (response) {
@@ -1224,7 +1225,9 @@ sap.ui.define([
 							"HR_checker": {
 								UserID: ""
 							},
-							"HR_maker": []
+							"HR_maker": [{
+								UserID: ""
+							}]
 						}), "oApprovalData");
 					} else {
 						this._oApproverDialog.setModel(new JSONModel({}), "oApprovalData");
@@ -1251,7 +1254,11 @@ sap.ui.define([
 			oData.Second_Level_Approver_Name = oData.Second_Level_Approver_Name ? oData.Second_Level_Approver_Name : "";
 			oData.Third_Level_Approver_Name = oData.Third_Level_Approver_Name ? oData.Third_Level_Approver_Name : "";
 			oData.Fourth_Level_Approver_Name = oData.Fourth_Level_Approver_Name ? oData.Fourth_Level_Approver_Name : "";
-			oData.Sequence_of_check = parseInt(aDupRec.length) + 1;
+			if (this.oViewData.getProperty("/CMode") === "Copy") {
+				oData.Sequence_of_check = parseInt(aDupRec.length) + 1;
+			} else {
+				oData.Sequence_of_check = oData.Sequence_of_check ? oData.Sequence_of_check : parseInt(aDupRec.length) + 1;
+			}
 
 			if (oTile === "HRMC") {
 				if (oData.HR_maker.length === 0) {
@@ -1339,6 +1346,7 @@ sap.ui.define([
 					this._oApproverDialog = oDialog;
 					this.getView().addDependent(this._oApproverDialog);
 					var oData = oContext.getObject();
+					this.oApprover = $.extend(true, {}, oData);
 					if (oTile === "HRMC") {
 						if (oData.HR_checker === null) {
 							oData.HR_checker = {
@@ -1365,6 +1373,7 @@ sap.ui.define([
 			this.oViewData.setProperty("/DMode", true);
 			this.oViewData.setProperty("/eIndex", sIndex);
 			this.oViewData.setProperty("/TMode", "Submit");
+			this.oViewData.setProperty("/CMode", "Copy");
 			if (!this._oApproverDialog) {
 				Fragment.load({
 					name: "BenefitClaim.ZBenefitClaim.fragments.AddApprover",
@@ -1437,6 +1446,7 @@ sap.ui.define([
 		},
 
 		onCloseApprover: function () {
+			this.oViewData.setProperty("/CMode", "");
 			this._oApproverDialog.close();
 			this._oApproverDialog.destroy();
 			this._oApproverDialog = undefined;
@@ -1712,10 +1722,10 @@ sap.ui.define([
 				sheet1 = XLSX.utils.json_to_sheet(hrmaker),
 				sheet2 = XLSX.utils.json_to_sheet(hrchecker),
 				wb = XLSX.utils.book_new();
-			XLSX.utils.book_append_sheet(wb, sheet, "Approval");
+			XLSX.utils.book_append_sheet(wb, sheet, "Config");
 			XLSX.utils.book_append_sheet(wb, sheet1, "HR Maker");
 			XLSX.utils.book_append_sheet(wb, sheet2, "HR Checker");
-			XLSX.writeFile(wb, "Approval Structure.xlsx");
+			XLSX.writeFile(wb, "HR_Maker_Checker.xlsx");
 		}
 	});
 

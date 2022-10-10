@@ -32,8 +32,7 @@
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="{i18n>LBL_SICK_LEAVE}"/>
 							<ComboBox width="100%" selectedKey="{oCoPayData>/Med_Leave_Declar}" visible="{ViewData>/DMode}" enabled="{=${ViewData>/TMode}==='Submit'}" change="onValidData">
-								<core:Item key="N/A" text="N/A"/>
-								<core:Item key="No" text="No"/>
+							 	<core:Item key="No" text="No"/>
 								<core:Item key="Yes" text="Yes"/>
 							</ComboBox>
 							<Text text="{oCoPayData>/Med_Leave_Declar}" visible="{= !${ViewData>/DMode}}"/>
@@ -45,8 +44,7 @@
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="{i18n>LBL_ANNUAL_ENTITLEMENT}" wrapping="true"/>
 							<ComboBox width="100%" selectedKey="{oCoPayData>/AL_Exceeded}" visible="{ViewData>/DMode}" enabled="{=${ViewData>/TMode}==='Submit'}" change="onValidData">
-								<core:Item key="N/A" text="N/A"/>
-								<core:Item key="No" text="No"/>
+					 			<core:Item key="No" text="No"/>
 								<core:Item key="Yes" text="Yes"/>
 							</ComboBox>
 							<Text visible="{= !${ViewData>/DMode}}" text="{oCoPayData>/AL_Exceeded}"/>
@@ -54,8 +52,7 @@
 						<VBox class="sapUiMediumMarginEnd">
 							<Label text="{i18n>LBL_ANNUAL_WORK_DAY}" wrapping="true"/>
 							<ComboBox width="100%" selectedKey="{oCoPayData>/AL_Wardday_Limit}" visible="{ViewData>/DMode}" change="onValidData">
-								<core:Item key="N/A" text="N/A"/>
-								<core:Item key="No" text="No"/>
+					 			<core:Item key="No" text="No"/>
 								<core:Item key="Yes" text="Yes"/>
 							</ComboBox>
 							<Text visible="{= !${ViewData>/DMode}}" text="{oCoPayData>/AL_Wardday_Limit}"/>

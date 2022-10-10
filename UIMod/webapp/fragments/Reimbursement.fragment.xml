@@ -1,5 +1,5 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form"
-	xmlns:core="sap.ui.core">
+	xmlns:core="sap.ui.core" xmlns:upload="sap.m.upload">
 	<Dialog contentWidth="{=${device>/isPhone}=== true ? 'auto' : '45%'}" class="sapUiSizeCompact" resizable="true"
 		title="{Reimbursement>/CLAIM_CATEGORY}" horizontalScrolling="false" draggable="true" busy="{appView>/busy}">
 		<content>
@@ -152,7 +152,7 @@
 				<l:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" defaultIndent="L0 M0 S0">
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
-							<UploadCollection id="MSRUploadCollection" maximumFilenameLength="50" filenameLengthExceed="onFileNameExceed" maximumFileSize="10"
+							<!--<UploadCollection id="MSRUploadCollection" maximumFilenameLength="50" filenameLengthExceed="onFileNameExceed" maximumFileSize="10"
 								multiple="false" uploadButtonInvisible="{= !${ViewData>/DMode}}" fileType="jpg,jpeg,png,pdf"
 								change="onChange($event, ${Reimbursement>/CLAIM_REFERENCE})" fileSizeExceed="onFileSizeExceed" selectionChange="onSelectionChange"
 								typeMissmatch="onTypeMissmatch" uploadComplete="onUploadComplete(${Reimbursement>/CLAIM_REFERENCE})" fileDeleted="onFileDeleted"
@@ -174,7 +174,30 @@
 										</attributes>
 									</UploadCollectionItem>
 								</items>
-							</UploadCollection>
+							</UploadCollection>-->
+							<upload:UploadSet id="MSRUploadCollection" maxFileNameLength="50" fileNameLengthExceeded="onFileNameExceed" maxFileSize="10"
+								multiple="false" uploadEnabled="{= ${ViewData>/DMode} &amp;&amp; ${ViewData>/oTile}!=='Approvals'}" fileTypes="jpg,jpeg,png,pdf"
+								instantUpload="false" beforeItemAdded="onChangeSet($event, ${Reimbursement>/CLAIM_REFERENCE})" fileSizeExceeded="onFileSizeExceed"
+								fileTypeMismatch="onTypeMissmatch" afterItemRemoved="onFileDeletedSet" items="{ path: 'oAttachItems>/', templateShareable: false }"
+								mode="None">
+								<upload:toolbar>
+									<OverflowToolbar>
+										<Title id="attachmentTitleMSR" text="Attachments ({ViewData>/ALength})"/>
+										<Link text="{i18n>LBL_INFO_TXT}" wrapping="false" press="handleUploadPopover"></Link>
+										<ToolbarSpacer/>
+										<upload:UploadSetToolbarPlaceholder/>
+									</OverflowToolbar>
+								</upload:toolbar>
+								<upload:items>
+									<upload:UploadSetItem url=" " fileName="{oAttachItems>fileName}" visibleEdit="false"
+										visibleRemove="{=${oAttachItems>delete} &amp;&amp; ${ViewData>/oTile}!=='Approvals'}" openPressed="onDownloadFileSet">
+										<upload:attributes>
+											<ObjectAttribute title="{i18n>TIT_UPLOADEDON}" text="{ path: 'oAttachItems>date', formatter: '.formatter.oClaimDate'}" active="false"/>
+											<ObjectAttribute title="{i18n>TIT_UPLOADEDBY}" text="{oAttachItems>name}" active="false"/>
+										</upload:attributes>
+									</upload:UploadSetItem>
+								</upload:items>
+							</upload:UploadSet>
 						</VBox>
 					</l:content>
 				</l:Grid>

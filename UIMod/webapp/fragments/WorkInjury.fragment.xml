@@ -144,7 +144,7 @@
 					<l:content>
 						<VBox class="sapUiMediumMarginEnd">
 							<UploadCollection id="WICUploadCollection" maximumFilenameLength="50" filenameLengthExceed="onFileNameExceed" maximumFileSize="10"
-								multiple="false" uploadButtonInvisible="{= !${ViewData>/DMode}}" fileType="jpg,jpeg,png,pdf"
+								multiple="false" uploadButtonInvisible="{= !${ViewData>/DMode} || ${ViewData>/oTile}==='Approvals'}" fileType="jpg,jpeg,png,pdf"
 								change="onChange($event, ${WorkInjury>/CLAIM_REFERENCE})" fileSizeExceed="onFileSizeExceed" selectionChange="onSelectionChange"
 								typeMissmatch="onTypeMissmatch" uploadComplete="onUploadComplete(${WorkInjury>/CLAIM_REFERENCE})" fileDeleted="onFileDeleted"
 								beforeUploadStarts="onBeforeUploadStarts" items="{ path: 'oAttachItems>/', templateShareable: false }">
@@ -158,7 +158,7 @@
 								</toolbar>
 								<items>
 									<UploadCollectionItem documentId="{oAttachItems>ID}" fileName="{oAttachItems>fileName}" visibleEdit="false"
-										visibleDelete="{oAttachItems>delete}" press="onDownloadFile">
+										visibleDelete="{=${oAttachItems>delete} &amp;&amp; ${ViewData>/oTile}!=='Approvals'}" press="onDownloadFile">
 										<attributes>
 											<ObjectAttribute title="{i18n>TIT_UPLOADEDON}" text="{ path: 'oAttachItems>date', formatter: '.formatter.oClaimDate'}" active="false"/>
 											<ObjectAttribute title="{i18n>TIT_UPLOADEDBY}" text="{oAttachItems>name}" active="false"/>

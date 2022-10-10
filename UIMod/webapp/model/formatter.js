@@ -335,6 +335,34 @@ sap.ui.define([], function () {
 				return "Admin Role";
 			case "TAB_ADMIN":
 				return "Administration Section Tab";
+			case "TAB_ADMSCH":
+				return "SMS Admin";
+			case "APP_MOHH":
+				return "Claim Approvals";
+			case "APP_SCH":
+				return "SMS Approvals";
+			case "COORQ_MOHH":
+				return "Claim Coordinator Request";
+			case "COORE_MOHH":
+				return "Claim Coordinator Record";
+			case "COORQ_SCH":
+				return "Claim Coordinator Request (Scholar)";
+			case "COORE_SCH":
+				return "Claim Coordinator Record (Scholar)";
+			case "BEHALF_SCH":
+				return "Create On-Behalf (Scholar)";
+			case "SMS_REP":
+				return "SMS Master Report";
+			case "PAY_UP":
+				return "Payment Upload";
+			case "PAY_HIS":
+				return "Payment Upload Record";
+			case "IMP_POS":
+				return "Import Posting";
+			case "ENT_ADJ":
+				return "Entitlement Adjustment";
+			case "HRMC":
+				return "HR Maker/Checker";
 			default:
 				return key;
 			}
